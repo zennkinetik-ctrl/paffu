@@ -1,0 +1,17 @@
+{
+  "name": "Paffu · Panel de la tienda",
+  "short_name": "Paffu Panel",
+  "description": "Administra productos, stock, pedidos y reseñas de paffu.cl",
+  "lang": "es-CL",
+  "start_url": "/panel/",
+  "scope": "/panel/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#CEB298",
+  "theme_color": "#8E5F47",
+  "icons": [
+    { "src": "/panel/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/panel/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/panel/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

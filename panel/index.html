@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Paffu Panel</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#8E5F47">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paffu Panel">
+<link rel="manifest" href="/panel/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/panel/icons/apple-touch-icon.png">
+<link rel="icon" href="/panel/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Oswald:wght@500;600&display=swap">
+<style>
+:root{
+  --arena:#CEB298;--crema:#EEE7DD;--vainilla:#FBEDD6;--terracota:#8E5F47;--terracota-2:#6E4532;--cafe:#3E2A20;--suave:#5A4436;--linea:#D9CCBC;--celeste:#A7B9C6;--ok:#2F6B45;--ok-bg:#DCEBDF;--mal:#9B2C24;--mal-bg:#F4DDD9;
+  --top:env(safe-area-inset-top,0px);--bot:env(safe-area-inset-bottom,0px);--l:max(16px,env(safe-area-inset-left,0px));--r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--arena);color:var(--cafe);font:400 16px/1.45 'Jost','Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--terracota-2);outline-offset:2px}
+h1,h2,h3{margin:0;font-family:'Oswald','Arial Narrow',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+.inp{width:100%;min-height:48px;border:1px solid var(--linea);border-radius:12px;background:#fff;padding:10px 14px;font-size:16px;color:var(--cafe)}
+textarea.inp{min-height:96px;resize:vertical}
+label.lb{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px;border:1px solid var(--terracota);background:var(--terracota);color:#fff;font-weight:600;font-size:15px;text-decoration:none}
+.btn:active{background:var(--terracota-2)}
+.btn.line{background:transparent;color:var(--terracota-2)}
+.btn.sm{min-height:40px;padding:0 14px;font-size:14px}
+.btn.mal{background:transparent;border-color:var(--mal);color:var(--mal)}
+.btn[disabled]{opacity:.5}
+.ico{width:44px;height:44px;border:0;border-radius:50%;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:inherit;flex:none}
+
+/* Login */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:calc(24px + var(--top)) var(--r) calc(24px + var(--bot)) var(--l)}
+.lg{width:min(400px,100%);display:flex;flex-direction:column;gap:14px}
+.lg-logo{width:120px;height:auto;align-self:flex-start;margin-bottom:8px}
+.lg h1{font-size:40px}
+.lg p{margin:0;color:var(--suave)}
+.lg form{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.err{margin:0;color:var(--mal);font-size:14px}
+.demo-link{background:none;border:0;color:var(--terracota-2);text-decoration:underline;padding:8px 0;font-size:14px;align-self:flex-start}
+
+/* App */
+.bar{position:sticky;top:0;z-index:20;background:var(--terracota);color:#fff;padding:calc(10px + var(--top)) var(--r) 10px var(--l);display:flex;align-items:center;gap:10px}
+.bar img{height:34px;width:auto}
+.bar h1{font-size:20px;flex:1}
+.bar .ico{color:#fff}
+.demo-tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:4px 8px;border-radius:6px}
+main{padding:16px var(--r) calc(96px + var(--bot)) var(--l);max-width:760px;margin:0 auto}
+.tools{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.tools .inp{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.stat{background:var(--crema);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-family:'Oswald',sans-serif;font-size:24px;line-height:1.1}
+.stat span{font-size:12px;color:var(--suave)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.chip{flex:none;min-height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--linea);background:var(--crema);font-size:14px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--cafe);border-color:var(--cafe);color:#fff}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--crema);border-radius:18px;padding:10px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:center;box-shadow:0 10px 30px -22px rgba(62,42,32,.6)}
+.thumb{width:72px;height:72px;border-radius:12px;object-fit:cover;background:var(--vainilla);display:block}
+.it-main{min-width:0;display:flex;flex-direction:column;gap:6px}
+.it-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.it-top button{all:unset;cursor:pointer;min-width:0;display:flex;flex-direction:column;gap:2px}
+.it-top b{font-size:16px;font-weight:600;line-height:1.2}
+.it-top small{font-size:12px;color:var(--suave)}
+.pill{font-size:11px;font-weight:600;padding:4px 8px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}
+.pill.out{background:var(--mal-bg);color:var(--mal)}
+.pill.ped{background:var(--vainilla);color:var(--terracota-2)}
+.it-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.price{font-weight:600}
+.stepper{display:flex;align-items:center;border:1px solid var(--linea);border-radius:999px;background:#fff}
+.stepper button{width:40px;height:40px;border:0;background:transparent;font-size:20px;line-height:1;color:var(--terracota-2)}
+.stepper span{min-width:30px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
+.empty{background:var(--crema);border-radius:18px;padding:24px;text-align:center;color:var(--suave)}
+.fab{position:fixed;right:var(--r);bottom:calc(84px + var(--bot));z-index:25;box-shadow:0 12px 30px -10px rgba(62,42,32,.6)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--crema);border-top:1px solid var(--linea);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:6px var(--r) calc(6px + var(--bot)) var(--l)}
+nav.tabs button{border:0;background:transparent;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:500;color:var(--suave);position:relative}
+nav.tabs button[aria-current="page"]{color:var(--terracota-2)}
+nav.tabs svg{width:24px;height:24px}
+.badge{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--mal);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.rev{background:var(--crema);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.rev .stars{color:#C99A3B;letter-spacing:2px}
+.rev p{margin:0}
+.rev small{color:var(--suave)}
+.rev .acts{display:flex;gap:8px;flex-wrap:wrap}
+.install{background:var(--vainilla);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.install p{margin:0;font-size:14px;color:var(--suave)}
+.install-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Hoja de edición */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.scrim{position:absolute;inset:0;background:rgba(40,25,18,.5)}
+.sheet-box{position:relative;width:min(640px,100%);max-height:calc(100vh - 24px - var(--top));overflow:auto;background:var(--crema);border-radius:22px 22px 0 0;padding:16px var(--r) calc(20px + var(--bot)) var(--l);display:flex;flex-direction:column;gap:14px}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:-16px;background:var(--crema);padding:8px 0;z-index:2}
+.sheet-head h2{font-size:24px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fotos{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.fotos figure{position:relative;margin:0;flex:none}
+.fotos img{width:88px;height:88px;border-radius:12px;object-fit:cover;display:block;background:var(--vainilla)}
+.fotos figure button{position:absolute;top:-6px;right:-6px;width:30px;height:30px;border-radius:50%;border:0;background:var(--cafe);color:#fff;font-size:16px;line-height:1}
+.fotos .add{flex:none;width:88px;height:88px;border-radius:12px;border:1.5px dashed var(--terracota);background:transparent;color:var(--terracota-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600}
+.var-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;align-items:center}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.seg button{min-height:44px;border-radius:12px;border:1px solid var(--linea);background:#fff;font-size:14px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--cafe);border-color:var(--cafe);color:#fff}
+.check{display:flex;align-items:center;gap:10px;min-height:44px}
+.check input{width:22px;height:22px;accent-color:var(--terracota)}
+.sheet-foot{display:flex;gap:10px;position:sticky;bottom:calc(-20px - var(--bot));background:var(--crema);padding:10px 0 4px}
+.sheet-foot .btn{flex:1}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + var(--bot));z-index:60;background:var(--cafe);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;max-width:calc(100% - 32px);box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
+.muted{color:var(--suave);font-size:14px}
+@media (min-width:700px){.sheet{align-items:center}.sheet-box{border-radius:22px}}
+</style>
+</head>
+<body>
+
+<section id="login" aria-labelledby="lgT">
+  <div class="lg">
+    <img class="lg-logo" src="/panel/icons/icon-192.png" alt="Paffu" width="120" height="120" style="border-radius:24px">
+    <h1 id="lgT">Panel de la tienda</h1>
+    <p>Ingresa con tu correo y contraseña para administrar paffu.cl.</p>
+    <form id="lgF" novalidate>
+      <div><label class="lb" for="lgE">Correo</label><input class="inp" id="lgE" type="email" autocomplete="username" inputmode="email" required></div>
+      <div><label class="lb" for="lgP">Contraseña</label><input class="inp" id="lgP" type="password" autocomplete="current-password" required></div>
+      <p class="err" id="lgErr" role="alert" hidden></p>
+      <button class="btn" id="lgB" type="submit">Entrar</button>
+    </form>
+    <button class="demo-link" type="button" id="demoBtn">Ver el panel con datos de ejemplo</button>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <header class="bar">
+    <img src="/panel/icons/icon-192.png" alt="" width="34" height="34" style="border-radius:8px">
+    <h1 id="viewT">Productos</h1>
+    <span class="demo-tag" id="demoTag" hidden>Ejemplo</span>
+    <button class="ico" type="button" id="refreshBtn" aria-label="Actualizar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+    <button class="ico" type="button" id="logoutBtn" aria-label="Cerrar sesión"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg></button>
+  </header>
+
+  <main>
+    <div class="install" id="installBox" hidden>
+      <b>Instala Paffu Panel en tu celular</b>
+      <p id="installTxt">Tenlo como una app más, con el ícono de Paffu en tu pantalla de inicio.</p>
+      <div class="install-row"><button class="btn sm" type="button" id="installBtn">Instalar</button><button class="btn sm line" type="button" id="notifBtn">Activar avisos</button><button class="btn sm line" type="button" id="installClose">Ahora no</button></div>
+    </div>
+
+    <section id="vP" aria-labelledby="viewT">
+      <div class="stats"><div class="stat"><b id="sTot">0</b><span>Productos</span></div><div class="stat"><b id="sOk">0</b><span>Disponibles</span></div><div class="stat"><b id="sLow">0</b><span>Stock bajo</span></div></div>
+      <div class="tools"><label class="lb" for="q" style="position:absolute;left:-9999px">Buscar producto</label><input class="inp" id="q" type="search" placeholder="Buscar producto"></div>
+      <div class="chips" role="group" aria-label="Filtrar por colección" id="catChips"></div>
+      <div class="list" id="pList"></div>
+    </section>
+
+    <section id="vO" hidden>
+      <div class="empty"><b style="display:block;color:var(--cafe);margin-bottom:6px">Aquí llegarán los pedidos</b>Cuando conectemos Webpay, cada compra aparecerá en esta pestaña con los datos de la clienta, el despacho y el estado del pago, y te llegará un aviso al celular.</div>
+    </section>
+
+    <section id="vR" hidden>
+      <div class="chips" role="group" aria-label="Filtrar reseñas"><button class="chip" type="button" data-rf="pend" aria-pressed="true">Por aprobar</button><button class="chip" type="button" data-rf="ok" aria-pressed="false">Publicadas</button></div>
+      <div class="list" id="rList"></div>
+    </section>
+  </main>
+
+  <button class="btn fab" type="button" id="newBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nuevo producto</button>
+
+  <nav class="tabs" aria-label="Secciones">
+    <button type="button" data-tab="P" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M8 4l-5 3 2 4 2-1v10h10V10l2 1 2-4-5-3a4 4 0 0 1-8 0z"/></svg>Productos</button>
+    <button type="button" data-tab="O"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg>Pedidos</button>
+    <button type="button" data-tab="R"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>Reseñas<span class="badge" id="rBadge" hidden></span></button>
+  </nav>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="scrim" id="scrim"></div>
+  <form class="sheet-box" id="eF" role="dialog" aria-modal="true" aria-labelledby="eT" novalidate>
+    <div class="sheet-head"><h2 id="eT">Editar producto</h2><button class="ico" type="button" id="eClose" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+
+    <div><span class="lb">Fotos</span><div class="fotos" id="eFotos"></div><input type="file" id="eFile" accept="image/*" hidden><p class="muted" id="eFotoMsg" style="margin:6px 0 0">La primera foto es la portada. Puedes tomarla con la cámara.</p></div>
+    <div><label class="lb" for="eName">Nombre</label><input class="inp" id="eName" required></div>
+    <div class="grid2">
+      <div><label class="lb" for="eCat">Colección</label><select class="inp" id="eCat"><option>Niños</option><option>Adultos</option><option>Tejidos</option><option>Accesorios</option></select></div>
+      <div><label class="lb" for="eMat">Tipo</label><input class="inp" id="eMat" placeholder="Ej: Hoodie, Polar, Gorro"></div>
+    </div>
+    <div class="grid2">
+      <div><label class="lb" for="ePrice">Precio base ($)</label><input class="inp" id="ePrice" inputmode="numeric" placeholder="22990"></div>
+      <div><label class="lb" for="eStock">Stock</label><input class="inp" id="eStock" inputmode="numeric" placeholder="0"></div>
+    </div>
+    <div><span class="lb">Estado</span><div class="seg" role="group" aria-label="Estado"><button type="button" data-st="ok">Disponible</button><button type="button" data-st="out">Agotado</button><button type="button" data-st="pedido">Consultar</button></div></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><span class="lb" style="margin:0">Tallas, colores o montos</span><select class="inp" id="eVLabel" style="width:auto;min-height:40px;padding:6px 10px" aria-label="Tipo de variante"><option>Talla</option><option>Color</option><option>Tamaño</option><option>Monto</option></select></div>
+      <div id="eVars" style="display:flex;flex-direction:column;gap:8px"></div>
+      <button class="btn sm line" type="button" id="eAddVar" style="margin-top:8px">+ Agregar opción</button>
+      <p class="muted" style="margin:6px 0 0">Si cada opción tiene su precio, la tienda muestra “Desde $…”.</p>
+    </div>
+    <div class="grid2">
+      <div><label class="lb" for="eDcto">Descuento (%)</label><input class="inp" id="eDcto" inputmode="numeric" placeholder="0"></div>
+      <div><label class="lb" for="eSello">Sello en la foto</label><input class="inp" id="eSello" placeholder="Ej: Nuevo, Más vendido"></div>
+    </div>
+    <div><label class="lb" for="eDesc">Descripción</label><textarea class="inp" id="eDesc"></textarea></div>
+    <label class="check"><input type="checkbox" id="eFeat"> Mostrar como destacado</label>
+    <p class="err" id="eErr" role="alert" hidden></p>
+    <div class="sheet-foot"><button class="btn mal" type="button" id="eDel">Eliminar</button><button class="btn" type="submit" id="eSave">Guardar</button></div>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  var SB_URL = 'https://tzqpnvpxstkxwcwxavfb.supabase.co', SB_KEY = 'sb_publishable_iMT92-h-1tKoY6BFKIQ6fw_NLU4vFh1';
+  var sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+  var DEMO_DATA = {"products": [{"id": "hoodie-classic", "orden": 1, "cat": "Niños", "name": "Hoodie Classic Oversize", "mat": "Hoodie", "price": 22990, "stock": 12, "st": "ok", "img": "hoodie-classic-oversize-kids-1", "foto": "", "fotos": ["hoodie-classic-oversize-kids-1", "hoodie-classic-oversize-kids-2", "hoodie-classic-oversize-kids-3", "hoodie-classic-oversize-kids-4", "hoodie-classic-oversize-kids-5"], "feat": true, "sello": "Más vendido", "desc": "Hoodie oversize de franela, 100% algodón nacional, con el bordado Paffu Pichilemu. Disponible en varios colores.", "tallas": [["1-2", 22990], ["4-6", 24990], ["8-10", 26990]], "vlabel": "Talla", "dcto": 0}, {"id": "polar-pro-kids", "orden": 2, "cat": "Niños", "name": "Polar Pro Kids", "mat": "Polar", "price": 22990, "stock": 8, "st": "ok", "img": "polar-pro-kids-1", "foto": "", "fotos": ["polar-pro-kids-1", "polar-pro-kids-2"], "feat": false, "sello": "Invierno 2026", "desc": "Polar grueso con cuello alto y cierre, para los días de viento en la costa.", "tallas": [["2", 22990], ["4-6", 24990], ["8-10", 26990], ["10-12", 28990]], "vlabel": "Talla", "dcto": 0}, {"id": "poleron-londres", "orden": 3, "cat": "Niños", "name": "Polerón Londres", "mat": "Hoodie polar", "price": 22990, "stock": 8, "st": "ok", "img": "poleron-londres-kids-2", "foto": "", "fotos": ["poleron-londres-kids-2", "poleron-londres-kids-1", "poleron-londres-kids-3", "poleron-londres-kids-4", "poleron-londres-kids-5"], "feat": false, "sello": "", "desc": "Polerón polar con cierre y bolsillo estampado. Combinaciones de color de temporada.", "tallas": [["1-2", 22990], ["4-6", 24990], ["8-10", 26990]], "vlabel": "Talla", "dcto": 0}, {"id": "poleron-paffu", "orden": 4, "cat": "Niños", "name": "Polerón Paffu", "mat": "Franela · 100% algodón", "price": 21990, "stock": 8, "st": "ok", "img": "poleron-paffu-kids-1", "foto": "", "fotos": ["poleron-paffu-kids-1", "poleron-paffu-kids-2"], "feat": false, "sello": "", "desc": "Polerón de franela 100% algodón nacional, con bordado de conchas. Cada pieza es diferente: mismo modelo, combinaciones únicas.", "tallas": [["6-9 meses", 21990], ["1", 21990], ["2-4", 23990], ["6-8", 25990], ["10-12", 29990]], "vlabel": "Talla", "dcto": 0}, {"id": "jardineras", "orden": 5, "cat": "Niños", "name": "Jardineras Kids", "mat": "Jardinera", "price": 21990, "stock": 6, "st": "ok", "img": "jardineras-kids-1", "foto": "", "fotos": ["jardineras-kids-1", "jardineras-kids-2", "jardineras-kids-3"], "feat": false, "sello": "", "desc": "Jardinera bicolor con bolsillo cuadrillé y tirantes ajustables.", "tallas": [["1", 21990], ["2", 22990], ["4", 24990], ["6", 26990]], "vlabel": "Talla", "dcto": 0}, {"id": "capucha-polar", "orden": 6, "cat": "Niños", "name": "Capucha Polar", "mat": "Capucha polar", "price": 11990, "stock": 10, "st": "ok", "img": "capucha-polar-adulto-kids-1", "foto": "", "fotos": ["capucha-polar-adulto-kids-1", "capucha-polar-adulto-kids-2"], "feat": false, "sello": "50% dcto", "desc": "Capucha polar que abriga cabeza y cuello. Colores a elección: consúltanos por los disponibles.", "tallas": [["Kids", 11990], ["Adulto", 13990]], "vlabel": "Tamaño", "dcto": 50}, {"id": "polar-pro-adulto", "orden": 7, "cat": "Adultos", "name": "Polerón Polar Pro", "mat": "Polar", "price": 39990, "stock": 5, "st": "ok", "img": "poleron-polar-pro-adulto-1", "foto": "", "fotos": ["poleron-polar-pro-adulto-1", "poleron-polar-pro-adulto-2"], "feat": true, "sello": "", "desc": "Polerón polar con cuello alto y bolsillo canguro, en bloques de color.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "poleron-lupe", "orden": 8, "cat": "Adultos", "name": "Polerón Lupe", "mat": "Polerón", "price": 38990, "stock": 5, "st": "ok", "img": "poleron-lupe-adulto-1", "foto": "", "fotos": ["poleron-lupe-adulto-1", "poleron-lupe-adulto-3", "poleron-lupe-adulto-2", "poleron-lupe-adulto-4"], "feat": false, "sello": "", "desc": "Polerón con capucha en dos tonos y frase “Seek & find your peace” en la espalda.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "chaleco-chicago", "orden": 9, "cat": "Tejidos", "name": "Chaleco Chicago", "mat": "Tejido a mano", "price": 26990, "stock": 4, "st": "ok", "img": "chaleco-chicago-kids-1", "foto": "", "fotos": ["chaleco-chicago-kids-1", "chaleco-chicago-kids-3", "chaleco-chicago-kids-2", "chaleco-chicago-kids-4"], "feat": false, "sello": "", "desc": "Chaleco tejido a mano. Cada uno es único en colores; abarca tallas 1 a 4.", "tallas": [["1", 26990], ["2", 26990], ["3", 26990], ["4", 26990]], "vlabel": "Talla", "dcto": 0}, {"id": "tejidos-unicos", "orden": 10, "cat": "Tejidos", "name": "Tejidos piezas únicas", "mat": "Tejido a mano", "price": 0, "stock": 1, "st": "pedido", "img": "tejidos-piezas-unicas-1", "foto": "", "fotos": ["tejidos-piezas-unicas-1", "tejidos-piezas-unicas-2", "tejidos-piezas-unicas-3", "tejidos-piezas-unicas-4", "tejidos-piezas-unicas-5"], "feat": false, "sello": "", "desc": "Chalecos y chaquetas tejidas a mano, una de cada una y en una sola talla. Escríbenos para saber cuáles quedan.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "croptop", "orden": 11, "cat": "Tejidos", "name": "Croptop de hilo", "mat": "Tejido a mano", "price": 25990, "stock": 4, "st": "ok", "img": "croptop-hilo-1", "foto": "", "fotos": ["croptop-hilo-1", "croptop-hilo-2"], "feat": false, "sello": "", "desc": "Croptop tejido en hilo a rayas, amarrado al cuello.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "beanies", "orden": 12, "cat": "Tejidos", "name": "Beanie Paffu", "mat": "Gorro", "price": 8990, "stock": 16, "st": "ok", "img": "beanies-mostaza", "foto": "", "fotos": ["beanies-mostaza", "beanies-lila", "beanies-vainilla", "beanies-fucsia"], "feat": false, "sello": "Más vendido", "desc": "Gorro beanie con doblez y parche Paffu.", "tallas": [["Mostaza", 8990], ["Lila", 8990], ["Vainilla", 8990], ["Fucsia", 8990]], "vlabel": "Color", "dcto": 0}, {"id": "headband", "orden": 13, "cat": "Tejidos", "name": "Headband", "mat": "Cintillo tejido", "price": 11990, "stock": 6, "st": "ok", "img": "headband-1", "foto": "", "fotos": ["headband-1"], "feat": false, "sello": "", "desc": "Cintillo tejido con nudo al frente, en bloques de color.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "cintillos-toka", "orden": 14, "cat": "Tejidos", "name": "Cintillos Toka", "mat": "Cintillo tejido", "price": 6990, "stock": 10, "st": "ok", "img": "cintillos-toka-1", "foto": "", "fotos": ["cintillos-toka-1", "cintillos-toka-2"], "feat": false, "sello": "", "desc": "Cintillo tejido a crochet, en varios colores.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "funda-ipad", "orden": 15, "cat": "Accesorios", "name": "Funda iPad", "mat": "Funda", "price": 20990, "stock": 6, "st": "ok", "img": "funda-ipad-1", "foto": "", "fotos": ["funda-ipad-1", "funda-ipad-2"], "feat": false, "sello": "", "desc": "Funda acolchada con cierre para iPad o tablet, en telas estampadas.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "cosmetiqueros", "orden": 16, "cat": "Accesorios", "name": "Cosmetiqueros", "mat": "Cosmetiquero", "price": 12990, "stock": 6, "st": "ok", "img": "cosmetiqueros-1", "foto": "", "fotos": ["cosmetiqueros-1", "cosmetiqueros-2", "cosmetiqueros-3"], "feat": false, "sello": "", "desc": "Cosmetiqueros con cierre en telas estampadas.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "mini-pocket", "orden": 17, "cat": "Accesorios", "name": "Mini pocket", "mat": "Monedero", "price": 6000, "stock": 12, "st": "ok", "img": "mini-pocket-1", "foto": "", "fotos": ["mini-pocket-1", "mini-pocket-2"], "feat": false, "sello": "", "desc": "Monedero pequeño con mosquetón, en estampados blanco y negro.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "porta-airpods", "orden": 18, "cat": "Accesorios", "name": "Porta AirPods", "mat": "Estuche", "price": 6990, "stock": 8, "st": "ok", "img": "porta-airpods-1", "foto": "", "fotos": ["porta-airpods-1"], "feat": false, "sello": "", "desc": "Estuche para audífonos con argolla y detalle de concha.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "llavero", "orden": 19, "cat": "Accesorios", "name": "Llavero Freehands", "mat": "Llavero", "price": 3990, "stock": 15, "st": "ok", "img": "llavero-freehands-1", "foto": "", "fotos": ["llavero-freehands-1"], "feat": false, "sello": "", "desc": "Llavero de cinta estampada para colgar las llaves al cuello o al bolso.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "billetera", "orden": 20, "cat": "Accesorios", "name": "Billetera", "mat": "Billetera", "price": 11990, "stock": 6, "st": "ok", "img": "billetera-1", "foto": "", "fotos": ["billetera-1"], "feat": false, "sello": "", "desc": "Billetera acolchada con broche y argolla, en telas estampadas.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "porta-celular", "orden": 21, "cat": "Accesorios", "name": "Bolsa porta celular", "mat": "Bolso cruzado", "price": 11990, "stock": 6, "st": "ok", "img": "porta-celular-1", "foto": "", "fotos": ["porta-celular-1"], "feat": false, "sello": "Nuevo", "desc": "Bolsa cruzada para el celular con correa ajustable, para andar con las manos libres.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "giftcard", "orden": 22, "cat": "Accesorios", "name": "Gift Card Paffu", "mat": "Tarjeta de regalo", "price": 10000, "stock": 99, "st": "ok", "img": "giftcard-1", "foto": "", "fotos": ["giftcard-1"], "feat": true, "sello": "Para regalar", "desc": "Regala Paffu y que elijan su pieza favorita, en la tienda o en la web.", "tallas": [["$10.000", 10000], ["$15.000", 15000], ["$25.000", 25000]], "vlabel": "Monto", "dcto": 0}, {"id": "gorro-newyork", "orden": 23, "cat": "Tejidos", "name": "Gorro New York", "mat": "Gorro tejido", "price": 14990, "stock": 6, "st": "ok", "img": "gorro-newyork-1", "foto": "", "fotos": ["gorro-newyork-1", "41855fdb2afc01bd5084f2dcbe4afa19"], "feat": false, "sello": "Pieza única", "desc": "Gorro tejido a mano en bloques de color. Cada uno es diferente: combinaciones irrepetibles.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "gorro-nairobi", "orden": 24, "cat": "Tejidos", "name": "Gorro Nairobi", "mat": "Gorro tejido", "price": 12990, "stock": 6, "st": "ok", "img": "56834f414a809fcacce39fe79a124638", "foto": "", "fotos": ["56834f414a809fcacce39fe79a124638"], "feat": false, "sello": "", "desc": "Gorro tejido a mano con pompón.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "barcelona", "orden": 25, "cat": "Accesorios", "name": "Banano Barcelona", "mat": "Banano", "price": 17990, "stock": 6, "st": "ok", "img": "d5c89340084cca36dc3580513709380c", "foto": "", "fotos": ["d5c89340084cca36dc3580513709380c"], "feat": false, "sello": "", "desc": "Banano en tela estampada con cierre y correa ajustable.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "seul", "orden": 26, "cat": "Accesorios", "name": "Funda Seúl", "mat": "Funda para Kindle", "price": 15990, "stock": 5, "st": "ok", "img": "da3d3648937c5bbe525298223043cb5d", "foto": "", "fotos": ["da3d3648937c5bbe525298223043cb5d"], "feat": false, "sello": "", "desc": "Funda acolchada para Kindle o lector de libros.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "miami", "orden": 27, "cat": "Accesorios", "name": "Funda Miami", "mat": "Funda de lentes", "price": 9000, "stock": 8, "st": "ok", "img": "31bf26dcf97aaf9e6554857ad034bdc4", "foto": "", "fotos": ["31bf26dcf97aaf9e6554857ad034bdc4"], "feat": false, "sello": "", "desc": "Funda acolchada para lentes de sol u ópticos.", "tallas": [], "vlabel": "Talla", "dcto": 0}, {"id": "totebag", "orden": 28, "cat": "Accesorios", "name": "Totebag", "mat": "Bolso de tela", "price": 7990, "stock": 6, "st": "ok", "img": "ba46c44a4adee7c932a382bda3163780", "foto": "", "fotos": ["ba46c44a4adee7c932a382bda3163780"], "feat": false, "sello": "", "desc": "Bolso de tela estampada para el día a día.", "tallas": [], "vlabel": "Talla", "dcto": 0}], "revs": [{"id": 1, "name": "Camila", "stars": 5, "text": "El hoodie es precioso y llegó al día siguiente. Mi hijo no se lo quiere sacar.", "prod": "Hoodie Classic Oversize (Talla 4-6)", "ok": false}, {"id": 2, "name": "Fernanda", "stars": 4, "text": "Muy linda la billetera, bien terminada. Volveré por la bolsa porta celular.", "prod": "Billetera", "ok": false}, {"id": 3, "name": "Valentina", "stars": 5, "text": "Compré la gift card para mi hermana y le encantó la tienda.", "prod": "Gift Card Paffu ($25.000)", "ok": true}]};
+  var THUMBS = {};
+  var demo = false, products = [], revs = [], view = 'P', cat = 'Todo', rf = 'pend', editing = null, eFotos = [], eSt = 'ok', toastT = null;
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function clp(n){ return '$' + (Number(n)||0).toLocaleString('es-CL'); }
+  function toast(m){ var t=$('toast'); t.textContent=m; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(function(){ t.hidden=true; }, 2600); }
+  function num(v){ return parseInt(String(v||'').replace(/\D/g,''),10) || 0; }
+  function fotoUrl(k){ if(!k) return ''; if(/^(https?:|data:)/.test(k)) return k; return '/img/productos/' + k + '.jpg'; }
+  function cover(p){ return p.foto || fotoUrl((p.fotos && p.fotos[0]) || p.img); }
+  function imgTag(src, key, cls, alt){ return '<img class="'+cls+'" src="'+esc(src)+'" alt="'+esc(alt||'')+'" loading="lazy" data-k="'+esc(key||'')+'">'; }
+  document.addEventListener('error', function(e){ var im=e.target; if(im.tagName!=='IMG' || im.dataset.fb) return; im.dataset.fb='1'; var k=im.dataset.k; if(k && THUMBS[k]) im.src=THUMBS[k]; else im.removeAttribute('src'); }, true);
+  function fromRow(r){ return {id:r.id, orden:r.orden||0, cat:r.cat, name:r.name, mat:r.mat||'', price:r.price||0, stock:r.stock||0, st:r.st||'ok', img:r.img||'', foto:r.foto||'', fotos:r.fotos||[], feat:!!r.feat, sello:r.sello||'', desc:r.descr||'', tallas:r.tallas||[], vlabel:r.vlabel||'Talla', dcto:r.dcto||0}; }
+  function toRow(p){ return {id:p.id, orden:p.orden||0, cat:p.cat, name:p.name, mat:p.mat||null, price:p.price, stock:p.stock, st:p.st, img:p.img||null, foto:p.foto||null, fotos:p.fotos&&p.fotos.length?p.fotos:null, feat:!!p.feat, sello:p.sello||null, descr:p.desc||null, tallas:p.tallas&&p.tallas.length?p.tallas:null, vlabel:p.vlabel||null, dcto:p.dcto||0, updated_at:new Date().toISOString()}; }
+  function dbErr(e){ toast('No se pudo guardar: ' + (e && e.message ? e.message : 'revisa tu conexión')); }
+
+  /* ---------- Sesión ---------- */
+  function showApp(){ $('login').hidden = true; $('app').hidden = false; $('demoTag').hidden = !demo; maybeInstall(); load(); }
+  $('lgF').addEventListener('submit', function(e){
+    e.preventDefault(); var err=$('lgErr'), b=$('lgB'); err.hidden=true;
+    var em=$('lgE').value.trim(), pw=$('lgP').value;
+    if(!em || !pw){ err.textContent='Escribe tu correo y contraseña.'; err.hidden=false; return; }
+    if(!sb){ err.textContent='No hay conexión con la base de datos. Revisa tu internet.'; err.hidden=false; return; }
+    b.disabled=true; b.textContent='Entrando…';
+    sb.auth.signInWithPassword({email:em, password:pw}).then(function(r){
+      b.disabled=false; b.textContent='Entrar';
+      if(r.error){ err.textContent='Correo o contraseña incorrectos.'; err.hidden=false; return; }
+      $('lgP').value=''; demo=false; showApp();
+    });
+  });
+  $('demoBtn').addEventListener('click', function(){ demo=true; showApp(); });
+  $('logoutBtn').addEventListener('click', function(){
+    if(demo){ demo=false; $('app').hidden=true; $('login').hidden=false; return; }
+    if(sb) sb.auth.signOut().then(function(){ $('app').hidden=true; $('login').hidden=false; toast('Sesión cerrada'); });
+  });
+  if(sb) sb.auth.getSession().then(function(r){ if(r.data && r.data.session){ demo=false; showApp(); } });
+
+  /* ---------- Datos ---------- */
+  function load(){
+    if(demo){ products = JSON.parse(JSON.stringify(DEMO_DATA.products)); revs = JSON.parse(JSON.stringify(DEMO_DATA.revs)); renderAll(); return; }
+    if(!sb) return;
+    sb.from('productos').select('*').order('orden',{ascending:true}).then(function(r){ if(r.error){ dbErr(r.error); return; } products = (r.data||[]).map(fromRow); renderP(); });
+    sb.from('resenas').select('*').order('created_at',{ascending:false}).then(function(r){ if(r.error) return; revs = (r.data||[]).map(function(d){ return {id:d.id, name:d.nombre, stars:d.estrellas, text:d.texto, prod:d.producto, ok:d.aprobada, at:d.created_at}; }); renderR(); });
+    listen();
+  }
+  $('refreshBtn').addEventListener('click', function(){ load(); toast('Actualizado'); });
+  var channel = null;
+  function listen(){
+    if(!sb || channel) return;
+    channel = sb.channel('panel').on('postgres_changes', {event:'INSERT', schema:'public', table:'resenas'}, function(p){
+      var d=p.new; revs.unshift({id:d.id, name:d.nombre, stars:d.estrellas, text:d.texto, prod:d.producto, ok:d.aprobada, at:d.created_at}); renderR();
+      notify('Nueva reseña de ' + d.nombre, d.estrellas + '★ · ' + d.texto, '/panel/#resenas');
+    }).subscribe();
+  }
+
+  /* ---------- Vistas ---------- */
+  var TITLES = {P:'Productos', O:'Pedidos', R:'Reseñas'};
+  function go(t){ view=t; ['P','O','R'].forEach(function(k){ $('v'+k).hidden = k!==t; }); document.querySelectorAll('[data-tab]').forEach(function(b){ if(b.dataset.tab===t) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }); $('viewT').textContent = TITLES[t]; $('newBtn').hidden = t!=='P'; window.scrollTo(0,0); }
+  document.querySelector('nav.tabs').addEventListener('click', function(e){ var b=e.target.closest('[data-tab]'); if(b) go(b.dataset.tab); });
+  if(location.hash==='#resenas') go('R');
+  function renderAll(){ renderP(); renderR(); }
+
+  function renderP(){
+    var cats=['Todo','Niños','Adultos','Tejidos','Accesorios'];
+    $('catChips').innerHTML = cats.map(function(c){ return '<button class="chip" type="button" data-cat="'+c+'" aria-pressed="'+(c===cat)+'">'+c+'</button>'; }).join('');
+    $('sTot').textContent = products.length;
+    $('sOk').textContent = products.filter(function(p){ return p.st==='ok' && p.stock>0; }).length;
+    $('sLow').textContent = products.filter(function(p){ return p.st==='ok' && p.stock<=3; }).length;
+    var q = $('q').value.trim().toLowerCase();
+    var list = products.filter(function(p){ return (cat==='Todo'||p.cat===cat) && (!q || (p.name+' '+p.mat).toLowerCase().indexOf(q)>-1); });
+    if(!products.length){ $('pList').innerHTML = '<div class="empty">Aún no hay productos. Toca “Nuevo producto” para cargar el primero.</div>'; return; }
+    if(!list.length){ $('pList').innerHTML = '<div class="empty">No hay productos con ese nombre.</div>'; return; }
+    $('pList').innerHTML = list.map(function(p){
+      var pill = p.st==='out' || (p.st==='ok' && p.stock<1) ? '<span class="pill out">Agotado</span>' : p.st==='pedido' ? '<span class="pill ped">Consultar</span>' : p.stock<=3 ? '<span class="pill ped">Quedan '+p.stock+'</span>' : '<span class="pill ok">Disponible</span>';
+      var pr = p.tallas && p.tallas.length ? 'Desde ' + clp(Math.min.apply(null, p.tallas.map(function(t){ return t[1]; }))) : clp(p.price);
+      return '<article class="item">'+imgTag(cover(p), (p.fotos&&p.fotos[0])||p.img, 'thumb', p.name)+
+        '<div class="it-main"><div class="it-top"><button type="button" data-edit="'+esc(p.id)+'" aria-label="Editar '+esc(p.name)+'"><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+(p.mat?' · '+esc(p.mat):'')+'</small></button>'+pill+'</div>'+
+        '<div class="it-row"><span class="price">'+pr+(p.dcto?' <small class="muted">−'+p.dcto+'%</small>':'')+'</span>'+
+        '<div class="stepper"><button type="button" data-step="-1" data-id="'+esc(p.id)+'" aria-label="Restar una unidad de '+esc(p.name)+'">−</button><span aria-label="Stock">'+p.stock+'</span><button type="button" data-step="1" data-id="'+esc(p.id)+'" aria-label="Sumar una unidad de '+esc(p.name)+'">+</button></div></div></div></article>';
+    }).join('');
+  }
+  $('q').addEventListener('input', renderP);
+  $('catChips').addEventListener('click', function(e){ var b=e.target.closest('[data-cat]'); if(!b) return; cat=b.dataset.cat; renderP(); });
+  var stepT = {};
+  $('pList').addEventListener('click', function(e){
+    var s = e.target.closest('[data-step]');
+    if(s){ var p = byId(s.dataset.id); p.stock = Math.max(0, p.stock + (+s.dataset.step)); if(p.stock>0 && p.st==='out') p.st='ok'; renderP();
+      clearTimeout(stepT[p.id]); stepT[p.id] = setTimeout(function(){ save(p, 'Stock de '+p.name+': '+p.stock); }, 700); return; }
+    var ed = e.target.closest('[data-edit]'); if(ed) openEdit(byId(ed.dataset.edit));
+  });
+  function byId(id){ return products.filter(function(p){ return p.id===id; })[0]; }
+  function save(p, msg){
+    if(demo){ toast(msg + ' (ejemplo, no se guarda)'); return Promise.resolve(); }
+    if(!sb) return Promise.resolve();
+    return sb.from('productos').upsert(toRow(p)).then(function(r){ if(r.error) dbErr(r.error); else toast(msg); });
+  }
+
+  /* ---------- Reseñas ---------- */
+  function renderR(){
+    var pend = revs.filter(function(r){ return !r.ok; }).length;
+    $('rBadge').hidden = !pend; $('rBadge').textContent = pend;
+    document.querySelectorAll('[data-rf]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.rf===rf)); });
+    var list = revs.filter(function(r){ return rf==='ok' ? r.ok : !r.ok; });
+    $('rList').innerHTML = list.length ? list.map(function(r){
+      return '<article class="rev"><div style="display:flex;justify-content:space-between;gap:8px"><b>'+esc(r.name)+'</b><span class="stars" aria-label="'+r.stars+' de 5">'+'★★★★★'.slice(0,r.stars)+'<span style="opacity:.25">'+'★★★★★'.slice(0,5-r.stars)+'</span></span></div>'+
+        '<p>“'+esc(r.text)+'”</p>'+(r.prod?'<small>Compró: '+esc(r.prod)+'</small>':'')+
+        '<div class="acts">'+(r.ok?'':'<button class="btn sm" type="button" data-rok="'+r.id+'">Publicar</button>')+'<button class="btn sm mal" type="button" data-rdel="'+r.id+'">Eliminar</button></div></article>';
+    }).join('') : '<div class="empty">'+(rf==='ok'?'Aún no hay reseñas publicadas.':'No hay reseñas por aprobar. Te avisamos cuando llegue una.')+'</div>';
+  }
+  document.querySelector('#vR .chips').addEventListener('click', function(e){ var b=e.target.closest('[data-rf]'); if(b){ rf=b.dataset.rf; renderR(); } });
+  $('rList').addEventListener('click', function(e){
+    var o=e.target.closest('[data-rok]'), d=e.target.closest('[data-rdel]'); if(!o && !d) return;
+    var id = (o||d).dataset[o?'rok':'rdel']; var r = revs.filter(function(x){ return String(x.id)===id; })[0]; if(!r) return;
+    if(o){ r.ok=true; renderR(); if(demo){ toast('Reseña publicada (ejemplo)'); return; } sb.from('resenas').update({aprobada:true}).eq('id', r.id).then(function(x){ if(x.error) dbErr(x.error); else toast('Reseña publicada en la tienda'); }); }
+    else { if(!confirmDel(d)) return; revs = revs.filter(function(x){ return x!==r; }); renderR(); if(demo){ toast('Reseña eliminada (ejemplo)'); return; } sb.from('resenas').delete().eq('id', r.id).then(function(x){ if(x.error) dbErr(x.error); else toast('Reseña eliminada'); }); }
+  });
+  function confirmDel(btn){ if(btn.dataset.sure){ return true; } btn.dataset.sure='1'; btn.textContent='¿Seguro? Toca de nuevo'; setTimeout(function(){ if(btn.isConnected){ delete btn.dataset.sure; btn.textContent='Eliminar'; } }, 3000); return false; }
+
+  /* ---------- Edición ---------- */
+  var lastFocus = null;
+  function openEdit(p){
+    lastFocus = document.activeElement; editing = p || null;
+    $('eT').textContent = p ? 'Editar producto' : 'Nuevo producto';
+    $('eName').value = p ? p.name : ''; $('eCat').value = p ? p.cat : 'Niños'; $('eMat').value = p ? p.mat : '';
+    $('ePrice').value = p ? p.price : ''; $('eStock').value = p ? p.stock : ''; $('eDesc').value = p ? p.desc : '';
+    $('eDcto').value = p && p.dcto ? p.dcto : ''; $('eSello').value = p ? p.sello : ''; $('eFeat').checked = p ? p.feat : false;
+    $('eVLabel').value = (p && p.vlabel) || 'Talla';
+    eSt = p ? (p.st==='ok' && p.stock<1 ? 'out' : p.st) : 'ok'; paintSt();
+    eFotos = p ? (p.fotos && p.fotos.length ? p.fotos.slice() : (p.foto ? [p.foto] : (p.img ? [p.img] : []))) : [];
+    paintFotos(); paintVars(p && p.tallas ? p.tallas : []);
+    $('eDel').hidden = !p; $('eErr').hidden = true; $('eFotoMsg').textContent = 'La primera foto es la portada. Puedes tomarla con la cámara.';
+    $('sheet').hidden = false; document.body.style.overflow='hidden'; $('eName').focus();
+  }
+  function closeEdit(){ $('sheet').hidden = true; document.body.style.overflow=''; if(lastFocus && lastFocus.focus) lastFocus.focus(); }
+  $('newBtn').addEventListener('click', function(){ openEdit(null); });
+  $('eClose').addEventListener('click', closeEdit); $('scrim').addEventListener('click', closeEdit);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('sheet').hidden) closeEdit(); });
+  function paintSt(){ document.querySelectorAll('[data-st]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.st===eSt)); }); }
+  document.querySelector('.seg').addEventListener('click', function(e){ var b=e.target.closest('[data-st]'); if(b){ eSt=b.dataset.st; paintSt(); } });
+  function paintFotos(){
+    $('eFotos').innerHTML = eFotos.map(function(k,i){ return '<figure>'+imgTag(fotoUrl(k), k, '', 'Foto '+(i+1))+'<button type="button" data-rmf="'+i+'" aria-label="Quitar foto '+(i+1)+'">×</button></figure>'; }).join('') +
+      '<button class="add" type="button" id="eAddFoto"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Agregar foto</button>';
+  }
+  $('eFotos').addEventListener('click', function(e){
+    var r=e.target.closest('[data-rmf]'); if(r){ eFotos.splice(+r.dataset.rmf,1); paintFotos(); return; }
+    if(e.target.closest('#eAddFoto')) $('eFile').click();
+  });
+  $('eFile').addEventListener('change', function(){
+    var f = this.files && this.files[0]; this.value=''; if(!f) return;
+    var msg=$('eFotoMsg'); msg.textContent='Preparando foto…';
+    shrink(f, 1600, .82).then(function(blob){
+      if(demo || !sb){ var u = URL.createObjectURL(blob); eFotos.push(u); paintFotos(); msg.textContent = demo ? 'Foto agregada (ejemplo, no se sube).' : 'Sin conexión: la foto no se subió.'; return; }
+      var path = 'productos/' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7) + '.jpg';
+      msg.textContent='Subiendo foto…';
+      sb.storage.from('productos').upload(path, blob, {contentType:'image/jpeg', upsert:false}).then(function(r){
+        if(r.error){ msg.textContent='No se pudo subir la foto: ' + r.error.message; return; }
+        eFotos.push(sb.storage.from('productos').getPublicUrl(path).data.publicUrl); paintFotos(); msg.textContent='Foto lista. Recuerda tocar Guardar.';
+      });
+    }).catch(function(){ msg.textContent='No se pudo leer la foto. Prueba con otra.'; });
+  });
+  function shrink(file, max, q){
+    return new Promise(function(ok, ko){
+      var img = new Image(), u = URL.createObjectURL(file);
+      img.onload = function(){ var s = Math.min(1, max/Math.max(img.width, img.height)); var c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s); c.getContext('2d').drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(u); c.toBlob(function(b){ b?ok(b):ko(); }, 'image/jpeg', q); };
+      img.onerror = function(){ URL.revokeObjectURL(u); ko(); }; img.src = u;
+    });
+  }
+  function paintVars(list){
+    $('eVars').innerHTML = list.map(function(t,i){ return varRow(t[0], t[1], i); }).join('');
+  }
+  function varRow(n, pr, i){ return '<div class="var-row"><input class="inp" aria-label="Opción '+(i+1)+'" placeholder="Ej: 4-6" value="'+esc(n)+'"><input class="inp" aria-label="Precio opción '+(i+1)+'" inputmode="numeric" placeholder="Precio" value="'+esc(pr||'')+'"><button class="ico" type="button" data-rmv aria-label="Quitar opción '+(i+1)+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'; }
+  $('eAddVar').addEventListener('click', function(){ var n=$('eVars').children.length; $('eVars').insertAdjacentHTML('beforeend', varRow('', $('ePrice').value, n)); $('eVars').lastElementChild.querySelector('input').focus(); });
+  $('eVars').addEventListener('click', function(e){ var b=e.target.closest('[data-rmv]'); if(b) b.parentNode.remove(); });
+  $('eF').addEventListener('submit', function(e){
+    e.preventDefault(); var err=$('eErr'); err.hidden=true;
+    var name=$('eName').value.trim(), price=num($('ePrice').value), stock=num($('eStock').value);
+    var vars = Array.prototype.map.call($('eVars').children, function(r){ var ins=r.querySelectorAll('input'); return [ins[0].value.trim(), num(ins[1].value) || price]; }).filter(function(v){ return v[0]; });
+    if(!name){ err.textContent='Escribe el nombre del producto.'; err.hidden=false; $('eName').focus(); return; }
+    if(!price && !vars.length && eSt!=='pedido'){ err.textContent='Escribe el precio en pesos, solo números (ej: 22990).'; err.hidden=false; $('ePrice').focus(); return; }
+    if(eSt==='ok' && stock<1){ err.textContent='Para dejarlo disponible, el stock debe ser al menos 1.'; err.hidden=false; $('eStock').focus(); return; }
+    var p = editing || {id: name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '-' + Date.now().toString(36).slice(-4), orden: (products.reduce(function(m,x){ return Math.max(m, x.orden||0); }, 0) + 1), img:''};
+    Object.assign(p, {name:name, cat:$('eCat').value, mat:$('eMat').value.trim(), price: price || (vars[0]?vars[0][1]:0), stock:stock, st:eSt, desc:$('eDesc').value.trim(), dcto:Math.min(90,num($('eDcto').value)), sello:$('eSello').value.trim(), feat:$('eFeat').checked, tallas:vars, vlabel:$('eVLabel').value, fotos:eFotos.slice(), foto:(eFotos[0] && /^https?:/.test(eFotos[0])) ? eFotos[0] : ''});
+    if(!p.foto) p.img = eFotos[0] || p.img;
+    if(!editing) products.unshift(p);
+    var was = !!editing; closeEdit(); renderP(); save(p, (was?'Guardaste ':'Agregaste ') + p.name);
+  });
+  $('eDel').addEventListener('click', function(){
+    var b=this; if(!editing || !confirmDel(b)) return;
+    var p=editing; products = products.filter(function(x){ return x!==p; }); closeEdit(); renderP();
+    if(demo){ toast('Eliminaste '+p.name+' (ejemplo)'); return; }
+    sb.from('productos').delete().eq('id', p.id).then(function(r){ if(r.error) dbErr(r.error); else toast('Eliminaste ' + p.name); });
+  });
+
+  /* ---------- Instalar y avisos ---------- */
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred = e; maybeInstall(); });
+  function standalone(){ return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; }
+  function maybeInstall(){
+    var hide = false; try{ hide = localStorage.getItem('paffu-install-off')==='1'; }catch(e){}
+    var needNotif = ('Notification' in window) && Notification.permission==='default';
+    if(hide || (standalone() && !needNotif)){ $('installBox').hidden = true; return; }
+    $('installBox').hidden = false;
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    $('installBtn').hidden = standalone() || (!deferred && !ios);
+    $('notifBtn').hidden = !needNotif;
+    if(standalone()) $('installTxt').textContent = 'Activa los avisos para enterarte al tiro de reseñas y pedidos nuevos.';
+    else if(ios && !deferred) $('installTxt').textContent = 'En iPhone: toca el botón Compartir de Safari y elige “Agregar a pantalla de inicio”.';
+  }
+  $('installBtn').addEventListener('click', function(){
+    if(deferred){ deferred.prompt(); deferred.userChoice.then(function(){ deferred=null; maybeInstall(); }); }
+    else toast('Toca Compartir en Safari y elige “Agregar a pantalla de inicio”.');
+  });
+  $('notifBtn').addEventListener('click', function(){ Notification.requestPermission().then(function(r){ toast(r==='granted' ? 'Avisos activados' : 'Avisos no activados'); maybeInstall(); }); });
+  $('installClose').addEventListener('click', function(){ $('installBox').hidden=true; try{ localStorage.setItem('paffu-install-off','1'); }catch(e){} });
+  function notify(title, body, url){
+    toast(title);
+    if(!('Notification' in window) || Notification.permission!=='granted') return;
+    if(navigator.serviceWorker && navigator.serviceWorker.controller){ navigator.serviceWorker.ready.then(function(reg){ reg.showNotification(title, {body:body, icon:'/panel/icons/icon-192.png', badge:'/panel/icons/icon-192.png', data:{url:url}}); }); }
+    else { try{ new Notification(title, {body:body, icon:'/panel/icons/icon-192.png'}); }catch(e){} }
+  }
+  if('serviceWorker' in navigator && location.pathname.indexOf('/panel')===0){ navigator.serviceWorker.register('/panel/sw.js', {scope:'/panel/'}).catch(function(){}); }
+})();
+</script>
+</body>
+</html>

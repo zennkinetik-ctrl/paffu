@@ -1,0 +1,10 @@
+PAFFU · archivos para subir al repo de GitHub (zennkinetik-ctrl/paffu)
+
+index.html            Tienda (paffu.cl)
+panel/                Panel instalable de Jireh (paffu.cl/panel)
+  index.html          App del panel (login, productos, stock, fotos, reseñas)
+  manifest.webmanifest, sw.js, icons/   Lo que la hace instalable como app
+img/productos/        Fotos de productos que usa el panel
+
+Sube TODO el contenido de esta carpeta a la raíz del repo, tal cual.
+Antes de usar el panel: correr paffu-supabase.sql en Supabase y crear los usuarios en Authentication.
