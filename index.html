@@ -1692,7 +1692,19 @@ if (!window.__EXPIRED) (function(){
       if(!n){ er.textContent='Escribe tu nombre.'; er.hidden=false; document.getElementById('pedN').focus(); return; } er.hidden=true;
       window.open(wa('Hola Paffu, soy '+n+'. Quiero cotizar un pedido especial: '+tipo+(c?'. Idea: '+c:'')+'.'), '_blank', 'noopener'); });
   })();
-  document.querySelectorAll('[data-src]').forEach(function(im){ im.src = R(im.dataset.src); });
+  (function(){
+    var vh = window.innerHeight || 800;
+    document.querySelectorAll('[data-src]').forEach(function(im){
+      var src = R(im.dataset.src), r = im.getBoundingClientRect(), w = im.clientWidth || r.width;
+      if(src && /\/img\/web\/[0-9a-f]+\.webp$|^img\/web\/[0-9a-f]+\.webp$/.test(src) && w && w <= 300) src = src.replace(/\.webp$/, '-s.webp');
+      im.decoding = 'async';
+      var visible = r.top < vh * 1.2 && r.bottom > 0 && r.width > 0;
+      if(!visible && !im.classList.contains('slide-img')) im.loading = 'lazy';
+      if(im.classList.contains('slide-img') && !im.classList.contains('on')) im.loading = 'lazy';
+      if(im.classList.contains('on')) im.fetchPriority = 'high';
+      im.src = src;
+    });
+  })();
   /* ---------- Portada rotativa ---------- */
   (function(){
     var imgs = Array.prototype.slice.call(document.querySelectorAll('#slides .slide-img'));
