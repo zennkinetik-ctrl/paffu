@@ -149,6 +149,26 @@ body.menu-open #menuBtn .ic-burger{display:none}
 .price{font-variant-numeric:tabular-nums;font-size:15px}
 .card .btn{min-height:44px;font-size:12px;padding:0 14px}
 .empty{grid-column:1/-1;padding:48px 0;text-align:center;color:var(--ink-2)}
+.grid.by-col{display:flex;flex-direction:column;gap:48px}
+.col-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:16px}
+.col-head h3{margin:0;font-family:var(--f-display);font-weight:400;text-transform:uppercase;letter-spacing:.03em;font-size:clamp(36px,4vw,52px);line-height:1}
+.col-head button{all:unset;cursor:pointer;font-size:12px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;opacity:.85}
+.col-head button:focus-visible,.col-more:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.slider{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(168px,44vw,270px);gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding:4px var(--gutter-r,16px) 18px var(--gutter-l,16px);margin-inline:calc(-1 * var(--gutter-l,16px)) calc(-1 * var(--gutter-r,16px));scroll-padding-inline:var(--gutter-l,16px);scrollbar-width:none}
+.slider::-webkit-scrollbar{display:none}
+.slider>*{scroll-snap-align:start}
+.col-more{all:unset;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;text-align:center;border:1px solid currentColor;border-radius:22px;opacity:.9;padding:16px}
+.col-more b{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:34px;line-height:1}
+.col-more span{font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+@media (max-width:600px){
+  .grid:not(.by-col){grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 10px}
+  .card{padding:8px 8px 12px!important;gap:8px}
+  .card h3{font-size:21px}
+  .card .tipo{font-size:10px;letter-spacing:.12em}
+  .card .acts .btn{min-height:40px!important;font-size:13px!important;padding:0 8px}
+  .fav{width:36px;height:36px;top:6px;right:6px}
+  .badge{top:8px;left:8px;font-size:10px;padding:4px 8px}
+}
 
 .modal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px}
 .modal-scrim{position:absolute;inset:0;background:rgba(47,71,87,.5)}
@@ -680,8 +700,8 @@ body{color:#3E2A20}
   </div>
   <nav class="bar-nav" aria-label="Principal">
     <a href="#catalogo" data-filter="Niños">Niños</a>
-    <a href="#catalogo" data-filter="Adultos">Adultos</a>
-    <a href="#catalogo" data-filter="Tejidos">Tejidos</a>
+    <a href="#catalogo" data-filter="Mujer">Mujer</a>
+    <a href="#catalogo" data-filter="Hombre">Hombre</a>
     <a href="#catalogo" data-filter="Accesorios">Accesorios</a>
     <a href="#tienda-fisica">Tienda física</a>
     <a href="#resenas">Reseñas</a>
@@ -714,8 +734,8 @@ body{color:#3E2A20}
       <div class="m-list" id="mg-tienda">
         <a class="m-sub" href="#catalogo" data-filter="Todos" data-close>Todo <small data-count="Todos"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Niños" data-close>Niños <small data-count="Niños"></small></a>
-        <a class="m-sub" href="#catalogo" data-filter="Adultos" data-close>Adultos <small data-count="Adultos"></small></a>
-        <a class="m-sub" href="#catalogo" data-filter="Tejidos" data-close>Tejidos <small data-count="Tejidos"></small></a>
+        <a class="m-sub" href="#catalogo" data-filter="Mujer" data-close>Mujer <small data-count="Mujer"></small></a>
+        <a class="m-sub" href="#catalogo" data-filter="Hombre" data-close>Hombre <small data-count="Hombre"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Accesorios" data-close>Accesorios <small data-count="Accesorios"></small></a>
       </div>
     </div>
@@ -808,8 +828,8 @@ body{color:#3E2A20}
       </div>
       <div class="cats">
         <button class="cat" type="button" data-filter="Niños"><div class="ph"><img data-src="hoodie-classic-oversize-kids-1" alt="" loading="lazy"></div><div class="cat-row"><b>Niños</b><span>Ver todo →</span></div></button>
-        <button class="cat" type="button" data-filter="Adultos"><div class="ph"><img data-src="poleron-polar-pro-adulto-1" alt="" loading="lazy"></div><div class="cat-row"><b>Adultos</b><span>Ver todo →</span></div></button>
-        <button class="cat" type="button" data-filter="Tejidos"><div class="ph"><img data-src="beanies-mostaza" alt="" loading="lazy"></div><div class="cat-row"><b>Tejidos</b><span>Ver todo →</span></div></button>
+        <button class="cat" type="button" data-filter="Mujer"><div class="ph"><img data-src="croptop-hilo-1" alt="" loading="lazy"></div><div class="cat-row"><b>Mujer</b><span>Ver todo →</span></div></button>
+        <button class="cat" type="button" data-filter="Hombre"><div class="ph"><img data-src="poleron-polar-pro-adulto-1" alt="" loading="lazy"></div><div class="cat-row"><b>Hombre</b><span>Ver todo →</span></div></button>
         <button class="cat" type="button" data-filter="Accesorios"><div class="ph"><img data-src="funda-ipad-2" alt="" loading="lazy"></div><div class="cat-row"><b>Accesorios</b><span>Ver todo →</span></div></button>
       </div>
     </section>
@@ -825,8 +845,8 @@ body{color:#3E2A20}
         <div class="filters" role="group" aria-label="Filtrar por colección">
           <button class="chip" type="button" data-chip="Todos" aria-pressed="true">Todo</button>
           <button class="chip" type="button" data-chip="Niños" aria-pressed="false">Niños</button>
-          <button class="chip" type="button" data-chip="Adultos" aria-pressed="false">Adultos</button>
-          <button class="chip" type="button" data-chip="Tejidos" aria-pressed="false">Tejidos</button>
+          <button class="chip" type="button" data-chip="Mujer" aria-pressed="false">Mujer</button>
+          <button class="chip" type="button" data-chip="Hombre" aria-pressed="false">Hombre</button>
           <button class="chip" type="button" data-chip="Accesorios" aria-pressed="false">Accesorios</button>
         </div>
       </div>
@@ -937,8 +957,8 @@ body{color:#3E2A20}
     <div>
       <h4>Tienda</h4>
       <a href="#catalogo" data-filter="Niños">Niños</a>
-      <a href="#catalogo" data-filter="Adultos">Adultos</a>
-      <a href="#catalogo" data-filter="Tejidos">Tejidos</a>
+      <a href="#catalogo" data-filter="Mujer">Mujer</a>
+      <a href="#catalogo" data-filter="Hombre">Hombre</a>
       <a href="#catalogo" data-filter="Accesorios">Accesorios</a>
     </div>
     <div>
@@ -1037,7 +1057,7 @@ body{color:#3E2A20}
       <label class="lbl-sm" for="pq" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar producto</label>
       <input class="inp grow" id="pq" type="search" placeholder="Buscar por nombre o tipo">
       <label class="lbl-sm" for="pcat" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Colección</label>
-      <select class="inp" id="pcat"><option value="">Todas las colecciones</option><option>Niños</option><option>Adultos</option><option>Tejidos</option><option>Accesorios</option></select>
+      <select class="inp" id="pcat"><option value="">Todas las colecciones</option><option>Niños</option><option>Mujer</option><option>Hombre</option><option>Accesorios</option></select>
       <label class="lbl-sm" for="pst" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Estado</label>
       <select class="inp" id="pst"><option value="">Todos los estados</option><option value="ok">Disponible</option><option value="pedido">Por encargo</option><option value="out">Vendido</option></select>
     </div>
@@ -1098,7 +1118,7 @@ body{color:#3E2A20}
     <div class="sheet-body">
       <div class="field"><label for="eName">Nombre del producto</label><input class="inp" id="eName" required maxlength="80"></div>
       <div class="two">
-        <div class="field"><label for="eCat">Colección</label><select class="inp" id="eCat"><option>Niños</option><option>Adultos</option><option>Tejidos</option><option>Accesorios</option></select></div>
+        <div class="field"><label for="eCat">Colección</label><select class="inp" id="eCat"><option>Niños</option><option>Mujer</option><option>Hombre</option><option value="Hombre, Mujer">Hombre y Mujer</option><option>Accesorios</option></select></div>
         <div class="field"><label for="ePrice">Precio (CLP)</label><input class="inp" id="ePrice" inputmode="numeric" placeholder="39990"></div>
       </div>
       <div class="two">
@@ -1156,14 +1176,14 @@ if (!window.__EXPIRED) (function(){
     P(4,'poleron-paffu','Niños','Polerón Paffu','Franela · 100% algodón',21990,8,'poleron-paffu-kids-1',[],{desc:'Polerón de franela 100% algodón nacional, con bordado de conchas. Cada pieza es diferente: mismo modelo, combinaciones únicas.', vlabel:'Talla', tallas:[['6-9 meses',21990],['1',21990],['2-4',23990],['6-8',25990],['10-12',29990]], fotos:['poleron-paffu-kids-1','poleron-paffu-kids-2']}),
     P(5,'jardineras','Niños','Jardineras Kids','Jardinera',21990,6,'jardineras-kids-1',[],{desc:'Jardinera bicolor con bolsillo cuadrillé y tirantes ajustables.', vlabel:'Talla', tallas:[['1',21990],['2',22990],['4',24990],['6',26990]], fotos:['jardineras-kids-1','jardineras-kids-2','jardineras-kids-3']}),
     P(6,'capucha-polar','Niños','Capucha Polar','Capucha polar',11990,10,'capucha-polar-adulto-kids-1',[],{sello:'50% dcto', dcto:50, desc:'Capucha polar que abriga cabeza y cuello. Colores a elección: consúltanos por los disponibles.', vlabel:'Tamaño', tallas:[['Kids',11990],['Adulto',13990]], fotos:['capucha-polar-adulto-kids-1','capucha-polar-adulto-kids-2']}),
-    P(7,'polar-pro-adulto','Adultos','Polerón Polar Pro','Polar',39990,5,'poleron-polar-pro-adulto-1',[],{feat:true, desc:'Polerón polar con cuello alto y bolsillo canguro, en bloques de color.', fotos:['poleron-polar-pro-adulto-1','poleron-polar-pro-adulto-2']}),
-    P(8,'poleron-lupe','Adultos','Polerón Lupe','Polerón',38990,5,'poleron-lupe-adulto-1',[],{desc:'Polerón con capucha en dos tonos y frase “Seek & find your peace” en la espalda.', fotos:['poleron-lupe-adulto-1','poleron-lupe-adulto-3','poleron-lupe-adulto-2','poleron-lupe-adulto-4']}),
-    P(9,'chaleco-chicago','Tejidos','Chaleco Chicago','Tejido a mano',26990,4,'chaleco-chicago-kids-1',[],{desc:'Chaleco tejido a mano. Cada uno es único en colores; abarca tallas 1 a 4.', vlabel:'Talla', tallas:[['1',26990],['2',26990],['3',26990],['4',26990]], fotos:['chaleco-chicago-kids-1','chaleco-chicago-kids-3','chaleco-chicago-kids-2','chaleco-chicago-kids-4']}),
-    P(10,'tejidos-unicos','Tejidos','Tejidos piezas únicas','Tejido a mano',0,1,'tejidos-piezas-unicas-1',[],{st:'pedido', desc:'Chalecos y chaquetas tejidas a mano, una de cada una y en una sola talla. Escríbenos para saber cuáles quedan.', fotos:['tejidos-piezas-unicas-1','tejidos-piezas-unicas-2','tejidos-piezas-unicas-3','tejidos-piezas-unicas-4','tejidos-piezas-unicas-5']}),
-    P(11,'croptop','Tejidos','Croptop de hilo','Tejido a mano',25990,4,'croptop-hilo-1',[],{desc:'Croptop tejido en hilo a rayas, amarrado al cuello.', fotos:['croptop-hilo-1','croptop-hilo-2']}),
-    P(12,'beanies','Tejidos','Beanie Paffu','Gorro',8990,16,'beanies-mostaza',[],{sello:'Más vendido', desc:'Gorro beanie con doblez y parche Paffu.', vlabel:'Color', tallas:[['Mostaza',8990],['Lila',8990],['Vainilla',8990],['Fucsia',8990]], fotos:['beanies-mostaza','beanies-lila','beanies-vainilla','beanies-fucsia']}),
-    P(13,'headband','Tejidos','Headband','Cintillo tejido',11990,6,'headband-1',[],{desc:'Cintillo tejido con nudo al frente, en bloques de color.', fotos:['headband-1']}),
-    P(14,'cintillos-toka','Tejidos','Cintillos Toka','Cintillo tejido',6990,10,'cintillos-toka-1',[],{desc:'Cintillo tejido a crochet, en varios colores.', fotos:['cintillos-toka-1','cintillos-toka-2']}),
+    P(7,'polar-pro-adulto','Hombre, Mujer','Polerón Polar Pro','Polar',39990,5,'poleron-polar-pro-adulto-1',[],{feat:true, desc:'Polerón polar con cuello alto y bolsillo canguro, en bloques de color.', fotos:['poleron-polar-pro-adulto-1','poleron-polar-pro-adulto-2']}),
+    P(8,'poleron-lupe','Hombre, Mujer','Polerón Lupe','Polerón',38990,5,'poleron-lupe-adulto-1',[],{desc:'Polerón con capucha en dos tonos y frase “Seek & find your peace” en la espalda.', fotos:['poleron-lupe-adulto-1','poleron-lupe-adulto-3','poleron-lupe-adulto-2','poleron-lupe-adulto-4']}),
+    P(9,'chaleco-chicago','Niños','Chaleco Chicago','Tejido a mano',26990,4,'chaleco-chicago-kids-1',[],{desc:'Chaleco tejido a mano. Cada uno es único en colores; abarca tallas 1 a 4.', vlabel:'Talla', tallas:[['1',26990],['2',26990],['3',26990],['4',26990]], fotos:['chaleco-chicago-kids-1','chaleco-chicago-kids-3','chaleco-chicago-kids-2','chaleco-chicago-kids-4']}),
+    P(10,'tejidos-unicos','Mujer','Tejidos piezas únicas','Tejido a mano',0,1,'tejidos-piezas-unicas-1',[],{st:'pedido', desc:'Chalecos y chaquetas tejidas a mano, una de cada una y en una sola talla. Escríbenos para saber cuáles quedan.', fotos:['tejidos-piezas-unicas-1','tejidos-piezas-unicas-2','tejidos-piezas-unicas-3','tejidos-piezas-unicas-4','tejidos-piezas-unicas-5']}),
+    P(11,'croptop','Mujer','Croptop de hilo','Tejido a mano',25990,4,'croptop-hilo-1',[],{desc:'Croptop tejido en hilo a rayas, amarrado al cuello.', fotos:['croptop-hilo-1','croptop-hilo-2']}),
+    P(12,'beanies','Accesorios','Beanie Paffu','Gorro',8990,16,'beanies-mostaza',[],{sello:'Más vendido', desc:'Gorro beanie con doblez y parche Paffu.', vlabel:'Color', tallas:[['Mostaza',8990],['Lila',8990],['Vainilla',8990],['Fucsia',8990]], fotos:['beanies-mostaza','beanies-lila','beanies-vainilla','beanies-fucsia']}),
+    P(13,'headband','Accesorios','Headband','Cintillo tejido',11990,6,'headband-1',[],{desc:'Cintillo tejido con nudo al frente, en bloques de color.', fotos:['headband-1']}),
+    P(14,'cintillos-toka','Accesorios','Cintillos Toka','Cintillo tejido',6990,10,'cintillos-toka-1',[],{desc:'Cintillo tejido a crochet, en varios colores.', fotos:['cintillos-toka-1','cintillos-toka-2']}),
     P(15,'funda-ipad','Accesorios','Funda iPad','Funda',20990,6,'funda-ipad-1',[],{desc:'Funda acolchada con cierre para iPad o tablet, en telas estampadas.', fotos:['funda-ipad-1','funda-ipad-2']}),
     P(16,'cosmetiqueros','Accesorios','Cosmetiqueros','Cosmetiquero',12990,6,'cosmetiqueros-1',[],{desc:'Cosmetiqueros con cierre en telas estampadas.', fotos:['cosmetiqueros-1','cosmetiqueros-2','cosmetiqueros-3']}),
     P(17,'mini-pocket','Accesorios','Mini pocket','Monedero',6000,12,'mini-pocket-1',[],{desc:'Monedero pequeño con mosquetón, en estampados blanco y negro.', fotos:['mini-pocket-1','mini-pocket-2']}),
@@ -1172,8 +1192,8 @@ if (!window.__EXPIRED) (function(){
     P(20,'billetera','Accesorios','Billetera','Billetera',11990,6,'billetera-1',[],{desc:'Billetera acolchada con broche y argolla, en telas estampadas.', fotos:['billetera-1']}),
     P(21,'porta-celular','Accesorios','Bolsa porta celular','Bolso cruzado',11990,6,'porta-celular-1',[],{sello:'Nuevo', desc:'Bolsa cruzada para el celular con correa ajustable, para andar con las manos libres.', fotos:['porta-celular-1']}),
     P(22,'giftcard','Accesorios','Gift Card Paffu','Tarjeta de regalo',10000,99,'giftcard-1',[],{feat:true, sello:'Para regalar', desc:'Regala Paffu y que elijan su pieza favorita, en la tienda o en la web.', vlabel:'Monto', tallas:[['$10.000',10000],['$15.000',15000],['$25.000',25000]], fotos:['giftcard-1']}),
-    P(23,'gorro-newyork','Tejidos','Gorro New York','Gorro tejido',14990,6,'gorro-newyork-1',[],{sello:'Pieza única', desc:'Gorro tejido a mano en bloques de color. Cada uno es diferente: combinaciones irrepetibles.', fotos:['gorro-newyork-1','41855fdb2afc01bd5084f2dcbe4afa19']}),
-    P(24,'gorro-nairobi','Tejidos','Gorro Nairobi','Gorro tejido',12990,6,'56834f414a809fcacce39fe79a124638',[],{desc:'Gorro tejido a mano con pompón.', fotos:['56834f414a809fcacce39fe79a124638']}),
+    P(23,'gorro-newyork','Accesorios','Gorro New York','Gorro tejido',14990,6,'gorro-newyork-1',[],{sello:'Pieza única', desc:'Gorro tejido a mano en bloques de color. Cada uno es diferente: combinaciones irrepetibles.', fotos:['gorro-newyork-1','41855fdb2afc01bd5084f2dcbe4afa19']}),
+    P(24,'gorro-nairobi','Accesorios','Gorro Nairobi','Gorro tejido',12990,6,'56834f414a809fcacce39fe79a124638',[],{desc:'Gorro tejido a mano con pompón.', fotos:['56834f414a809fcacce39fe79a124638']}),
     P(25,'barcelona','Accesorios','Banano Barcelona','Banano',17990,6,'d5c89340084cca36dc3580513709380c',[],{desc:'Banano en tela estampada con cierre y correa ajustable.', fotos:['d5c89340084cca36dc3580513709380c']}),
     P(26,'seul','Accesorios','Funda Seúl','Funda para Kindle',15990,5,'da3d3648937c5bbe525298223043cb5d',[],{desc:'Funda acolchada para Kindle o lector de libros.', fotos:['da3d3648937c5bbe525298223043cb5d']}),
     P(27,'miami','Accesorios','Funda Miami','Funda de lentes',9000,8,'31bf26dcf97aaf9e6554857ad034bdc4',[],{desc:'Funda acolchada para lentes de sol u ópticos.', fotos:['31bf26dcf97aaf9e6554857ad034bdc4']}),
@@ -1182,6 +1202,11 @@ if (!window.__EXPIRED) (function(){
   products.forEach(function(p){ if(p.st==='pedido') return; p.st = p.stock>0?'ok':'out'; });
   var cfg = {wa:'56936324552', dir:'Ángel Gaete 460-C, Pichilemu', horario:'Lunes a sábado, 10:00–13:30 y 16:00–19:00', gratis:50000, maps:'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Paffu, Ángel Gaete 460-C, Pichilemu, Chile')};
   var LIB = products.map(function(p){ return p.img; }).concat(['514f4888025a454fbe13bbc3cb0197f5','476c77907758b6e01c75149417b6c9c4','5188a116e9cb3d2f4d5bcee55f294706','3b87f235a22f94f30c999e5b53fe1df0']);
+  var CATS = ['Niños','Mujer','Hombre','Accesorios'];
+  var CATMAP = {'polar-pro-adulto':'Hombre, Mujer','poleron-lupe':'Hombre, Mujer','chaleco-chicago':'Niños','tejidos-unicos':'Mujer','croptop':'Mujer'};
+  function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
+  function catsOf(p){ return String(p.cat||'').split(/\s*,\s*/).filter(Boolean); }
+  function inCat(p,c){ return !c || c==='Todos' || catsOf(p).indexOf(c)>-1; }
   var STLABEL = {ok:'Disponible', out:'Vendido', pedido:'Por encargo'};
   function unica(p){ return p && p.id!=='giftcard'; }
 
@@ -1245,7 +1270,7 @@ if (!window.__EXPIRED) (function(){
     document.querySelectorAll('.js-horario').forEach(function(s){ s.textContent = cfg.horario; });
     document.querySelectorAll('.js-maps').forEach(function(a){ a.href = cfg.maps; });
     var g = document.querySelector('#anuncio li b'); if (g) g.textContent = clp(cfg.gratis);
-    var parts = ['Niños','Adultos','Tejidos','Accesorios','Hecho a mano en Pichilemu'];
+    var parts = ['Niños','Mujer','Hombre','Accesorios','Hecho a mano en Pichilemu'];
     var one = parts.map(function(p){ return '<span>'+esc(p)+'</span><span>✦</span>'; }).join('');
     document.getElementById('track').innerHTML = one + one;
   }
@@ -1264,15 +1289,15 @@ if (!window.__EXPIRED) (function(){
     var q = state.q.trim().toLowerCase();
     var so = (document.getElementById('sortSel')||{}).value || 'dest';
     var list = sorted().slice().sort(function(a,b){ if(so==='asc') return (minPrice(a)||1e9)-(minPrice(b)||1e9); if(so==='desc') return minPrice(b)-minPrice(a); if(so==='az') return a.name.localeCompare(b.name,'es'); return (b.feat?1:0)-(a.feat?1:0); }).filter(function(p){
-      return (state.cat==='Todos' || p.cat===state.cat) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
+      return inCat(p,state.cat) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
     });
     title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : state.cat);
     document.querySelectorAll('[data-chip]').forEach(function(c){ c.setAttribute('aria-pressed', String(c.dataset.chip===state.cat)); });
-    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = products.filter(function(p){ return c==='Todos' || p.cat===c; }).length; });
+    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = products.filter(function(p){ return inCat(p,c); }).length; });
     var pc=document.getElementById('pCount'); if(pc) pc.textContent = list.length + (list.length===1?' producto':' productos');
     if(!products.length){ grid.innerHTML = '<p class="empty">Aún no hay productos publicados. Agrégalos desde el <a href="#panel">panel de la tienda</a>.</p>'; return; }
     if(!list.length){ grid.innerHTML = '<p class="empty">No encontramos productos con ese nombre. Prueba con “hoodie”, “gorro” o “funda”, o escríbenos por WhatsApp.</p>'; return; }
-    grid.innerHTML = list.map(function(p){
+    var card = function(p){
       var btn = p.st==='ok' ? ((p.tallas&&p.tallas.length) ? '<button class="btn btn-ink" type="button" data-open="'+esc(p.id)+'">Elegir '+esc((p.vlabel||'talla').toLowerCase())+'</button>' : '<button class="btn btn-ink" type="button" data-add="'+esc(p.id)+'">Agregar al carro</button>')
         : p.st==='pedido' ? '<a class="btn btn-line" href="'+esc(wa('Hola Paffu, me interesa '+p.name+'. ¿Qué tienen disponible y a qué precio?'))+'" target="_blank" rel="noopener">Consultar por WhatsApp</a>'
         : '<button class="btn btn-line" type="button" disabled>Vendido</button>';
@@ -1281,11 +1306,23 @@ if (!window.__EXPIRED) (function(){
         '<button class="card-img single" type="button" data-open="'+esc(p.id)+'" aria-label="Ver ficha de '+esc(p.name)+'">'+badgeFor(p)+
           '<img src="'+esc(src(p))+'" alt="'+esc(p.name)+'" loading="lazy">'+
         '</button>'+'<button class="fav" type="button" data-fav="'+esc(p.id)+'" aria-pressed="'+(FAV[p.id]?'true':'false')+'" aria-label="Guardar '+esc(p.name)+' en favoritos"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button>'+
-        '<span class="tipo">'+esc(p.cat)+' · '+esc(p.mat||'')+'</span><h3>'+esc(p.name)+'</h3>'+
+        '<span class="tipo">'+esc(p.mat||catsOf(p).join(' · '))+'</span><h3>'+esc(p.name)+'</h3>'+
         '<div class="price-row"><span class="price">'+priceTxt(p)+'</span>'+dots+'</div>'+
         '<div class="acts">'+btn+'</div>'+
       '</article>';
-    }).join('');
+    };
+    if (state.cat==='Todos' && !q){
+      grid.classList.add('by-col');
+      grid.innerHTML = CATS.map(function(c){
+        var items = list.filter(function(p){ return inCat(p,c); }); if(!items.length) return '';
+        var more = items.length>8 ? '<button class="col-more" type="button" data-filter="'+esc(c)+'"><b>Ver las '+items.length+'</b><span>piezas de '+esc(c)+' →</span></button>' : '';
+        return '<section class="col-sec"><div class="col-head"><h3>'+esc(c)+'</h3><button type="button" data-filter="'+esc(c)+'">Ver todo ('+items.length+') →</button></div>'+
+          '<div class="slider">'+items.slice(0,8).map(card).join('')+more+'</div></section>';
+      }).join('');
+      return;
+    }
+    grid.classList.remove('by-col');
+    grid.innerHTML = list.map(card).join('');
   }
   function setCat(c, scroll){ state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
 
@@ -1308,7 +1345,7 @@ if (!window.__EXPIRED) (function(){
     var p = byId(id); if(!p) return;
     lastFocus = from; modalId = id;
     var im = document.getElementById('mImg'); im.src = src(p); im.alt = p.name;
-    document.getElementById('mCat').textContent = p.cat;
+    document.getElementById('mCat').textContent = catsOf(p).join(' · ');
     document.getElementById('mTitle').textContent = p.name;
     mTalla = (p.tallas&&p.tallas.length===1) ? p.tallas[0][0] : null;
     function paintVar(){ document.getElementById('mPrice').innerHTML = mTalla ? clp(vprice(p,mTalla))+(p.dcto?strike(oprice(p,mTalla)):'') : priceTxt(p);
@@ -1370,7 +1407,7 @@ if (!window.__EXPIRED) (function(){
     var opts = REGIONES.map(function(x){ return '<option'+(x[0]===envio.region?' selected':'')+'>'+esc(x[0])+'</option>'; }).join('');
     cBody.innerHTML =
       r.lines.map(function(l){ return '<div class="c-line"><img src="'+esc(src(l.p))+'" alt="">'+
-        '<div><b>'+esc(l.p.name)+'</b><small>'+esc(l.t ? vlab(l.p,l.t) : l.p.cat+' · '+(l.p.mat||''))+'</small>'+
+        '<div><b>'+esc(l.p.name)+'</b><small>'+esc(l.t ? vlab(l.p,l.t) : (l.p.mat||catsOf(l.p).join(' · ')))+'</small>'+
         (unica(l.p) ? '<div class="qty"><span style="font-size:13px;color:var(--muted)">Pieza única</span><button type="button" class="q-del" data-q="-1" data-id="'+esc(l.p.id)+'" data-t="'+esc(l.t||'')+'" aria-label="Quitar '+esc(l.p.name)+' del carro">Quitar</button></div></div>'
           : '<div class="qty"><button type="button" data-q="-1" data-id="'+esc(l.p.id)+'" data-t="'+esc(l.t||'')+'" aria-label="Quitar una unidad de '+esc(l.p.name)+'">−</button><span>'+l.q+'</span><button type="button" data-q="1" data-id="'+esc(l.p.id)+'" data-t="'+esc(l.t||'')+'" aria-label="Agregar una unidad de '+esc(l.p.name)+'">+</button></div></div>')+
         '<span class="price">'+clp(l.u*l.q)+'</span></div>'; }).join('') +
@@ -1470,7 +1507,7 @@ if (!window.__EXPIRED) (function(){
     document.getElementById('sPed').textContent = products.filter(function(p){return p.st==='pedido';}).length;
     document.getElementById('sOrd').textContent = orders.filter(function(o){return !o.enviado;}).length;
     var q = pq.value.trim().toLowerCase(), c = pcat.value, s = pst.value;
-    var list = sorted().filter(function(p){ return (!c || p.cat===c) && (!s || p.st===s) && (!q || (p.name+' '+(p.mat||'')).toLowerCase().indexOf(q)>-1); });
+    var list = sorted().filter(function(p){ return inCat(p,c) && (!s || p.st===s) && (!q || (p.name+' '+(p.mat||'')).toLowerCase().indexOf(q)>-1); });
     var head = '<div class="row head"><span></span><span>Producto</span><span class="r-cat">Colección</span><span>Precio</span><span>Estado</span><span style="text-align:right">Acciones</span></div>';
     if(!products.length){ pRows.innerHTML = '<div class="row" style="display:block;padding:32px;text-align:center;color:var(--ink-2)">Tu tienda está vacía. Toca <b>+ Nuevo producto</b> para agregar el primero.</div>'; }
     else if(!list.length){ pRows.innerHTML = head + '<div class="row" style="display:block;padding:24px;color:var(--ink-2)">Ningún producto coincide con la búsqueda.</div>'; }
@@ -1538,7 +1575,7 @@ if (!window.__EXPIRED) (function(){
     editing = p; editFrom = document.activeElement;
     document.getElementById('eTitle').textContent = p ? 'Editar producto' : 'Nuevo producto';
     document.getElementById('eName').value = p ? p.name : '';
-    document.getElementById('eCat').value = p ? p.cat : 'Niños';
+    document.getElementById('eCat').value = p ? (CATS.indexOf(p.cat)>-1 || p.cat==='Hombre, Mujer' ? p.cat : catsOf(p)[0]||'Niños') : 'Niños';
     document.getElementById('ePrice').value = p ? p.price : '';
     document.getElementById('eMat').value = p ? (p.mat||'') : '';
     document.getElementById('eDesc').value = p ? (p.desc||'') : '';
@@ -1592,7 +1629,7 @@ if (!window.__EXPIRED) (function(){
     if(!sb) return;
     sb.from('productos').select('*').order('orden',{ascending:true}).then(function(res){
       if(res.error || !res.data || !res.data.length) return;
-      products = res.data.map(fromRow); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
+      products = res.data.map(fromRow).map(fixCat); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
     });
   }
   function dbErr(e){ toast('No se pudo guardar en la base: ' + (e && e.message ? e.message : 'revisa tu conexión')); }

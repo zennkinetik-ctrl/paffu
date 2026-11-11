@@ -1,6 +1,6 @@
 /* Paffu Panel · service worker: guarda la app para abrirla rápido y sin conexión.
    Los datos (Supabase) siempre se piden en línea. */
-const CACHE = 'paffu-panel-v3';
+const CACHE = 'paffu-panel-v4';
 const SHELL = ['/panel/', '/panel/index.html', '/panel/manifest.webmanifest', '/panel/icons/icon-192.png', '/panel/icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {
