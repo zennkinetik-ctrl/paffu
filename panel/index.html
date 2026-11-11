@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="/panel/icons/apple-touch-icon.png">
 <link rel="icon" href="/panel/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Oswald:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=League+Gothic&display=swap">
 <style>
 :root{
   --arena:#CEB298;--crema:#EEE7DD;--vainilla:#FBEDD6;--terracota:#8E5F47;--terracota-2:#6E4532;--cafe:#3E2A20;--suave:#5A4436;--linea:#D9CCBC;--celeste:#A7B9C6;--ok:#2F6B45;--ok-bg:#DCEBDF;--mal:#9B2C24;--mal-bg:#F4DDD9;
@@ -27,7 +27,7 @@ body{background:var(--arena);color:var(--cafe);font:400 16px/1.45 'Jost','Helvet
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--terracota-2);outline-offset:2px}
-h1,h2,h3{margin:0;font-family:'Oswald','Arial Narrow',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+h1,h2,h3{margin:0;font-family:'League Gothic','Arial Narrow',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.03em;line-height:1}
 .inp{width:100%;min-height:48px;border:1px solid var(--linea);border-radius:12px;background:#fff;padding:10px 14px;font-size:16px;color:var(--cafe)}
 textarea.inp{min-height:96px;resize:vertical}
 label.lb{display:block;font-size:13px;font-weight:600;margin:0 0 6px}
@@ -60,7 +60,7 @@ main{padding:16px var(--r) calc(96px + var(--bot)) var(--l);max-width:760px;marg
 .tools .inp{flex:1}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
 .stat{background:var(--crema);border-radius:14px;padding:10px 12px}
-.stat b{display:block;font-family:'Oswald',sans-serif;font-size:24px;line-height:1.1}
+.stat b{display:block;font-family:'League Gothic','Arial Narrow',sans-serif;font-weight:400;font-size:30px;line-height:1.05}
 .stat span{font-size:12px;color:var(--suave)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
 .chip{flex:none;min-height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--linea);background:var(--crema);font-size:14px;font-weight:500}
@@ -171,7 +171,7 @@ nav.tabs svg{width:24px;height:24px}
     </div>
 
     <section id="vP" aria-labelledby="viewT">
-      <div class="stats"><div class="stat"><b id="sTot">0</b><span>Productos</span></div><div class="stat"><b id="sOk">0</b><span>Disponibles</span></div><div class="stat"><b id="sLow">0</b><span>Stock bajo</span></div></div>
+      <div class="stats"><div class="stat"><b id="sTot">0</b><span>Productos</span></div><div class="stat"><b id="sOk">0</b><span>Disponibles</span></div><div class="stat"><b id="sSold">0</b><span>Vendidas</span></div></div>
       <div class="tools"><label class="lb" for="q" style="position:absolute;left:-9999px">Buscar producto</label><input class="inp" id="q" type="search" placeholder="Buscar producto"></div>
       <div class="chips" role="group" aria-label="Filtrar por colección" id="catChips"></div>
       <div class="list" id="pList"></div>
@@ -209,9 +209,9 @@ nav.tabs svg{width:24px;height:24px}
     </div>
     <div class="grid2">
       <div><label class="lb" for="ePrice">Precio base ($)</label><input class="inp" id="ePrice" inputmode="numeric" placeholder="22990"></div>
-      <div><label class="lb" for="eStock">Stock</label><input class="inp" id="eStock" inputmode="numeric" placeholder="0"></div>
+      <div style="align-self:end"><p class="muted" style="margin:0 0 12px">Cada producto es pieza única: al venderse queda como “Vendida”.</p></div>
     </div>
-    <div><span class="lb">Estado</span><div class="seg" role="group" aria-label="Estado"><button type="button" data-st="ok">Disponible</button><button type="button" data-st="out">Agotado</button><button type="button" data-st="pedido">Consultar</button></div></div>
+    <div><span class="lb">Estado</span><div class="seg" role="group" aria-label="Estado"><button type="button" data-st="ok">Disponible</button><button type="button" data-st="out">Vendida</button><button type="button" data-st="pedido">Consultar</button></div></div>
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px"><span class="lb" style="margin:0">Tallas, colores o montos</span><select class="inp" id="eVLabel" style="width:auto;min-height:40px;padding:6px 10px" aria-label="Tipo de variante"><option>Talla</option><option>Color</option><option>Tamaño</option><option>Monto</option></select></div>
       <div id="eVars" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -331,28 +331,27 @@ nav.tabs svg{width:24px;height:24px}
     var cats=['Todo','Niños','Adultos','Tejidos','Accesorios'];
     $('catChips').innerHTML = cats.map(function(c){ return '<button class="chip" type="button" data-cat="'+c+'" aria-pressed="'+(c===cat)+'">'+c+'</button>'; }).join('');
     $('sTot').textContent = products.length;
-    $('sOk').textContent = products.filter(function(p){ return p.st==='ok' && p.stock>0; }).length;
-    $('sLow').textContent = products.filter(function(p){ return p.st==='ok' && p.stock<=3; }).length;
+    $('sOk').textContent = products.filter(function(p){ return p.st==='ok'; }).length;
+    $('sSold').textContent = products.filter(function(p){ return p.st==='out'; }).length;
     var q = $('q').value.trim().toLowerCase();
     var list = products.filter(function(p){ return (cat==='Todo'||p.cat===cat) && (!q || (p.name+' '+p.mat).toLowerCase().indexOf(q)>-1); });
     if(!products.length){ $('pList').innerHTML = '<div class="empty">Aún no hay productos. Toca “Nuevo producto” para cargar el primero.</div>'; return; }
     if(!list.length){ $('pList').innerHTML = '<div class="empty">No hay productos con ese nombre.</div>'; return; }
     $('pList').innerHTML = list.map(function(p){
-      var pill = p.st==='out' || (p.st==='ok' && p.stock<1) ? '<span class="pill out">Agotado</span>' : p.st==='pedido' ? '<span class="pill ped">Consultar</span>' : p.stock<=3 ? '<span class="pill ped">Quedan '+p.stock+'</span>' : '<span class="pill ok">Disponible</span>';
+      var pill = p.st==='out' ? '<span class="pill out">Vendida</span>' : p.st==='pedido' ? '<span class="pill ped">Consultar</span>' : '<span class="pill ok">Disponible</span>';
       var pr = p.tallas && p.tallas.length ? 'Desde ' + clp(Math.min.apply(null, p.tallas.map(function(t){ return t[1]; }))) : clp(p.price);
       return '<article class="item">'+imgTag(cover(p), (p.fotos&&p.fotos[0])||p.img, 'thumb', p.name)+
         '<div class="it-main"><div class="it-top"><button type="button" data-edit="'+esc(p.id)+'" aria-label="Editar '+esc(p.name)+'"><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+(p.mat?' · '+esc(p.mat):'')+'</small></button>'+pill+'</div>'+
         '<div class="it-row"><span class="price">'+pr+(p.dcto?' <small class="muted">−'+p.dcto+'%</small>':'')+'</span>'+
-        '<div class="stepper"><button type="button" data-step="-1" data-id="'+esc(p.id)+'" aria-label="Restar una unidad de '+esc(p.name)+'">−</button><span aria-label="Stock">'+p.stock+'</span><button type="button" data-step="1" data-id="'+esc(p.id)+'" aria-label="Sumar una unidad de '+esc(p.name)+'">+</button></div></div></div></article>';
+        (p.st==='pedido' ? '' : '<button class="btn sm line" type="button" data-sold="'+esc(p.id)+'">'+(p.st==='out' ? 'Volver a disponible' : 'Marcar vendida')+'</button>')+'</div></div></article>';
     }).join('');
   }
   $('q').addEventListener('input', renderP);
   $('catChips').addEventListener('click', function(e){ var b=e.target.closest('[data-cat]'); if(!b) return; cat=b.dataset.cat; renderP(); });
-  var stepT = {};
   $('pList').addEventListener('click', function(e){
-    var s = e.target.closest('[data-step]');
-    if(s){ var p = byId(s.dataset.id); p.stock = Math.max(0, p.stock + (+s.dataset.step)); if(p.stock>0 && p.st==='out') p.st='ok'; renderP();
-      clearTimeout(stepT[p.id]); stepT[p.id] = setTimeout(function(){ save(p, 'Stock de '+p.name+': '+p.stock); }, 700); return; }
+    var s = e.target.closest('[data-sold]');
+    if(s){ var p = byId(s.dataset.sold); p.st = p.st==='out' ? 'ok' : 'out'; p.stock = p.st==='out' ? 0 : 1; renderP();
+      save(p, p.name + (p.st==='out' ? ': vendida' : ': disponible otra vez')); return; }
     var ed = e.target.closest('[data-edit]'); if(ed) openEdit(byId(ed.dataset.edit));
   });
   function byId(id){ return products.filter(function(p){ return p.id===id; })[0]; }
@@ -389,7 +388,7 @@ nav.tabs svg{width:24px;height:24px}
     lastFocus = document.activeElement; editing = p || null;
     $('eT').textContent = p ? 'Editar producto' : 'Nuevo producto';
     $('eName').value = p ? p.name : ''; $('eCat').value = p ? p.cat : 'Niños'; $('eMat').value = p ? p.mat : '';
-    $('ePrice').value = p ? p.price : ''; $('eStock').value = p ? p.stock : ''; $('eDesc').value = p ? p.desc : '';
+    $('ePrice').value = p ? p.price : ''; $('eDesc').value = p ? p.desc : '';
     $('eDcto').value = p && p.dcto ? p.dcto : ''; $('eSello').value = p ? p.sello : ''; $('eFeat').checked = p ? p.feat : false;
     $('eVLabel').value = (p && p.vlabel) || 'Talla';
     eSt = p ? (p.st==='ok' && p.stock<1 ? 'out' : p.st) : 'ok'; paintSt();
@@ -440,11 +439,10 @@ nav.tabs svg{width:24px;height:24px}
   $('eVars').addEventListener('click', function(e){ var b=e.target.closest('[data-rmv]'); if(b) b.parentNode.remove(); });
   $('eF').addEventListener('submit', function(e){
     e.preventDefault(); var err=$('eErr'); err.hidden=true;
-    var name=$('eName').value.trim(), price=num($('ePrice').value), stock=num($('eStock').value);
+    var name=$('eName').value.trim(), price=num($('ePrice').value), stock=(eSt==='out' ? 0 : 1);
     var vars = Array.prototype.map.call($('eVars').children, function(r){ var ins=r.querySelectorAll('input'); return [ins[0].value.trim(), num(ins[1].value) || price]; }).filter(function(v){ return v[0]; });
     if(!name){ err.textContent='Escribe el nombre del producto.'; err.hidden=false; $('eName').focus(); return; }
     if(!price && !vars.length && eSt!=='pedido'){ err.textContent='Escribe el precio en pesos, solo números (ej: 22990).'; err.hidden=false; $('ePrice').focus(); return; }
-    if(eSt==='ok' && stock<1){ err.textContent='Para dejarlo disponible, el stock debe ser al menos 1.'; err.hidden=false; $('eStock').focus(); return; }
     var p = editing || {id: name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '-' + Date.now().toString(36).slice(-4), orden: (products.reduce(function(m,x){ return Math.max(m, x.orden||0); }, 0) + 1), img:''};
     Object.assign(p, {name:name, cat:$('eCat').value, mat:$('eMat').value.trim(), price: price || (vars[0]?vars[0][1]:0), stock:stock, st:eSt, desc:$('eDesc').value.trim(), dcto:Math.min(90,num($('eDcto').value)), sello:$('eSello').value.trim(), feat:$('eFeat').checked, tallas:vars, vlabel:$('eVLabel').value, fotos:eFotos.slice(), foto:(eFotos[0] && /^https?:/.test(eFotos[0])) ? eFotos[0] : ''});
     if(!p.foto) p.img = eFotos[0] || p.img;
