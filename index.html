@@ -2007,7 +2007,7 @@ if (!window.__EXPIRED) (function(){
     var reviews = window.__revs.filter(function(r){ return r.ok; });
     if (!reviews.length){
       sum.innerHTML = '';
-      box.innerHTML = [1,2,3].map(function(){ return '<div class="rev rev-empty"><span class="stars" aria-hidden="true">☆☆☆☆☆</span><p>Espacio para reseña</p><span class="rev-by">Aquí aparecerán las opiniones de quienes compran en Paffu.</span></div>'; }).join('') + cta;
+      box.innerHTML = '<div class="rev-cta"><span>¿Ya tienes tu Paffu? Al terminar tu compra puedes dejarnos tu opinión y aparecerá aquí.</span><a class="btn btn-line" href="#catalogo">Ver la tienda</a></div>';
       return;
     }
     var avg = reviews.reduce(function(s,r){ return s+r.stars; },0)/reviews.length;
