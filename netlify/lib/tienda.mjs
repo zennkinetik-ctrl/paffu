@@ -36,7 +36,7 @@ export function etiqueta(p, t) {
 }
 
 // ---------- Supabase (REST con la service role key; solo en el servidor) ----------
-const SB = () => process.env.SUPABASE_URL;
+const SB = () => process.env.SUPABASE_URL || 'https://tzqpnvpxstkxwcwxavfb.supabase.co'; // URL pública del proyecto
 const KEY = () => process.env.SUPABASE_SERVICE_ROLE_KEY;
 async function sb(path, opt = {}) {
   const r = await fetch(SB() + '/rest/v1/' + path, {

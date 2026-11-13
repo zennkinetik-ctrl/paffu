@@ -30,7 +30,7 @@ Pasos (una sola vez):
 3. Netlify > Site configuration > Environment variables:
    MP_ACCESS_TOKEN            Access Token de Mercado Pago
    MP_WEBHOOK_SECRET          Clave secreta del webhook (opcional, recomendado)
-   SUPABASE_URL               https://tzqpnvpxstkxwcwxavfb.supabase.co
+   (SUPABASE_URL ya viene en el código; no hace falta cargarla)
    SUPABASE_SERVICE_ROLE_KEY  Supabase > Project Settings > API keys > service_role / secret
                               (NUNCA ponerla en el HTML ni en GitHub)
    TRANSFERENCIA_DATOS        Datos de BancoEstado que verá la clienta, ej:
