@@ -131,6 +131,27 @@ body.menu-open #menuBtn .ic-burger{display:none}
 .cat:focus-visible{outline:2px solid var(--gold-deep);outline-offset:4px}
 
 .filters{display:flex;flex-wrap:wrap;gap:8px}
+.edades{margin:0 0 22px;scroll-margin-top:84px}
+.edades .e-q{margin:0 0 12px;font-family:var(--f-display);text-transform:uppercase;letter-spacing:.03em;font-size:clamp(26px,6vw,38px);line-height:1}
+.edades .e-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(min-width:760px){.edades .e-grid{grid-template-columns:repeat(8,1fr);gap:10px}}
+.edades .e-btn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:78px;padding:10px 6px;border:1px solid var(--line);border-radius:16px;text-align:center}
+.edades .e-btn b{font-family:var(--f-display);font-weight:400;font-size:clamp(20px,5.4vw,28px);line-height:1;white-space:nowrap}
+.edades .e-btn small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.edades .e-btn[aria-pressed="true"]{background:var(--btn);border-color:var(--btn);color:#fff}
+.edades .e-btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.edades .e-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.edades .e-talla{font-family:var(--f-display);text-transform:uppercase;font-size:clamp(24px,5vw,32px);line-height:1;margin-right:6px}
+.edades .e-all{all:unset;cursor:pointer;margin-top:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px}
+.edades .e-back{all:unset;cursor:pointer;display:inline-block;margin:0 0 12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.edades .e-back:focus-visible,.edades .e-pill:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.edades p.e-talla{margin:0 0 12px;display:block}
+.edades .e-pills{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.edades .e-pills::-webkit-scrollbar{display:none}
+.edades .e-pill{all:unset;cursor:pointer;flex:none;padding:8px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;white-space:nowrap}
+.edades .e-pill[aria-pressed="true"]{background:var(--btn);border-color:var(--btn);color:#fff}
+.m-edades{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0 10px 14px}
+.m-edades a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;color:inherit;text-decoration:none}
 .chip{min-height:44px;padding:0 18px;border:1px solid var(--line);background:transparent;color:var(--ink);font:400 13px var(--f-body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--white)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:40px 20px}
@@ -358,7 +379,9 @@ textarea.inp{height:auto;min-height:88px;padding:10px 12px;resize:vertical;line-
 .tot{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-variant-numeric:tabular-nums;font-size:15px}
 .tot .g{font-family:var(--f-display);font-size:28px;line-height:1.1;padding-top:6px;border-top:1px solid var(--line);margin-top:6px}
 .c-empty{text-align:center;color:var(--ink-2);padding-block:48px;display:flex;flex-direction:column;gap:16px;align-items:center}
-.c-msg{font-size:14px;color:var(--ok);background:var(--ok-bg);padding:10px 12px}
+.c-msg{font-size:14px;color:var(--ok);background:var(--ok-bg);padding:10px 12px;white-space:pre-line}
+.c-err{margin:0;font-size:14px;color:#9b2c1f;background:#f8e3df;padding:10px 12px;border-radius:8px}
+.c-datos .field{margin-bottom:10px}
 .c-note{font-size:12px;color:var(--muted);margin:0;text-align:center}
 .foot-demo{font-size:12px;color:#C9D6DE}
 .p-orders{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--paper)}
@@ -480,8 +503,31 @@ footer{background:#3E2A22!important;color:#F3EAE0!important}
 .m-thumbs button[aria-current="true"]{border-color:#2A1D17}
 .m-thumbs img{position:static;width:100%;height:100%;object-fit:cover}
 .m-var{display:flex;flex-direction:column;gap:8px}
+.m-mods{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 4px}
+.m-mods::-webkit-scrollbar{display:none}
+.m-mods button{flex:none;width:76px;padding:0;border:2px solid transparent;border-radius:12px;background:transparent;color:inherit;cursor:pointer;text-align:center;font:400 12px var(--f-body)}
+.m-mods img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+.m-mods span{display:block;padding:4px 2px 2px;line-height:1.2}
+.m-mods button[aria-checked="true"]{border-color:var(--btn)}
+.m-mods button[aria-checked="true"] span{font-weight:600}
+.m-mods button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.m-trust{margin:-6px 0 0!important;font-size:13px;line-height:1.5!important;color:var(--ink-2)}
+.m-trust b{font-weight:600}
+.m-off{display:inline-block;margin-left:10px;padding:3px 8px;border-radius:6px;background:var(--btn);color:#fff;font-size:14px;font-weight:600;vertical-align:middle}
+@media(max-width:700px){
+  .modal{padding:0;align-items:flex-end}
+  .modal-box{display:block;max-height:94%;border-radius:20px 20px 0 0}
+  .modal-img{min-height:0;height:min(40vh,340px)}
+  .modal-body{padding:16px 18px 0;gap:12px}
+  .modal-body h3{font-size:32px}
+  #mCat{order:1} #mTitle{order:2} #mPrice{order:3;font-size:28px!important;font-weight:600} #mTrust{order:4} #mModBox{order:5} #mVarBox{order:5} #mAdd{order:6} #mWa{order:7} #mDesc{order:8} .modal-body .spec{order:9;margin-bottom:24px}
+  .m-sizes{gap:6px}
+  .m-sizes button{min-height:42px;min-width:46px;padding:0 12px;border-radius:10px}
+  #mAdd{position:sticky;bottom:10px;z-index:3;min-height:54px;font-size:16px;box-shadow:0 0 0 10px var(--sand)}
+}
 header.bar .logo img{filter:brightness(0) saturate(100%) invert(12%) sepia(20%) saturate(900%) hue-rotate(340deg)}
 .m-sizes{display:flex;flex-wrap:wrap;gap:8px}
+.btn-wait{opacity:.55}
 .m-sizes button{min-height:44px;min-width:52px;padding:0 14px;border:1px solid var(--line);background:transparent;color:var(--ink);font:400 14px var(--f-body);cursor:pointer}
 .m-sizes button[aria-checked="true"]{background:#2A1D17;color:#F3EAE0;border-color:#2A1D17}
 
@@ -703,6 +749,7 @@ body{color:#3E2A20}
     <a href="#catalogo" data-filter="Mujer">Mujer</a>
     <a href="#catalogo" data-filter="Hombre">Hombre</a>
     <a href="#catalogo" data-filter="Accesorios">Accesorios</a>
+    <a href="#catalogo" data-filter="Billeteras">Billeteras</a>
     <a href="#tienda-fisica">Tienda física</a>
     <a href="#resenas">Reseñas</a>
   </nav>
@@ -734,9 +781,11 @@ body{color:#3E2A20}
       <div class="m-list" id="mg-tienda">
         <a class="m-sub" href="#catalogo" data-filter="Todos" data-close>Todo <small data-count="Todos"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Niños" data-close>Niños <small data-count="Niños"></small></a>
+        <div class="m-edades"><a href="#catalogo" data-filter="Niños" data-edad="0-3m" data-close>0–3 meses</a><a href="#catalogo" data-filter="Niños" data-edad="6-9m" data-close>6–9 meses</a><a href="#catalogo" data-filter="Niños" data-edad="1-2" data-close>1–2 años</a><a href="#catalogo" data-filter="Niños" data-edad="3-4" data-close>3–4</a><a href="#catalogo" data-filter="Niños" data-edad="5-6" data-close>5–6</a><a href="#catalogo" data-filter="Niños" data-edad="7-8" data-close>7–8</a><a href="#catalogo" data-filter="Niños" data-edad="9-10" data-close>9–10</a><a href="#catalogo" data-filter="Niños" data-edad="11-12" data-close>11–12</a></div>
         <a class="m-sub" href="#catalogo" data-filter="Mujer" data-close>Mujer <small data-count="Mujer"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Hombre" data-close>Hombre <small data-count="Hombre"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Accesorios" data-close>Accesorios <small data-count="Accesorios"></small></a>
+        <a class="m-sub" href="#catalogo" data-filter="Billeteras" data-close>Billeteras <small data-count="Billeteras"></small></a>
       </div>
     </div>
     <div>
@@ -812,7 +861,7 @@ body{color:#3E2A20}
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h22v18H4zM26 20h8l6 6v6H26"/><circle cx="12" cy="35" r="3.5"/><circle cx="33" cy="35" r="3.5"/><path d="M1 19h7M1 24h5"/></svg><p>Envío gratis en compras sobre $50.000</p></div>
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 8h28v26H10z"/><path d="M20 8v8l4-2 4 2V8"/><path d="M4 40h10l8-4h10a3 3 0 0 0 0-6h-8"/></svg><p>Despachamos desde Pichilemu en 1 a 3 días hábiles</p></div>
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38L36 12"/><path d="M33 9a3 3 0 0 1 4 0l2 2a3 3 0 0 1 0 4l-2 1-5-5z"/><path d="M10 38c-4 2-6-1-4-4s8-4 10 0 8 6 14 4"/></svg><p>Cosido y tejido a mano en nuestro taller</p></div>
-      <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><path d="M5 18h38M11 30h8"/></svg><p>Webpay: débito, crédito y cuotas sin complicaciones</p></div>
+      <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><path d="M5 18h38M11 30h8"/></svg><p>Paga por transferencia bancaria y te confirmamos por WhatsApp</p></div>
     </div>
   </section>
 
@@ -827,10 +876,11 @@ body{color:#3E2A20}
         <p style="margin:0;color:var(--muted);max-width:360px">Pruébatelas en la tienda de Pichilemu o compra online con envío a todo Chile.</p>
       </div>
       <div class="cats">
-        <button class="cat" type="button" data-filter="Niños"><div class="ph"><img data-src="hoodie-classic-oversize-kids-1" alt="" loading="lazy"></div><div class="cat-row"><b>Niños</b><span>Ver todo →</span></div></button>
+        <button class="cat" type="button" data-filter="Niños"><div class="ph"><img data-src="hoodie-classic-oversize-kids-1" alt="" loading="lazy"></div><div class="cat-row"><b>Niños</b><span>Por edad →</span></div></button>
         <button class="cat" type="button" data-filter="Mujer"><div class="ph"><img data-src="croptop-hilo-1" alt="" loading="lazy"></div><div class="cat-row"><b>Mujer</b><span>Ver todo →</span></div></button>
         <button class="cat" type="button" data-filter="Hombre"><div class="ph"><img data-src="poleron-polar-pro-adulto-1" alt="" loading="lazy"></div><div class="cat-row"><b>Hombre</b><span>Ver todo →</span></div></button>
         <button class="cat" type="button" data-filter="Accesorios"><div class="ph"><img data-src="funda-ipad-2" alt="" loading="lazy"></div><div class="cat-row"><b>Accesorios</b><span>Ver todo →</span></div></button>
+        <button class="cat" type="button" data-filter="Billeteras"><div class="ph"><img data-src="billetera-1" alt="" loading="lazy"></div><div class="cat-row"><b>Billeteras</b><span>Elige diseño →</span></div></button>
       </div>
     </section>
   </div>
@@ -848,8 +898,10 @@ body{color:#3E2A20}
           <button class="chip" type="button" data-chip="Mujer" aria-pressed="false">Mujer</button>
           <button class="chip" type="button" data-chip="Hombre" aria-pressed="false">Hombre</button>
           <button class="chip" type="button" data-chip="Accesorios" aria-pressed="false">Accesorios</button>
+          <button class="chip" type="button" data-chip="Billeteras" aria-pressed="false">Billeteras</button>
         </div>
       </div>
+      <div class="edades" id="edades" hidden></div>
       <div class="toolbar"><span id="pCount" class="eyebrow"></span><label class="sort"><span class="eyebrow">Ordenar</span><select id="sortSel" class="inp"><option value="dest">Destacados</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option><option value="az">Nombre A–Z</option></select></label></div>
       <div class="grid" id="grid"></div>
     </section>
@@ -880,7 +932,7 @@ body{color:#3E2A20}
 
   <section class="compra" aria-label="Medios de pago y envío">
     <div class="wrap">
-      <div><h2>Paga como prefieras</h2><p>Webpay con débito, crédito o cuotas, o transferencia bancaria. Envío gratis sobre $50.000 o retiro gratis en Pichilemu.</p></div>
+      <div><h2>Paga como prefieras</h2><p>Paga con transferencia bancaria. Envío gratis sobre $50.000 o retiro gratis en Pichilemu.</p></div>
       <a class="btn" href="#catalogo">Comprar ahora</a>
     </div>
   </section>
@@ -952,7 +1004,7 @@ body{color:#3E2A20}
   <div class="wrap foot">
     <div>
       <img data-src="91736af62d742e3049d0426360fd9901" alt="Paffu" style="height:72px;width:auto">
-      <span style="color:#C9D6DE;font-weight:300;margin-top:8px">Hecho a mano en Pichilemu.</span>
+      <span style="color:#C9D6DE;font-weight:300;margin-top:8px;max-width:30ch;line-height:1.6">Ropa cosida y tejida a mano en Pichilemu, Chile. Confección artesanal, algodón 100% nacional y lana para capear el viento y abrigar con amor.</span>
     </div>
     <div>
       <h4>Tienda</h4>
@@ -962,24 +1014,23 @@ body{color:#3E2A20}
       <a href="#catalogo" data-filter="Accesorios">Accesorios</a>
     </div>
     <div>
-      <h4>Contacto</h4>
+      <h4>Visítanos y contacto</h4>
+      <span class="js-dir"></span>
+      <span class="js-horario"></span>
       <a class="wa-link" href="#" target="_blank" rel="noopener">WhatsApp <span class="js-wa-num" style="display:inline;padding:0"></span></a>
       <a class="js-maps" href="#" target="_blank" rel="noopener">Cómo llegar (Google Maps)</a>
       <a href="https://www.instagram.com/paffuchile" target="_blank" rel="noopener">Instagram @paffuchile</a>
       <a href="https://www.tiktok.com/@paffuchile" target="_blank" rel="noopener">TikTok @paffuchile</a>
-      <span class="js-dir"></span>
-      <span class="js-horario"></span>
     </div>
     <div>
       <h4>Compra segura</h4>
-      <span>Webpay: débito, crédito y cuotas</span>
       <span>Transferencia bancaria</span>
       <span>Envío gratis sobre $50.000</span>
       <span>Retiro gratis en tienda</span>
     </div>
   </div>
-  <div class="wrap paychips" aria-label="Medios de pago"><span>Webpay</span><span>Débito</span><span>Crédito</span><span>Cuotas</span><span>Transferencia</span></div>
-  <div class="wrap copyline"><span>© 2026 Paffu · Sitio por Kinetik Studio</span></div>
+  <div class="wrap paychips" aria-label="Medios de pago"><span>Transferencia bancaria</span><span>Retiro en tienda</span></div>
+  <div class="wrap copyline"><span>© 2026 Paffu</span></div>
 </footer>
 
 <a class="fab wa-link store-only" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
@@ -997,6 +1048,8 @@ body{color:#3E2A20}
       <span class="eyebrow" id="mCat"></span>
       <h3 id="mTitle"></h3>
       <span class="price" id="mPrice" style="font-size:20px"></span>
+      <p class="m-trust" id="mTrust"></p>
+      <div class="m-var" id="mModBox" hidden><span class="eyebrow" id="mModLbl">Modelo</span><div class="m-mods" id="mMods" role="radiogroup" aria-label="Modelo"></div></div>
       <div class="m-var" id="mVarBox" hidden><span class="eyebrow" id="mVarLbl">Talla</span><div class="m-sizes" id="mSizes" role="radiogroup"></div></div>
       <p id="mDesc"></p>
       <dl class="spec"><dt>Tipo</dt><dd id="mMat"></dd><dt>Estado</dt><dd id="mStock"></dd></dl>
@@ -1170,15 +1223,15 @@ if (!window.__EXPIRED) (function(){
   var C = {teal:'#78A6A3', black:'#2B211B', gray:'#A7A4AA', coral:'#D2695F', cream:'#EDE6D8', red:'#C8322F', pink:'#E35A84', brown:'#9A6A3A', green:'#2F5D46', lilac:'#B9A7D6', mint:'#A8D5C2'};
   function P(o,id,cat,name,tipo,price,stock,img,col,extra){ return Object.assign({id:id, orden:o, cat:cat, name:name, mat:tipo, price:price, stock:stock, st: stock>0?'ok':'out', img:img, colores:col.map(function(k){return C[k]||k;}), feat:false}, extra||{}); }
   var products = [
-    P(1,'hoodie-classic','Niños','Hoodie Classic Oversize','Hoodie',22990,12,'hoodie-classic-oversize-kids-1',[],{feat:true, sello:'Más vendido', desc:'Hoodie oversize de franela, 100% algodón nacional, con el bordado Paffu Pichilemu. Disponible en varios colores.', vlabel:'Talla', tallas:[['1-2',22990],['4-6',24990],['8-10',26990]], fotos:['hoodie-classic-oversize-kids-1','hoodie-classic-oversize-kids-2','hoodie-classic-oversize-kids-3','hoodie-classic-oversize-kids-4','hoodie-classic-oversize-kids-5']}),
-    P(2,'polar-pro-kids','Niños','Polar Pro Kids','Polar',22990,8,'polar-pro-kids-1',[],{sello:'Invierno 2026', desc:'Polar grueso con cuello alto y cierre, para los días de viento en la costa.', vlabel:'Talla', tallas:[['2',22990],['4-6',24990],['8-10',26990],['10-12',28990]], fotos:['polar-pro-kids-1','polar-pro-kids-2']}),
-    P(3,'poleron-londres','Niños','Polerón Londres','Hoodie polar',22990,8,'poleron-londres-kids-2',[],{desc:'Polerón polar con cierre y bolsillo estampado. Combinaciones de color de temporada.', vlabel:'Talla', tallas:[['1-2',22990],['4-6',24990],['8-10',26990]], fotos:['poleron-londres-kids-2','poleron-londres-kids-1','poleron-londres-kids-3','poleron-londres-kids-4','poleron-londres-kids-5']}),
-    P(4,'poleron-paffu','Niños','Polerón Paffu','Franela · 100% algodón',21990,8,'poleron-paffu-kids-1',[],{desc:'Polerón de franela 100% algodón nacional, con bordado de conchas. Cada pieza es diferente: mismo modelo, combinaciones únicas.', vlabel:'Talla', tallas:[['6-9 meses',21990],['1',21990],['2-4',23990],['6-8',25990],['10-12',29990]], fotos:['poleron-paffu-kids-1','poleron-paffu-kids-2']}),
-    P(5,'jardineras','Niños','Jardineras Kids','Jardinera',21990,6,'jardineras-kids-1',[],{desc:'Jardinera bicolor con bolsillo cuadrillé y tirantes ajustables.', vlabel:'Talla', tallas:[['1',21990],['2',22990],['4',24990],['6',26990]], fotos:['jardineras-kids-1','jardineras-kids-2','jardineras-kids-3']}),
+    P(1,'hoodie-classic','Niños','Hoodie Classic Oversize','Hoodie',22990,12,'hoodie-classic-oversize-kids-1',[],{feat:true, sello:'Más vendido', desc:'Hoodie oversize de franela, 100% algodón nacional, con el bordado Paffu Pichilemu. Disponible en varios colores.', vlabel:'Modelo', tallas:[['Crudo · 2',22990],['Crudo · 6',24990],['Verde menta · 4',24990],['Fucsia · 4',24990],['Fucsia · 8',26990],['Mostaza · 6',24990],['Mostaza · 10',26990],['Negro · 8',26990],['Negro · 12',26990]], fotos:['hoodie-classic-oversize-kids-1','hoodie-classic-oversize-kids-2','hoodie-classic-oversize-kids-3','hoodie-classic-oversize-kids-4','hoodie-classic-oversize-kids-5']}),
+    P(2,'polar-pro-kids','Niños','Polar Pro Kids','Polar',22990,8,'polar-pro-kids-1',[],{sello:'Invierno 2026', desc:'Polar grueso con cuello alto y cierre, para los días de viento en la costa.', vlabel:'Talla', tallas:[['2',22990],['4',24990],['6',24990],['8',26990],['10',26990],['12',28990]], fotos:['polar-pro-kids-1','polar-pro-kids-2']}),
+    P(3,'poleron-londres','Niños','Polerón Londres','Hoodie polar',22990,8,'poleron-londres-kids-2',[],{desc:'Polerón polar con cierre y bolsillo estampado. Combinaciones de color de temporada.', vlabel:'Talla', tallas:[['2',22990],['4',24990],['6',24990],['8',26990],['10',26990]], fotos:['poleron-londres-kids-2','poleron-londres-kids-1','poleron-londres-kids-3','poleron-londres-kids-4','poleron-londres-kids-5']}),
+    P(4,'poleron-paffu','Niños','Polerón Paffu','Franela · 100% algodón',21990,8,'poleron-paffu-kids-1',[],{desc:'Polerón de franela 100% algodón nacional, con bordado de conchas. Cada pieza es diferente: mismo modelo, combinaciones únicas.', vlabel:'Talla', tallas:[['0-3 meses',21990],['6-9 meses',21990],['2',23990],['4',23990],['6',25990],['8',25990],['10',29990],['12',29990]], fotos:['poleron-paffu-kids-1','poleron-paffu-kids-2']}),
+    P(5,'jardineras','Niños','Jardineras Kids','Jardinera',21990,6,'jardineras-kids-1',[],{desc:'Jardinera bicolor con bolsillo cuadrillé y tirantes ajustables.', vlabel:'Talla', tallas:[['0-3 meses',21990],['6-9 meses',21990],['2',22990],['4',24990],['6',26990]], fotos:['jardineras-kids-1','jardineras-kids-2','jardineras-kids-3']}),
     P(6,'capucha-polar','Niños','Capucha Polar','Capucha polar',11990,10,'capucha-polar-adulto-kids-1',[],{sello:'50% dcto', dcto:50, desc:'Capucha polar que abriga cabeza y cuello. Colores a elección: consúltanos por los disponibles.', vlabel:'Tamaño', tallas:[['Kids',11990],['Adulto',13990]], fotos:['capucha-polar-adulto-kids-1','capucha-polar-adulto-kids-2']}),
-    P(7,'polar-pro-adulto','Hombre, Mujer','Polerón Polar Pro','Polar',39990,5,'poleron-polar-pro-adulto-1',[],{feat:true, desc:'Polerón polar con cuello alto y bolsillo canguro, en bloques de color.', fotos:['poleron-polar-pro-adulto-1','poleron-polar-pro-adulto-2']}),
-    P(8,'poleron-lupe','Hombre, Mujer','Polerón Lupe','Polerón',38990,5,'poleron-lupe-adulto-1',[],{desc:'Polerón con capucha en dos tonos y frase “Seek & find your peace” en la espalda.', fotos:['poleron-lupe-adulto-1','poleron-lupe-adulto-3','poleron-lupe-adulto-2','poleron-lupe-adulto-4']}),
-    P(9,'chaleco-chicago','Niños','Chaleco Chicago','Tejido a mano',26990,4,'chaleco-chicago-kids-1',[],{desc:'Chaleco tejido a mano. Cada uno es único en colores; abarca tallas 1 a 4.', vlabel:'Talla', tallas:[['1',26990],['2',26990],['3',26990],['4',26990]], fotos:['chaleco-chicago-kids-1','chaleco-chicago-kids-3','chaleco-chicago-kids-2','chaleco-chicago-kids-4']}),
+    P(7,'polar-pro-adulto','Hombre, Mujer','Polerón Polar Pro','Polar',39990,5,'poleron-polar-pro-adulto-1',[],{feat:true, vlabel:'Talla', tallas:[['XS',39990],['S',39990],['M',39990],['L',39990],['XL',39990]], desc:'Polerón polar con cuello alto y bolsillo canguro, en bloques de color.', fotos:['poleron-polar-pro-adulto-1','poleron-polar-pro-adulto-2']}),
+    P(8,'poleron-lupe','Hombre, Mujer','Polerón Lupe','Polerón',38990,5,'poleron-lupe-adulto-1',[],{vlabel:'Talla', tallas:[['XS',38990],['S',38990],['M',38990],['L',38990],['XL',38990]], desc:'Polerón con capucha en dos tonos y frase “Seek & find your peace” en la espalda.', fotos:['poleron-lupe-adulto-1','poleron-lupe-adulto-3','poleron-lupe-adulto-2','poleron-lupe-adulto-4']}),
+    P(9,'chaleco-chicago','Niños','Chaleco Chicago','Tejido a mano',26990,4,'chaleco-chicago-kids-1',[],{desc:'Chaleco tejido a mano. Cada uno es único en colores; tallas 2 y 4.', vlabel:'Talla', tallas:[['2',26990],['4',26990]], fotos:['chaleco-chicago-kids-1','chaleco-chicago-kids-3','chaleco-chicago-kids-2','chaleco-chicago-kids-4']}),
     P(10,'tejidos-unicos','Mujer','Tejidos piezas únicas','Tejido a mano',0,1,'tejidos-piezas-unicas-1',[],{st:'pedido', desc:'Chalecos y chaquetas tejidas a mano, una de cada una y en una sola talla. Escríbenos para saber cuáles quedan.', fotos:['tejidos-piezas-unicas-1','tejidos-piezas-unicas-2','tejidos-piezas-unicas-3','tejidos-piezas-unicas-4','tejidos-piezas-unicas-5']}),
     P(11,'croptop','Mujer','Croptop de hilo','Tejido a mano',25990,4,'croptop-hilo-1',[],{desc:'Croptop tejido en hilo a rayas, amarrado al cuello.', fotos:['croptop-hilo-1','croptop-hilo-2']}),
     P(12,'beanies','Accesorios','Beanie Paffu','Gorro',8990,16,'beanies-mostaza',[],{sello:'Más vendido', desc:'Gorro beanie con doblez y parche Paffu.', vlabel:'Color', tallas:[['Mostaza',8990],['Lila',8990],['Vainilla',8990],['Fucsia',8990]], fotos:['beanies-mostaza','beanies-lila','beanies-vainilla','beanies-fucsia']}),
@@ -1189,7 +1242,7 @@ if (!window.__EXPIRED) (function(){
     P(17,'mini-pocket','Accesorios','Mini pocket','Monedero',6000,12,'mini-pocket-1',[],{desc:'Monedero pequeño con mosquetón, en estampados blanco y negro.', fotos:['mini-pocket-1','mini-pocket-2']}),
     P(18,'porta-airpods','Accesorios','Porta AirPods','Estuche',6990,8,'porta-airpods-1',[],{desc:'Estuche para audífonos con argolla y detalle de concha.', fotos:['porta-airpods-1']}),
     P(19,'llavero','Accesorios','Llavero Freehands','Llavero',3990,15,'llavero-freehands-1',[],{desc:'Llavero de cinta estampada para colgar las llaves al cuello o al bolso.', fotos:['llavero-freehands-1']}),
-    P(20,'billetera','Accesorios','Billetera','Billetera',11990,6,'billetera-1',[],{desc:'Billetera acolchada con broche y argolla, en telas estampadas.', fotos:['billetera-1']}),
+    P(20,'billetera','Accesorios','Billetera','Billetera',11990,6,'billetera-1',[],{desc:'Billetera acolchada con broche y argolla, en telas estampadas. Todas tienen el mismo valor: elige tu diseño.', vlabel:'Diseño', tallas:[['Palmeras fucsia',11990]], fotos:['billetera-1']}),
     P(21,'porta-celular','Accesorios','Bolsa porta celular','Bolso cruzado',11990,6,'porta-celular-1',[],{sello:'Nuevo', desc:'Bolsa cruzada para el celular con correa ajustable, para andar con las manos libres.', fotos:['porta-celular-1']}),
     P(22,'giftcard','Accesorios','Gift Card Paffu','Tarjeta de regalo',10000,99,'giftcard-1',[],{feat:true, sello:'Para regalar', desc:'Regala Paffu y que elijan su pieza favorita, en la tienda o en la web.', vlabel:'Monto', tallas:[['$10.000',10000],['$15.000',15000],['$25.000',25000]], fotos:['giftcard-1']}),
     P(23,'gorro-newyork','Accesorios','Gorro New York','Gorro tejido',14990,6,'gorro-newyork-1',[],{sello:'Pieza única', desc:'Gorro tejido a mano en bloques de color. Cada uno es diferente: combinaciones irrepetibles.', fotos:['gorro-newyork-1','41855fdb2afc01bd5084f2dcbe4afa19']}),
@@ -1203,6 +1256,22 @@ if (!window.__EXPIRED) (function(){
   var cfg = {wa:'56936324552', dir:'Ángel Gaete 460-C, Pichilemu', horario:'Lunes a sábado, 10:00–13:30 y 16:00–19:00', gratis:50000, maps:'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Paffu, Ángel Gaete 460-C, Pichilemu, Chile')};
   var LIB = products.map(function(p){ return p.img; }).concat(['514f4888025a454fbe13bbc3cb0197f5','476c77907758b6e01c75149417b6c9c4','5188a116e9cb3d2f4d5bcee55f294706','3b87f235a22f94f30c999e5b53fe1df0']);
   var CATS = ['Niños','Mujer','Hombre','Accesorios'];
+  /* Niños por edad: cada tramo muestra las tallas que le corresponden (talla 4 = 3 a 4 años). */
+  /* Tallas de Paffu: 0-3 meses, 6-9 meses, 2, 4, 6, 8, 10, 12 (rangos en meses) */
+  var EDADES = [{k:'0-3m',n:'0–3',u:'meses',l:'0 a 3 meses',a:0,b:3},{k:'6-9m',n:'6–9',u:'meses',l:'6 a 9 meses',a:6,b:9},{k:'1-2',n:'1–2',u:'años',l:'1 a 2 años',a:12,b:24},{k:'3-4',n:'3–4',u:'años',l:'3 a 4 años',a:36,b:48},{k:'5-6',n:'5–6',u:'años',l:'5 a 6 años',a:60,b:72},{k:'7-8',n:'7–8',u:'años',l:'7 a 8 años',a:84,b:96},{k:'9-10',n:'9–10',u:'años',l:'9 a 10 años',a:108,b:120},{k:'11-12',n:'11–12',u:'años',l:'11 a 12 años',a:132,b:144}];
+  function edadObj(k){ return EDADES.filter(function(e){ return e.k===k; })[0]; }
+  /* Productos con modelos: cada opción es "Modelo · Talla"; la foto N corresponde al modelo N */
+  function vparts(t){ t=String(t); var i=t.lastIndexOf(' · '); return i<0 ? {m:'', t:t} : {m:t.slice(0,i), t:t.slice(i+3)}; }
+  function esModelo(p){ return p.vlabel==='Modelo'; }
+  function modelos(p){ var o=[]; (p.tallas||[]).forEach(function(x){ var m=vparts(x[0]).m; if(m && o.indexOf(m)<0) o.push(m); }); return o; }
+  function fotoModelo(p,m){ var i=modelos(p).indexOf(m); return (p.fotos&&p.fotos[i]) ? R(p.fotos[i]) : src(p); }
+  function rangoTalla(t){ var s=vparts(t).t.toLowerCase(); var n=s.match(/\d+/g); if(!n) return null; var f=/mes/.test(s)?1:12; return [+n[0]*f, +n[n.length-1]*f]; }
+  /* null = el producto no tiene tallas por número (ej. Kids/Adulto): se muestra en todas las edades */
+  function tallasEdad(p,e){ if(!p.tallas||!p.tallas.length) return null; var num=false; var out=p.tallas.filter(function(x){ var r=rangoTalla(x[0]); if(!r) return false; num=true; return r[0]<=e.b && r[1]>=e.a; }); return num?out:null; }
+  function enEdad(p,e){ var t=tallasEdad(p,e); return t===null || t.length>0; }
+  /* Billeteras: cada diseño es una pieza; todas al mismo valor */
+  function esBilletera(p){ return /billetera/i.test(p.name+' '+(p.mat||'')); }
+  function disenos(){ var out=[]; sorted().forEach(function(p){ if(!esBilletera(p)||p.st!=='ok') return; if(p.tallas&&p.tallas.length){ p.tallas.forEach(function(x,i){ out.push({p:p, t:x[0], precio:dc(p,x[1]), was:p.dcto?x[1]:0, foto:(p.fotos&&p.fotos[i])?R(p.fotos[i]):src(p)}); }); } else out.push({p:p, t:'', precio:minPrice(p), was:p.dcto?ominPrice(p):0, foto:src(p)}); }); return out; }
   var CATMAP = {'polar-pro-adulto':'Hombre, Mujer','poleron-lupe':'Hombre, Mujer','chaleco-chicago':'Niños','tejidos-unicos':'Mujer','croptop':'Mujer'};
   function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
   function catsOf(p){ return String(p.cat||'').split(/\s*,\s*/).filter(Boolean); }
@@ -1222,7 +1291,11 @@ if (!window.__EXPIRED) (function(){
   var REGIONES = [['Arica y Parinacota','extremo'],['Tarapacá','norte'],['Antofagasta','norte'],['Atacama','norte'],['Coquimbo','centro'],['Valparaíso','centro'],['Metropolitana de Santiago','rm'],["O'Higgins",'local'],['Maule','centro'],['Ñuble','sur'],['Biobío','sur'],['La Araucanía','sur'],['Los Ríos','sur'],['Los Lagos','sur'],['Aysén','extremo'],['Magallanes','extremo']];
 
   var cart = [], revFor = null, revStars = 5;
-  var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'webpay'};
+  var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'transferencia'};
+  /* Mercado Pago: poner en true cuando estén cargadas las llaves en Netlify */
+  var MP_ON = false;
+  var waPedido = null, waSig = '';
+  var cli = {nombre:'', email:'', telefono:'', direccion:'', comuna:''};
   var orders = [
     {num:'1042', cliente:'Camila R. (ejemplo)', items:'Hoodie Classic Oversize (Talla 4-6) · Beanie Paffu (Color Mostaza)', entrega:'Despacho a Santiago · gratis', total:54980, enviado:false},
     {num:'1041', cliente:'Diego M. (ejemplo)', items:'Polerón Polar Pro', entrega:'Retiro en tienda', total:54990, enviado:false},
@@ -1240,7 +1313,7 @@ if (!window.__EXPIRED) (function(){
   function minPrice(p){ return dc(p, ominPrice(p)); }
   function strike(n){ return ' <s class="was">'+clp(n)+'</s>'; }
   function priceTxt(p){ if(!minPrice(p)) return 'Consultar'; var many=p.tallas&&p.tallas.length>1&&p.tallas.some(function(x){return x[1]!==p.tallas[0][1];}); return (many?'Desde ':'')+clp(minPrice(p))+(p.dcto?strike(ominPrice(p)):''); }
-  function vlab(p,t){ return t ? (p.vlabel||'Talla')+' '+t : ''; }
+  function vlab(p,t){ if(t && esModelo(p)){ var v=vparts(t); return v.m+' · Talla '+v.t; } return t ? (p.vlabel==='Diseño' ? 'Diseño '+t : (p.vlabel||'Talla')+' '+t) : ''; }
   function waNum(){ return String(cfg.wa||'').replace(/\D/g,''); }
   function wa(text){ return 'https://wa.me/' + waNum() + '?text=' + encodeURIComponent(text); }
   function fmtWa(){ var d = waNum(); return d.length===11 ? '+'+d.slice(0,2)+' '+d.slice(2,3)+' '+d.slice(3,7)+' '+d.slice(7) : '+'+d; }
@@ -1275,12 +1348,15 @@ if (!window.__EXPIRED) (function(){
     document.getElementById('track').innerHTML = one + one;
   }
 
-  var state = {cat:'Todos', q:''};
+  var state = {cat:'Todos', q:'', edad:''};
   var FAV = {}; try{ FAV = JSON.parse(localStorage.getItem('paffu-fav')||'{}'); }catch(e){}
   var grid = document.getElementById('grid'), title = document.getElementById('catTitle');
-  function badgeFor(p){
+  function badgeFor(p, n){
     if (p.st==='out') return '<span class="badge out">Vendido</span>';
     if (p.st==='pedido') return '<span class="badge ok">Por encargo</span>';
+    if (esModelo(p) && unica(p)){ var nm = (n!=null) ? n : modelos(p).length; return '<span class="badge ok">'+(nm>1 ? nm+' modelos' : 'Pieza única')+'</span>'; }
+    var k = (n!=null) ? n : ((p.tallas&&p.tallas.length)||0);
+    if (unica(p) && k>1) return '<span class="badge ok">1 por '+esc((p.vlabel||'talla').toLowerCase())+'</span>';
     if (unica(p)) return '<span class="badge ok">Pieza única</span>';
     if (p.sello) return '<span class="badge ok">'+esc(p.sello)+'</span>';
     return '';
@@ -1288,16 +1364,32 @@ if (!window.__EXPIRED) (function(){
   function renderStore(){
     var q = state.q.trim().toLowerCase();
     var so = (document.getElementById('sortSel')||{}).value || 'dest';
+    var ed = (state.cat==='Niños' && !q) ? edadObj(state.edad) : null;
     var list = sorted().slice().sort(function(a,b){ if(so==='asc') return (minPrice(a)||1e9)-(minPrice(b)||1e9); if(so==='desc') return minPrice(b)-minPrice(a); if(so==='az') return a.name.localeCompare(b.name,'es'); return (b.feat?1:0)-(a.feat?1:0); }).filter(function(p){
-      return inCat(p,state.cat) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
+      return inCat(p,state.cat) && (!ed || enEdad(p,ed)) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
     });
-    title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : state.cat);
+    title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : state.cat + (ed ? ' · ' + ed.l : ''));
+    renderEdades(ed, list, q);
     document.querySelectorAll('[data-chip]').forEach(function(c){ c.setAttribute('aria-pressed', String(c.dataset.chip===state.cat)); });
-    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = products.filter(function(p){ return inCat(p,c); }).length; });
+    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = c==='Billeteras' ? disenos().length : products.filter(function(p){ return inCat(p,c); }).length; });
     var pc=document.getElementById('pCount'); if(pc) pc.textContent = list.length + (list.length===1?' producto':' productos');
+    if (state.cat==='Billeteras' && !q){ renderBilleteras(pc); return; }
+    if (state.cat==='Niños' && !q && !state.edad){ grid.classList.remove('by-col'); grid.innerHTML=''; if(pc) pc.textContent=''; return; }
     if(!products.length){ grid.innerHTML = '<p class="empty">Aún no hay productos publicados. Agrégalos desde el <a href="#panel">panel de la tienda</a>.</p>'; return; }
     if(!list.length){ grid.innerHTML = '<p class="empty">No encontramos productos con ese nombre. Prueba con “hoodie”, “gorro” o “funda”, o escríbenos por WhatsApp.</p>'; return; }
     var card = function(p){
+      var te = ed ? tallasEdad(p,ed) : null;
+      if (te && te.length && p.st==='ok'){
+        var tps = []; te.forEach(function(x){ var tt=vparts(x[0]).t; if(tps.indexOf(tt)<0) tps.push(tt); });
+        var mods = []; te.forEach(function(x){ var mm=vparts(x[0]).m; if(mm && mods.indexOf(mm)<0) mods.push(mm); });
+        var etq = 'Talla ' + tps.join(' y ');
+        var pr = te.length===1 ? clp(dc(p,te[0][1]))+(p.dcto?strike(te[0][1]):'') : (te.some(function(x){ return x[1]!==te[0][1]; }) ? 'Desde ' : '') + clp(dc(p, Math.min.apply(null, te.map(function(x){ return x[1]; }))));
+        var b = te.length===1 ? '<button class="btn btn-ink" type="button" data-add="'+esc(p.id)+'" data-t="'+esc(te[0][0])+'">Agregar '+(mods.length?esc(mods[0])+' ':'')+'talla '+esc(vparts(te[0][0]).t)+'</button>' : '<button class="btn btn-ink" type="button" data-open="'+esc(p.id)+'" data-t="'+esc(te[0][0])+'">'+(mods.length>1?'Ver '+mods.length+' modelos':'Elegir talla')+'</button>';
+        return '<article class="card">'+
+          '<button class="card-img single" type="button" data-open="'+esc(p.id)+'" data-t="'+esc(te[0][0])+'" aria-label="Ver ficha de '+esc(p.name)+'">'+badgeFor(p, esModelo(p) ? mods.length : te.length)+'<img src="'+esc(mods.length ? fotoModelo(p,mods[0]) : src(p))+'" alt="'+esc(p.name)+'" loading="lazy"></button>'+
+          '<span class="tipo">'+esc(etq)+'</span><h3>'+esc(p.name)+'</h3>'+
+          '<div class="price-row"><span class="price">'+pr+'</span></div><div class="acts">'+b+'</div></article>';
+      }
       var btn = p.st==='ok' ? ((p.tallas&&p.tallas.length) ? '<button class="btn btn-ink" type="button" data-open="'+esc(p.id)+'">Elegir '+esc((p.vlabel||'talla').toLowerCase())+'</button>' : '<button class="btn btn-ink" type="button" data-add="'+esc(p.id)+'">Agregar al carro</button>')
         : p.st==='pedido' ? '<a class="btn btn-line" href="'+esc(wa('Hola Paffu, me interesa '+p.name+'. ¿Qué tienen disponible y a qué precio?'))+'" target="_blank" rel="noopener">Consultar por WhatsApp</a>'
         : '<button class="btn btn-line" type="button" disabled>Vendido</button>';
@@ -1324,7 +1416,33 @@ if (!window.__EXPIRED) (function(){
     grid.classList.remove('by-col');
     grid.innerHTML = list.map(card).join('');
   }
-  function setCat(c, scroll){ state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
+  function renderEdades(ed, list, q){
+    var box = document.getElementById('edades'); if(!box) return;
+    if (state.cat!=='Niños' || q){ box.hidden = true; box.innerHTML=''; return; }
+    box.hidden = false;
+    var btns = EDADES.map(function(e){ return '<button class="e-btn" type="button" data-edad="'+e.k+'" aria-pressed="'+(state.edad===e.k)+'"><b>'+esc(e.n)+'</b><small>'+esc(e.u)+'</small></button>'; }).join('');
+    if (!state.edad){ box.innerHTML = '<p class="e-q">¿Qué edad tiene?</p><div class="e-grid">'+btns+'</div><button class="e-all" type="button" data-edad="todas">o ver todo Niños</button>'; return; }
+    var tallas = {}; if(ed) list.forEach(function(p){ (tallasEdad(p,ed)||[]).forEach(function(x){ tallas[vparts(x[0]).t]=1; }); });
+    var tl = Object.keys(tallas).sort(function(a,b){ return (rangoTalla(a)||[0])[0]-(rangoTalla(b)||[0])[0]; });
+    var pills = EDADES.map(function(e){ return '<button class="e-pill" type="button" data-edad="'+e.k+'" aria-pressed="'+(state.edad===e.k)+'">'+esc(e.n+' '+e.u)+'</button>'; }).join('');
+    box.innerHTML = '<button class="e-back" type="button" data-edad="">← Volver a edades</button>' +
+      (ed && tl.length ? '<p class="e-talla">Talla '+esc(tl.join(' y '))+'</p>' : '') +
+      '<div class="e-pills" aria-label="Cambiar edad">'+pills+'</div>';
+  }
+  function renderBilleteras(pc){
+    var ds = disenos();
+    grid.classList.remove('by-col');
+    if (pc) pc.textContent = ds.length + (ds.length===1?' diseño':' diseños') + (ds.length ? ' · todas a ' + clp(ds[0].precio) : '');
+    if (!ds.length){ grid.innerHTML = '<p class="empty">Por ahora no quedan billeteras disponibles. Escríbenos por WhatsApp y te avisamos cuando lleguen nuevos diseños.</p>'; return; }
+    grid.innerHTML = ds.map(function(d){
+      return '<article class="card">'+
+        '<button class="card-img single" type="button" data-open="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'" aria-label="Ver billetera '+esc(d.t||d.p.name)+'"><span class="badge ok">Pieza única</span><img src="'+esc(d.foto)+'" alt="Billetera '+esc(d.t||d.p.name)+'" loading="lazy"></button>'+
+        '<span class="tipo">Billetera</span><h3>'+esc(d.t||d.p.name)+'</h3>'+
+        '<div class="price-row"><span class="price">'+clp(d.precio)+(d.was?strike(d.was):'')+'</span></div>'+
+        '<div class="acts"><button class="btn btn-ink" type="button" data-add="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'">Agregar al carro</button></div></article>';
+    }).join('');
+  }
+  function setCat(c, scroll, edad){ state.edad = (c==='Niños' && edad) ? edad : ''; state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
 
   /* Menú */
   var drawer = document.getElementById('drawer'), menuBtn = document.getElementById('menuBtn');
@@ -1341,27 +1459,49 @@ if (!window.__EXPIRED) (function(){
 
   /* Ficha */
   var modal = document.getElementById('modal'), lastFocus = null, modalId = null, mTalla = null;
-  function openModal(id, from){
+  function openModal(id, from, pre){
     var p = byId(id); if(!p) return;
     lastFocus = from; modalId = id;
     var im = document.getElementById('mImg'); im.src = src(p); im.alt = p.name;
     document.getElementById('mCat').textContent = catsOf(p).join(' · ');
     document.getElementById('mTitle').textContent = p.name;
     mTalla = (p.tallas&&p.tallas.length===1) ? p.tallas[0][0] : null;
-    function paintVar(){ document.getElementById('mPrice').innerHTML = mTalla ? clp(vprice(p,mTalla))+(p.dcto?strike(oprice(p,mTalla)):'') : priceTxt(p);
+    if (pre && p.tallas && p.tallas.some(function(x){ return x[0]===pre; })) mTalla = pre;
+    if (mTalla && p.vlabel==='Diseño' && p.fotos){ var di=p.tallas.map(function(x){return x[0];}).indexOf(mTalla); if(p.fotos[di]) im.src=R(p.fotos[di]); }
+    function paintVar(){ document.getElementById('mPrice').innerHTML = (mTalla ? clp(vprice(p,mTalla))+(p.dcto?strike(oprice(p,mTalla)):'') : priceTxt(p)) + (p.dcto ? '<span class="m-off">-'+p.dcto+'%</span>' : '');
+      var ab = document.getElementById('mAdd'), nv = p.tallas&&p.tallas.length, lb = (p.vlabel||'talla').toLowerCase();
+      if (esModelo(p)){ var vp = mTalla ? vparts(mTalla) : null; ab.textContent = vp ? 'Agregar talla '+vp.t+' · '+clp(vprice(p,mTalla)) : 'Elige la talla'; }
+      else ab.textContent = !nv ? 'Agregar al carro · '+clp(minPrice(p)) : (mTalla ? 'Agregar '+(p.vlabel==='Diseño'?'': lb+' ')+mTalla+' · '+clp(vprice(p,mTalla)) : 'Elige tu '+lb);
+      ab.classList.toggle('btn-wait', !!nv && !mTalla);
       document.querySelectorAll('#mSizes button').forEach(function(b){ b.setAttribute('aria-checked', String(b.dataset.t===mTalla)); }); }
     var vb = document.getElementById('mVarBox'); vb.hidden = !(p.tallas&&p.tallas.length);
-    document.getElementById('mVarLbl').textContent = p.vlabel||'Talla';
+    document.getElementById('mVarLbl').textContent = (p.vlabel||'Talla') + (unica(p) && p.tallas && p.tallas.length>1 ? ' · hay 1 pieza de cada '+(p.vlabel||'talla').toLowerCase() : '');
     document.getElementById('mSizes').innerHTML = (p.tallas||[]).map(function(x){ return '<button type="button" role="radio" aria-checked="false" data-t="'+esc(x[0])+'">'+esc(x[0])+'</button>'; }).join('');
-    document.getElementById('mSizes').onclick = function(e){ var b=e.target.closest('[data-t]'); if(!b) return; mTalla=b.dataset.t; paintVar(); if(p.fotos&&p.vlabel==='Color'){ var k=p.fotos.filter(function(f){return f.indexOf(mTalla.toLowerCase())>-1;})[0]; if(k){ document.getElementById('mImg').src=R(k);} } };
-    paintVar();
-    var th = document.getElementById('mThumbs'); var fs = p.fotos||[];
+    document.getElementById('mSizes').onclick = function(e){ var b=e.target.closest('[data-t]'); if(!b) return; mTalla=b.dataset.t; paintVar(); if(p.fotos&&p.vlabel==='Diseño'){ var di=p.tallas.map(function(x){return x[0];}).indexOf(mTalla); if(p.fotos[di]) document.getElementById('mImg').src=R(p.fotos[di]); } if(p.fotos&&p.vlabel==='Color'){ var k=p.fotos.filter(function(f){return f.indexOf(mTalla.toLowerCase())>-1;})[0]; if(k){ document.getElementById('mImg').src=R(k);} } };
+    var mb = document.getElementById('mModBox'); mb.hidden = !esModelo(p);
+    if (esModelo(p)){
+      var ms = modelos(p), mMod = mTalla ? vparts(mTalla).m : ms[0];
+      var paintMod = function(){
+        im.src = fotoModelo(p, mMod);
+        var ts = p.tallas.filter(function(x){ return vparts(x[0]).m===mMod; });
+        if (!mTalla || vparts(mTalla).m!==mMod) mTalla = ts.length===1 ? ts[0][0] : null;
+        document.getElementById('mModLbl').textContent = 'Modelo · ' + mMod;
+        document.getElementById('mMods').innerHTML = ms.map(function(m){ return '<button type="button" role="radio" aria-checked="'+(m===mMod)+'" data-m="'+esc(m)+'"><img src="'+esc(fotoModelo(p,m))+'" alt=""><span>'+esc(m)+'</span></button>'; }).join('');
+        document.getElementById('mVarLbl').textContent = 'Talla' + (ts.length>1 ? ' · hay 1 pieza de cada talla' : ' · pieza única');
+        document.getElementById('mSizes').innerHTML = ts.map(function(x){ return '<button type="button" role="radio" aria-checked="false" data-t="'+esc(x[0])+'">'+esc(vparts(x[0]).t)+'</button>'; }).join('');
+        paintVar();
+      };
+      document.getElementById('mMods').onclick = function(e){ var b=e.target.closest('[data-m]'); if(!b) return; mMod=b.dataset.m; paintMod(); };
+      paintMod();
+    } else paintVar();
+    var th = document.getElementById('mThumbs'); var fs = esModelo(p) ? [] : (p.fotos||[]);
     th.innerHTML = fs.length>1 ? fs.map(function(f,k){ return '<button type="button" data-f="'+esc(f)+'" aria-label="Foto '+(k+1)+'"'+(k===0?' aria-current="true"':'')+'><img src="'+esc(R(f))+'" alt=""></button>'; }).join('') : '';
     th.onclick = function(e){ var b=e.target.closest('[data-f]'); if(!b) return; document.getElementById('mImg').src=R(b.dataset.f); th.querySelectorAll('button').forEach(function(x){x.removeAttribute('aria-current');}); b.setAttribute('aria-current','true'); };
     document.getElementById('mDesc').textContent = p.desc || 'Confeccionado a mano en nuestro taller de Pichilemu, en pequeñas producciones.';
     document.getElementById('mMat').textContent = p.mat || '—';
     document.getElementById('mStock').textContent = p.st==='ok' ? (unica(p) ? 'Disponible · pieza única' : 'Disponible') : STLABEL[p.st];
     var add = document.getElementById('mAdd'); add.hidden = p.st!=='ok';
+    document.getElementById('mTrust').innerHTML = p.st==='ok' ? 'Envío gratis sobre <b>'+clp(cfg.gratis)+'</b> · Retiro en tienda en Pichilemu<br>Paga con transferencia bancaria' : '';
     document.getElementById('mWa').href = wa('Hola Paffu, me interesa '+p.name+'. ¿Está disponible?');
     modal.hidden = false; document.body.style.overflow='hidden';
     document.getElementById('mClose').focus();
@@ -1383,6 +1523,7 @@ if (!window.__EXPIRED) (function(){
     if (envio.metodo==='despacho' && !gratis) costo = zona.precio;
     return {lines:lines, sub:sub, zona:zona, gratis:gratis, costo:costo, total:sub+costo, n:lines.reduce(function(s,l){ return s+l.q; },0)};
   }
+  function fld(id, k, lb, type, ac){ return '<div class="field"><label for="'+id+'">'+lb+'</label><input class="inp" id="'+id+'" data-cli="'+k+'" type="'+type+'" autocomplete="'+ac+'" value="'+esc(cli[k])+'"></div>'; }
   function renderCart(){
     var r = calc();
     document.getElementById('cartCount').textContent = r.n;
@@ -1405,7 +1546,7 @@ if (!window.__EXPIRED) (function(){
     cFoot.hidden = false;
     var falta = Math.max(0, cfg.gratis - r.sub), pct = Math.min(100, Math.round(r.sub / cfg.gratis * 100));
     var opts = REGIONES.map(function(x){ return '<option'+(x[0]===envio.region?' selected':'')+'>'+esc(x[0])+'</option>'; }).join('');
-    cBody.innerHTML =
+    cBody.innerHTML = (lastMsg ? '<p class="c-msg" style="margin:0 0 12px">'+esc(lastMsg)+'</p>' : '') +
       r.lines.map(function(l){ return '<div class="c-line"><img src="'+esc(src(l.p))+'" alt="">'+
         '<div><b>'+esc(l.p.name)+'</b><small>'+esc(l.t ? vlab(l.p,l.t) : (l.p.mat||catsOf(l.p).join(' · ')))+'</small>'+
         (unica(l.p) ? '<div class="qty"><span style="font-size:13px;color:var(--muted)">Pieza única</span><button type="button" class="q-del" data-q="-1" data-id="'+esc(l.p.id)+'" data-t="'+esc(l.t||'')+'" aria-label="Quitar '+esc(l.p.name)+' del carro">Quitar</button></div></div>'
@@ -1418,16 +1559,24 @@ if (!window.__EXPIRED) (function(){
       '</fieldset>'+
       (envio.metodo==='despacho' ? '<div class="field"><label for="cReg">Región de destino</label><select class="inp" id="cReg">'+opts+'</select><span style="font-size:13px;color:var(--muted)">'+esc(r.zona.nombre)+': '+clp(r.zona.precio)+' · gratis desde '+clp(cfg.gratis)+'</span></div>' : '')+
       '<fieldset class="opts"><legend class="eyebrow">Pago</legend>'+
-        '<label class="opt" for="p-web"><input type="radio" name="pago" id="p-web" value="webpay"'+(envio.pago==='webpay'?' checked':'')+'><span class="t">Webpay<small>Débito, crédito y cuotas con Transbank</small></span></label>'+
-        '<label class="opt" for="p-tra"><input type="radio" name="pago" id="p-tra" value="transferencia"'+(envio.pago==='transferencia'?' checked':'')+'><span class="t">Transferencia bancaria<small>Te enviamos los datos para transferir</small></span></label>'+
+        (MP_ON ? '<label class="opt" for="p-mp"><input type="radio" name="pago" id="p-mp" value="mercadopago"'+(envio.pago==='mercadopago'?' checked':'')+'><span class="t">Mercado Pago<small>Débito, crédito, cuotas o saldo Mercado Pago</small></span></label>' : '')+
+        '<label class="opt" for="p-tra"><input type="radio" name="pago" id="p-tra" value="transferencia"'+(envio.pago==='transferencia'?' checked':'')+'><span class="t">Transferencia bancaria<small>Te mostramos los datos al confirmar</small></span></label>'+
+      '</fieldset>'+
+      '<fieldset class="opts c-datos"><legend class="eyebrow">Tus datos</legend>'+
+        fld('cNom','nombre','Nombre y apellido','text','name')+fld('cMail','email','Correo','email','email')+fld('cTel','telefono','Teléfono (WhatsApp)','tel','tel')+
+        (envio.metodo==='despacho' ? fld('cDir','direccion','Dirección (calle, número, depto)','text','street-address')+fld('cCom','comuna','Comuna','text','address-level2') : '')+
+        '<p class="c-err" id="cErr" role="alert" hidden></p>'+
       '</fieldset>';
+    if (waPedido && waSig !== JSON.stringify([cart, envio, cli])) waPedido = null;
     cFoot.innerHTML =
       '<div class="tot"><span>Subtotal</span><span>'+clp(r.sub)+'</span>'+
       '<span>Envío</span><span>'+(envio.metodo==='retiro' ? 'Retiro gratis' : (r.gratis ? 'Gratis' : clp(r.costo)))+'</span>'+
       '<span class="g">Total</span><span class="g">'+clp(r.total)+'</span></div>'+
-      (envio.pago==='webpay'
-        ? '<button class="btn btn-ink" type="button" id="cPay">Pagar con Webpay</button><p class="c-note">Te llevamos a Webpay de Transbank para pagar con débito, crédito o cuotas.</p>'
-        : '<button class="btn btn-ink" type="button" id="cPay">Confirmar pedido</button><p class="c-note">Te enviamos los datos de transferencia por correo y WhatsApp. Reservamos tu pedido hasta recibir el pago.</p>');
+      (waPedido
+        ? '<a class="btn btn-ink" id="cWa" href="'+esc(waPedido)+'" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a><p class="c-note">Último paso: envíanos tu pedido por WhatsApp y te respondemos con los datos para transferir.</p>'
+        : envio.pago==='mercadopago'
+        ? '<button class="btn btn-ink" type="button" id="cPay">Pagar con Mercado Pago</button><p class="c-note">Te llevamos a Mercado Pago para pagar con débito, crédito o cuotas. Al terminar vuelves a la tienda.</p>'
+        : '<button class="btn btn-ink" type="button" id="cPay">Confirmar pedido</button><p class="c-note">Te enviamos los datos para transferir por WhatsApp. Despachamos cuando recibimos el pago.</p>');
   }
   function addToCart(id, t){
     var p = byId(id); if(!p || p.st!=='ok') return;
@@ -1461,31 +1610,84 @@ if (!window.__EXPIRED) (function(){
     revFor = null; revStars = 5; lastMsg = '¡Gracias, ' + n + '! Tu reseña quedó enviada y aparecerá en la tienda cuando la revisemos.'; renderCart();
   });
   cBody.addEventListener('change', function(e){
-    if (e.target.closest('#rvForm')) return;
+    if (e.target.closest('#rvForm') || e.target.dataset.cli) return;
     if (e.target.name==='metodo') envio.metodo = e.target.value;
     if (e.target.name==='pago') envio.pago = e.target.value;
     if (e.target.id==='cReg') envio.region = e.target.value;
     renderCart();
     var f = document.getElementById(e.target.id); if (f) f.focus();
   });
-  cFoot.addEventListener('click', function(e){
-    if (e.target.id!=='cPay') return;
+  cBody.addEventListener('input', function(e){ var k=e.target.dataset.cli; if(k) cli[k]=e.target.value; });
+  function demoPedido(){
     var r = calc();
     var det = r.lines.map(function(l){ if(unica(l.p)){ if(l.t && l.p.tallas && l.p.tallas.length){ l.p.tallas = l.p.tallas.filter(function(x){ return x[0]!==l.t; }); } if(!l.t || !l.p.tallas || !l.p.tallas.length){ l.p.st='out'; l.p.stock=0; } } return l.p.name + (l.t?' ('+vlab(l.p,l.t)+')':'') + (l.q>1?' x'+l.q:''); }).join(' · ');
     var ent = envio.metodo==='retiro' ? 'Retiro en tienda' : 'Despacho a ' + envio.region + (r.gratis ? ' · gratis' : ' · ' + clp(r.costo));
     var tra = envio.pago==='transferencia';
     revFor = {num:String(nextNum), items:det};
-    orders.unshift({num:String(nextNum++), cliente:'Compra de prueba', items:det, entrega:ent + (tra ? ' · Transferencia (pago pendiente)' : ' · Webpay'), total:r.total, enviado:false});
-    cart = []; lastMsg = 'Pedido de prueba por ' + clp(r.total) + ' creado. ' + (tra ? 'En la tienda publicada recibirás aquí los datos de transferencia.' : 'En la tienda publicada aquí se abre Webpay.') + ' Míralo en Panel › Pedidos.';
+    orders.unshift({num:String(nextNum++), cliente:'Compra de prueba', items:det, entrega:ent + (tra ? ' · Transferencia (pago pendiente)' : ' · Mercado Pago'), total:r.total, enviado:false});
+    cart = []; lastMsg = 'Pedido de prueba por ' + clp(r.total) + ' creado. ' + (tra ? 'En la tienda publicada recibirás aquí los datos de transferencia.' : 'En la tienda publicada aquí se abre Mercado Pago.') + ' Míralo en Panel › Pedidos.';
     renderCart(); renderStore();
+  }
+  /* Pago real: funciones de Netlify (crear-pedido). Sin servidor (vista previa) usa el pedido de prueba. */
+  function quitarVendidos(){ calc().lines.forEach(function(l){ if(unica(l.p)){ if(l.t && l.p.tallas && l.p.tallas.length) l.p.tallas = l.p.tallas.filter(function(x){ return x[0]!==l.t; }); if(!l.t || !l.p.tallas || !l.p.tallas.length){ l.p.st='out'; l.p.stock=0; } } }); }
+  cFoot.addEventListener('click', function(e){
+    if (e.target.id!=='cPay') return;
+    var btn = e.target, er = document.getElementById('cErr');
+    var bad = function(msg, id){ er.textContent = msg; er.hidden = false; var f=id&&document.getElementById(id); if(f){ f.focus(); f.scrollIntoView({block:'center'}); } };
+    er.hidden = true;
+    if (!cli.nombre.trim()) return bad('Escribe tu nombre.', 'cNom');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(cli.email.trim())) return bad('Revisa tu correo.', 'cMail');
+    if (cli.telefono.replace(/\D/g,'').length < 8) return bad('Escribe tu teléfono con al menos 8 números.', 'cTel');
+    if (envio.metodo==='despacho' && !cli.direccion.trim()) return bad('Escribe la dirección de despacho.', 'cDir');
+    if (envio.metodo==='despacho' && !cli.comuna.trim()) return bad('Escribe la comuna.', 'cCom');
+    var body = {items: cart.map(function(l){ return {id:l.id, t:l.t||'', q:l.q}; }), metodo:envio.metodo, region:envio.region, pago:envio.pago,
+      cliente:{nombre:cli.nombre, email:cli.email, telefono:cli.telefono}, direccion:cli.direccion, comuna:cli.comuna};
+    btn.disabled = true; var txt = btn.textContent; btn.textContent = 'Un momento…';
+    fetch('/.netlify/functions/crear-pedido', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
+      .then(function(r){ if(r.status===404 || r.status===405) throw {demo:true}; if(r.status===503 || r.status>=500) throw {wa:true}; return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(x){
+        btn.disabled = false; btn.textContent = txt;
+        if (!x.ok) return bad(x.d.error || 'No pudimos crear el pedido. Inténtalo de nuevo.');
+        if (x.d.url){ try{ localStorage.setItem('paffu-cart', JSON.stringify({cart:cart, cli:cli, envio:envio})); }catch(e){} location.href = x.d.url; return; }
+        quitarVendidos(); revFor = {num:String(x.d.num), items:''}; cart = [];
+        lastMsg = '¡Pedido N° ' + x.d.num + ' recibido! Transfiere ' + clp(x.d.total) + ' a:\n\n' + x.d.datos + '\n\nEnvía el comprobante por WhatsApp indicando tu número de pedido. Reservamos tus piezas mientras llega el pago.';
+        renderCart(); renderStore();
+      })
+      .catch(function(err){ btn.disabled = false; btn.textContent = txt; if (err && err.demo) return demoPedido(); if (err && err.wa) return pedidoWa(); bad('No hay conexión. Revisa tu internet e inténtalo de nuevo.'); });
   });
+  /* Sin servidor configurado: el pedido se envía por WhatsApp y Jireh responde con los datos de transferencia */
+  function pedidoWa(){
+    var r = calc();
+    var det = r.lines.map(function(l){ return '• ' + l.p.name + (l.t ? ' (' + vlab(l.p, l.t) + ')' : '') + (l.q>1 ? ' ×' + l.q : '') + ' · ' + clp(l.u*l.q); }).join('\n');
+    var ent = envio.metodo==='retiro' ? 'Retiro en tienda' : 'Despacho a ' + cli.direccion + ', ' + cli.comuna + ', ' + envio.region + (r.gratis ? ' (envío gratis)' : ' (envío ' + clp(r.costo) + ')');
+    waSig = JSON.stringify([cart, envio, cli]);
+    waPedido = wa('Hola Paffu, quiero hacer este pedido con pago por transferencia:\n\n' + det + '\n\nTotal: ' + clp(r.total) + '\nEntrega: ' + ent + '\n\nNombre: ' + cli.nombre + '\nCorreo: ' + cli.email + '\nTeléfono: ' + cli.telefono);
+    lastMsg = ''; renderCart();
+    var a = document.getElementById('cWa'); if (a) a.focus();
+  }
+  cFoot.addEventListener('click', function(e){
+    if (e.target.id!=='cWa') return;
+    setTimeout(function(){ waPedido = null; cart = []; lastMsg = '¡Gracias! Recibimos tu pedido por WhatsApp. Te responderemos con los datos para transferir.'; renderCart(); renderStore(); }, 300);
+  });
+  /* Vuelta desde Mercado Pago */
+  (function(){
+    var qs = new URLSearchParams(location.search), st = qs.get('pago'), num = qs.get('pedido'); if(!st) return;
+    try{ history.replaceState(null, '', location.pathname + location.hash); }catch(e){}
+    var saved = {}; try{ saved = JSON.parse(localStorage.getItem('paffu-cart')||'{}')||{}; localStorage.removeItem('paffu-cart'); }catch(e){}
+    if (saved.cli) cli = saved.cli; if (saved.envio) envio = saved.envio;
+    if (st==='ok'){ lastMsg = '¡Gracias! Tu pago fue aprobado. Pedido N° ' + num + '. Te escribiremos por WhatsApp para coordinar la entrega.'; revFor = {num:String(num||''), items:''}; }
+    else if (st==='pendiente'){ lastMsg = 'Tu pago del pedido N° ' + num + ' quedó pendiente. Te avisaremos cuando Mercado Pago lo confirme.'; }
+    else { cart = saved.cart || []; lastMsg = 'El pago no se completó. Tus productos siguen en el carro para que lo intentes de nuevo.'; }
+    setTimeout(function(){ renderCart(); openCart(); }, 400);
+  })();
 
   document.addEventListener('click', function(e){
     var f = e.target.closest('[data-filter]');
-    if(f){ e.preventDefault(); closeMenu(); if(location.hash==='#panel') location.hash='catalogo'; setCat(f.dataset.filter, true); return; }
+    if(f){ e.preventDefault(); closeMenu(); if(location.hash==='#panel') location.hash='catalogo'; setCat(f.dataset.filter, true, f.dataset.edad); return; }
+    var ea = e.target.closest('[data-edad]'); if(ea){ state.edad = ea.dataset.edad; renderStore(); document.getElementById(state.edad && state.edad!=='todas' ? 'edades' : 'catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); return; }
     var ch = e.target.closest('[data-chip]'); if(ch){ setCat(ch.dataset.chip, false); return; }
-    var a = e.target.closest('[data-add]'); if(a){ addToCart(a.dataset.add); return; }
-    var o = e.target.closest('[data-open]'); if(o){ openModal(o.dataset.open, o); return; }
+    var a = e.target.closest('[data-add]'); if(a){ addToCart(a.dataset.add, a.dataset.t); return; }
+    var o = e.target.closest('[data-open]'); if(o){ openModal(o.dataset.open, o, o.dataset.t); return; }
     var c = e.target.closest('[data-close]'); if(c){ closeMenu(); }
   });
 
