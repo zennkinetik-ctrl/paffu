@@ -759,6 +759,37 @@ body{color:#3E2A20}
 .hecho100 span{font-weight:600;font-size:15px}
 .hecho100 small{font-size:12px;color:#5A4436;line-height:1.4}
 @media (max-width:700px){.hecho100{right:8px;bottom:-18px;width:150px}}
+/* ---------- Hero alineado a la izquierda (pedido Jireh, nov 2026) ---------- */
+.hero-akke{align-items:flex-start!important;text-align:left!important;justify-content:center}
+.hero-akke .hero-big{font-size:clamp(58px,9.5vw,138px)!important;line-height:.88!important}
+.hero-akke .hero-tag{font:300 clamp(20px,2.6vw,32px)/1.15 var(--f-body);letter-spacing:.02em;color:#fff;text-shadow:0 1px 14px rgba(0,0,0,.45);margin-top:-2px}
+.hero-akke .hero-tag::before{content:"";display:block;width:56px;height:1px;background:rgba(255,255,255,.8);margin:4px 0 14px}
+.hero-akke .hero-lead{max-width:38ch;margin-top:4px}
+.hero-akke .hero-ctas{justify-content:flex-start;margin-top:6px}
+.hero::after{background:linear-gradient(to right,rgba(24,15,10,.62) 0%,rgba(24,15,10,.32) 45%,rgba(24,15,10,0) 75%),linear-gradient(to top,rgba(24,15,10,.5) 0%,rgba(24,15,10,0) 45%)!important}
+@media (max-width:700px){.hero::after{background:linear-gradient(to top,rgba(24,15,10,.75) 0%,rgba(24,15,10,.35) 55%,rgba(24,15,10,.2) 100%)!important}.hero-akke .hero-tag::before{margin:2px 0 10px}}
+/* ---------- Cupón de bienvenida ---------- */
+.cp{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px}
+.cp-scrim{position:absolute;inset:0;background:rgba(24,15,10,.55);animation:fade .3s both}
+.cp-box{position:relative;width:100%;max-width:440px;background:#F3EAE0;color:#2A1D17;border-radius:20px;padding:34px 28px 26px;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:fade .4s both}
+.cp-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;background:transparent;font-size:26px;line-height:1;color:#2A1D17;cursor:pointer}
+.cp-eye{font:500 12px/1 var(--f-body);letter-spacing:.28em;text-transform:uppercase;color:#7A5C48}
+.cp-box h2{margin:10px 0 6px;font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:clamp(44px,11vw,60px);line-height:.9}
+.cp-box p{margin:0 0 18px;font-size:15px;line-height:1.5;color:#4A372C}
+.cp-box form{display:flex;flex-direction:column;gap:10px}
+.cp-box input[type=email]{height:50px;border:1px solid #CDBBA8;border-radius:999px;background:#fff;padding:0 18px;font:400 16px var(--f-body);color:#2A1D17}
+.cp-box .btn-oval{background:#2A1D17;color:#F3EAE0;border-color:#2A1D17;cursor:pointer}
+.cp-box .btn-oval:hover{background:transparent;color:#2A1D17}
+.cp-err{margin:0;color:#A3402A;font-size:13px}
+.cp-code{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px dashed #2A1D17;border-radius:14px;padding:12px 14px;margin:4px 0 14px}
+.cp-code b{font-family:var(--f-display);font-weight:400;font-size:clamp(24px,7vw,32px);letter-spacing:.06em;min-width:0;overflow-wrap:anywhere}
+.cp-code button{flex:0 0 auto}
+.cp-code button{min-height:44px;padding:0 16px;border:1px solid #2A1D17;border-radius:999px;background:transparent;font:500 12px var(--f-body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:#2A1D17}
+.cp-small{font-size:12px!important;color:#7A5C48!important;margin:12px 0 0!important}
+.cupon-row{display:flex;gap:8px;align-items:stretch}
+.cupon-row .inp{flex:1;text-transform:uppercase}
+.cupon-row button{flex:0 0 auto;min-height:44px;padding:0 16px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:500 12px var(--f-body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.cupon-ok{font-size:13px;color:var(--muted)}
 </style>
 
 <!-- ================= TIENDA ================= -->
@@ -864,9 +895,10 @@ body{color:#3E2A20}
     </div>
     <div class="hero-sub hero-akke">
       <img class="hero-olas" data-src="olas-blanco" alt="" aria-hidden="true">
-      <span class="hero-eye">Hecho a mano</span>
-      <p class="hero-big">Colección<br>Origen</p>
-      <span class="hero-lead">Algodón 100% nacional, hecho a mano desde Pichilemu.</span>
+      <span class="hero-eye">Hecho a mano en Pichilemu</span>
+      <p class="hero-big">Prendas con<br>identidad,</p>
+      <span class="hero-tag">hechas para acompañarte</span>
+      <span class="hero-lead">Ropa y accesorios para grandes y pequeños. Piezas de autor en pequeñas producciones, cosidas con cariño frente al mar.</span>
       <div class="hero-ctas">
         <a class="btn-oval light" href="#catalogo">Ver tienda</a>
         <a class="btn-oval light ghost" href="#tienda-fisica">Visítanos</a>
@@ -1071,6 +1103,33 @@ body{color:#3E2A20}
   <div class="ck-btns"><button type="button" class="ck-no" data-ck="no">Solo necesarias</button><button type="button" class="ck-yes" data-ck="yes">Aceptar</button></div>
 </div>
 </footer>
+
+<div class="cp store-only" id="cupon" hidden role="dialog" aria-modal="true" aria-labelledby="cpT">
+  <div class="cp-scrim" data-cp-close></div>
+  <div class="cp-box">
+    <button class="cp-x" type="button" data-cp-close aria-label="Cerrar">×</button>
+    <span class="cp-eye">Bienvenida a Paffu</span>
+    <h2 id="cpT"><span id="cpPct">10%</span> en tu<br>primera compra</h2>
+    <div id="cpStep1">
+      <p>Déjanos tu correo y te damos tu cupón al tiro. Además te avisamos cuando lleguen piezas nuevas.</p>
+      <form id="cpForm" name="cupon" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="cupon">
+        <input type="hidden" name="cupon" id="cpCodeIn">
+        <p hidden><label>No llenar: <input name="bot-field"></label></p>
+        <label for="cpMail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Tu correo</label>
+        <input id="cpMail" name="email" type="email" autocomplete="email" placeholder="tu@correo.cl" required>
+        <p class="cp-err" id="cpErr" role="alert" hidden></p>
+        <button class="btn-oval" type="submit">Quiero mi cupón</button>
+      </form>
+      <p class="cp-small">Sin spam. Puedes darte de baja cuando quieras.</p>
+    </div>
+    <div id="cpStep2" hidden>
+      <p>¡Listo! Usa este código en el carro antes de confirmar tu pedido:</p>
+      <div class="cp-code"><b id="cpCode">BIENVENIDA10</b><button type="button" id="cpCopy">Copiar</button></div>
+      <a class="btn-oval" href="#catalogo" data-cp-close style="width:100%;box-sizing:border-box">Ver la tienda</a>
+    </div>
+  </div>
+</div>
 
 <a class="fab wa-link store-only" href="#" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.1A8 8 0 1 1 20 12z"/></svg>
@@ -1292,7 +1351,7 @@ if (!window.__EXPIRED) (function(){
     P(28,'totebag','Accesorios','Totebag','Bolso de tela',7990,6,'ba46c44a4adee7c932a382bda3163780',[],{desc:'Bolso de tela estampada para el día a día.', fotos:['ba46c44a4adee7c932a382bda3163780']})
   ];
   products.forEach(function(p){ if(p.st==='pedido') return; p.st = p.stock>0?'ok':'out'; });
-  var cfg = {wa:'56936324552', dir:'Ángel Gaete 460-C, Pichilemu', horario:'Lunes a sábado, 10:00–13:30 y 16:00–19:00', gratis:50000, maps:'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Paffu, Ángel Gaete 460-C, Pichilemu, Chile')};
+  var cfg = {wa:'56936324552', dir:'Ángel Gaete 460-C, Pichilemu', horario:'Lunes a sábado, 10:00–13:30 y 16:00–19:00', gratis:50000, cupon:{code:'BIENVENIDA10', pct:10}, maps:'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Paffu, Ángel Gaete 460-C, Pichilemu, Chile')};
   var LIB = products.map(function(p){ return p.img; }).concat(['514f4888025a454fbe13bbc3cb0197f5','476c77907758b6e01c75149417b6c9c4','5188a116e9cb3d2f4d5bcee55f294706','3b87f235a22f94f30c999e5b53fe1df0']);
   var CATS = ['Niños','Mujer','Hombre','Accesorios'];
   /* Niños por edad: cada tramo muestra las tallas que le corresponden (talla 4 = 3 a 4 años). */
@@ -1333,6 +1392,7 @@ if (!window.__EXPIRED) (function(){
   var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'transferencia'};
   /* Mercado Pago: poner en true cuando estén cargadas las llaves en Netlify */
   var MP_ON = false;
+  var cuponOn = ''; try{ cuponOn = localStorage.getItem('paffu-cupon-on')||''; }catch(e){}
   var waPedido = null, waSig = '';
   var cli = {nombre:'', email:'', telefono:'', direccion:'', comuna:''};
   var orders = [
@@ -1553,6 +1613,40 @@ if (!window.__EXPIRED) (function(){
     if(p && p.tallas && p.tallas.length && !mTalla){ toast('Elige '+(p.vlabel||'talla').toLowerCase()+' antes de agregar'); var f=document.querySelector('#mSizes button'); if(f) f.focus(); return; }
     var t = mTalla; closeModal(); addToCart(id, t); });
 
+  /* ---------- Cupón de bienvenida: aparece una vez, guarda el correo en Netlify Forms (aviso a paffu.cl@gmail.com) ---------- */
+  (function(){
+    var cp = document.getElementById('cupon'); if (!cp) return;
+    var seen = false; try{ seen = !!localStorage.getItem('paffu-cupon-visto'); }catch(e){}
+    var from = null;
+    document.getElementById('cpPct').textContent = cfg.cupon.pct + '%';
+    document.getElementById('cpCode').textContent = cfg.cupon.code;
+    document.getElementById('cpCodeIn').value = cfg.cupon.code;
+    function marcar(){ try{ localStorage.setItem('paffu-cupon-visto', '1'); }catch(e){} }
+    function abrir(){
+      var ck = document.getElementById('cookieBar'), ocupado = (ck && !ck.hidden) || !document.getElementById('cart').hidden || !document.getElementById('modal').hidden || document.body.dataset.view==='panel';
+      if (ocupado){ setTimeout(abrir, 4000); return; }
+      from = document.activeElement; cp.hidden = false; marcar(); track('view_promotion', {promotion_name:cfg.cupon.code});
+      document.getElementById('cpMail').focus();
+    }
+    function cerrar(){ cp.hidden = true; marcar(); if (from && from.focus) from.focus(); }
+    if (!seen && !/[?&]pago=/.test(location.search)) setTimeout(abrir, 5000);
+    cp.addEventListener('click', function(e){ if (e.target.closest('[data-cp-close]')) cerrar(); });
+    document.addEventListener('keydown', function(e){ if (e.key==='Escape' && !cp.hidden) cerrar(); });
+    document.getElementById('cpCopy').addEventListener('click', function(){
+      var b = this; try{ navigator.clipboard.writeText(cfg.cupon.code).then(function(){ b.textContent = 'Copiado'; }); }catch(e){ b.textContent = 'Copiado'; }
+    });
+    document.getElementById('cpForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var f = this, mail = document.getElementById('cpMail'), er = document.getElementById('cpErr'), btn = f.querySelector('button');
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail.value.trim())){ er.textContent = 'Revisa tu correo.'; er.hidden = false; mail.focus(); return; }
+      er.hidden = true; btn.disabled = true;
+      var listo = function(){ document.getElementById('cpStep1').hidden = true; document.getElementById('cpStep2').hidden = false; document.getElementById('cpCopy').focus();
+        cuponOn = cfg.cupon.code; try{ localStorage.setItem('paffu-cupon-on', cuponOn); }catch(e){} track('generate_lead', {method:'cupon_bienvenida'}); };
+      fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(new FormData(f)).toString()})
+        .then(listo, listo);
+    });
+  })();
+
   /* ---------- Carro con despacho ---------- */
   var cartEl = document.getElementById('cart'), cBody = document.getElementById('cBody'), cFoot = document.getElementById('cFoot'), cartFrom = null, lastMsg = '';
   function calc(){
@@ -1561,7 +1655,8 @@ if (!window.__EXPIRED) (function(){
     var zk = (REGIONES.filter(function(r){ return r[0]===envio.region; })[0]||[])[1] || 'rm';
     var zona = ZONAS[zk], gratis = sub >= cfg.gratis, costo = 0;
     if (envio.metodo==='despacho' && !gratis) costo = zona.precio;
-    return {lines:lines, sub:sub, zona:zona, gratis:gratis, costo:costo, total:sub+costo, n:lines.reduce(function(s,l){ return s+l.q; },0)};
+    var dcto = cuponOn===cfg.cupon.code ? Math.round(sub * cfg.cupon.pct / 100) : 0;
+    return {lines:lines, sub:sub, zona:zona, gratis:gratis, costo:costo, dcto:dcto, total:sub-dcto+costo, n:lines.reduce(function(s,l){ return s+l.q; },0)};
   }
   function fld(id, k, lb, type, ac){ return '<div class="field"><label for="'+id+'">'+lb+'</label><input class="inp" id="'+id+'" data-cli="'+k+'" type="'+type+'" autocomplete="'+ac+'" value="'+esc(cli[k])+'"></div>'; }
   function renderCart(){
@@ -1602,6 +1697,10 @@ if (!window.__EXPIRED) (function(){
         (MP_ON ? '<label class="opt" for="p-mp"><input type="radio" name="pago" id="p-mp" value="mercadopago"'+(envio.pago==='mercadopago'?' checked':'')+'><span class="t">Mercado Pago<small>Débito, crédito, cuotas o saldo Mercado Pago</small></span></label>' : '')+
         '<label class="opt" for="p-tra"><input type="radio" name="pago" id="p-tra" value="transferencia"'+(envio.pago==='transferencia'?' checked':'')+'><span class="t">Transferencia bancaria<small>Te mostramos los datos al confirmar</small></span></label>'+
       '</fieldset>'+
+      '<fieldset class="opts"><legend class="eyebrow">Cupón de descuento</legend>'+
+        (r.dcto ? '<span class="cupon-ok"><span class="ok-txt">'+esc(cuponOn)+'</span> aplicado: '+cfg.cupon.pct+'% de descuento · <button type="button" class="q-del" data-cupon-del>Quitar</button></span>'
+          : '<div class="cupon-row"><input class="inp" id="cCupon" placeholder="Código" autocomplete="off" aria-label="Código de cupón"><button type="button" data-cupon-add>Aplicar</button></div>')+
+      '</fieldset>'+
       '<fieldset class="opts c-datos"><legend class="eyebrow">Tus datos</legend>'+
         fld('cNom','nombre','Nombre y apellido','text','name')+fld('cMail','email','Correo','email','email')+fld('cTel','telefono','Teléfono (WhatsApp)','tel','tel')+
         (envio.metodo==='despacho' ? fld('cDir','direccion','Dirección (calle, número, depto)','text','street-address')+fld('cCom','comuna','Comuna','text','address-level2') : '')+
@@ -1610,6 +1709,7 @@ if (!window.__EXPIRED) (function(){
     if (waPedido && waSig !== JSON.stringify([cart, envio, cli])) waPedido = null;
     cFoot.innerHTML =
       '<div class="tot"><span>Subtotal</span><span>'+clp(r.sub)+'</span>'+
+      (r.dcto ? '<span>Cupón '+esc(cuponOn)+'</span><span>−'+clp(r.dcto)+'</span>' : '')+
       '<span>Envío</span><span>'+(envio.metodo==='retiro' ? 'Retiro gratis' : (r.gratis ? 'Gratis' : clp(r.costo)))+'</span>'+
       '<span class="g">Total</span><span class="g">'+clp(r.total)+'</span></div>'+
       (waPedido
@@ -1639,6 +1739,10 @@ if (!window.__EXPIRED) (function(){
     if (e.target.closest('[data-go-shop]')){ closeCart(); setCat('Todos', true); }
     var st = e.target.closest('[data-rs]'); if (st){ revStars = +st.dataset.rs; cBody.querySelectorAll('[data-rs]').forEach(function(x){ x.setAttribute('aria-pressed', String(+x.dataset.rs<=revStars)); }); return; }
     if (e.target.closest('[data-rv-skip]')){ revFor = null; renderCart(); }
+    if (e.target.closest('[data-cupon-add]')){ var ci=document.getElementById('cCupon'), cv=(ci.value||'').trim().toUpperCase();
+      if (cv===cfg.cupon.code){ cuponOn=cv; try{ localStorage.setItem('paffu-cupon-on', cv); }catch(e){} track('select_promotion',{promotion_name:cv}); renderCart(); toast('Cupón aplicado: '+cfg.cupon.pct+'% de descuento'); }
+      else { toast(cv ? 'Ese código no es válido' : 'Escribe tu código'); ci.focus(); } return; }
+    if (e.target.closest('[data-cupon-del]')){ cuponOn=''; try{ localStorage.removeItem('paffu-cupon-on'); }catch(e){} renderCart(); }
   });
   cBody.addEventListener('submit', function(e){
     if (e.target.id!=='rvForm') return; e.preventDefault();
@@ -1659,6 +1763,7 @@ if (!window.__EXPIRED) (function(){
     var f = document.getElementById(e.target.id); if (f) f.focus();
   });
   cBody.addEventListener('input', function(e){ var k=e.target.dataset.cli; if(k) cli[k]=e.target.value; });
+  cBody.addEventListener('keydown', function(e){ if(e.key==='Enter' && e.target.id==='cCupon'){ e.preventDefault(); var b=cBody.querySelector('[data-cupon-add]'); if(b) b.click(); } });
   function demoPedido(){
     var r = calc();
     var det = r.lines.map(function(l){ if(unica(l.p)){ if(l.t && l.p.tallas && l.p.tallas.length){ l.p.tallas = l.p.tallas.filter(function(x){ return x[0]!==l.t; }); } if(!l.t || !l.p.tallas || !l.p.tallas.length){ l.p.st='out'; l.p.stock=0; } } return l.p.name + (l.t?' ('+vlab(l.p,l.t)+')':'') + (l.q>1?' x'+l.q:''); }).join(' · ');
@@ -1683,7 +1788,7 @@ if (!window.__EXPIRED) (function(){
     if (envio.metodo==='despacho' && !cli.direccion.trim()) return bad('Escribe la dirección de despacho.', 'cDir');
     if (envio.metodo==='despacho' && !cli.comuna.trim()) return bad('Escribe la comuna.', 'cCom');
     var body = {items: cart.map(function(l){ return {id:l.id, t:l.t||'', q:l.q}; }), metodo:envio.metodo, region:envio.region, pago:envio.pago,
-      cliente:{nombre:cli.nombre, email:cli.email, telefono:cli.telefono}, direccion:cli.direccion, comuna:cli.comuna};
+      cliente:{nombre:cli.nombre, email:cli.email, telefono:cli.telefono}, direccion:cli.direccion, comuna:cli.comuna, cupon:cuponOn};
     btn.disabled = true; var txt = btn.textContent; btn.textContent = 'Un momento…';
     fetch('/.netlify/functions/crear-pedido', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
       .then(function(r){ if(r.status===404 || r.status===405) throw {demo:true}; if(r.status===503 || r.status>=500) throw {wa:true}; return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
@@ -1691,7 +1796,7 @@ if (!window.__EXPIRED) (function(){
         btn.disabled = false; btn.textContent = txt;
         if (!x.ok) return bad(x.d.error || 'No pudimos crear el pedido. Inténtalo de nuevo.');
         if (x.d.url){ try{ localStorage.setItem('paffu-cart', JSON.stringify({cart:cart, cli:cli, envio:envio})); }catch(e){} location.href = x.d.url; return; }
-        quitarVendidos(); revFor = {num:String(x.d.num), items:''}; cart = [];
+        quitarVendidos(); revFor = {num:String(x.d.num), items:''}; cart = []; cuponOn = ''; try{ localStorage.removeItem('paffu-cupon-on'); }catch(e){}
         lastMsg = '¡Pedido N° ' + x.d.num + ' recibido! Transfiere ' + clp(x.d.total) + ' a:\n\n' + x.d.datos + '\n\nEnvía el comprobante por WhatsApp indicando tu número de pedido. Reservamos tus piezas mientras llega el pago.';
         renderCart(); renderStore();
       })
@@ -1703,14 +1808,14 @@ if (!window.__EXPIRED) (function(){
     var det = r.lines.map(function(l){ return '• ' + l.p.name + (l.t ? ' (' + vlab(l.p, l.t) + ')' : '') + (l.q>1 ? ' ×' + l.q : '') + ' · ' + clp(l.u*l.q); }).join('\n');
     var ent = envio.metodo==='retiro' ? 'Retiro en tienda' : 'Despacho a ' + cli.direccion + ', ' + cli.comuna + ', ' + envio.region + (r.gratis ? ' (envío gratis)' : ' (envío ' + clp(r.costo) + ')');
     waSig = JSON.stringify([cart, envio, cli]);
-    waPedido = wa('Hola Paffu, quiero hacer este pedido con pago por transferencia:\n\n' + det + '\n\nTotal: ' + clp(r.total) + '\nEntrega: ' + ent + '\n\nNombre: ' + cli.nombre + '\nCorreo: ' + cli.email + '\nTeléfono: ' + cli.telefono);
+    waPedido = wa('Hola Paffu, quiero hacer este pedido con pago por transferencia:\n\n' + det + (r.dcto ? '\n\nCupón ' + cuponOn + ': −' + clp(r.dcto) : '') + '\n\nTotal: ' + clp(r.total) + '\nEntrega: ' + ent + '\n\nNombre: ' + cli.nombre + '\nCorreo: ' + cli.email + '\nTeléfono: ' + cli.telefono);
     lastMsg = ''; renderCart();
     var a = document.getElementById('cWa'); if (a) a.focus();
   }
   cFoot.addEventListener('click', function(e){
     if (e.target.id!=='cWa') return;
     track('generate_lead', {currency:'CLP', value:calc().total, method:'whatsapp_transferencia'});
-    setTimeout(function(){ waPedido = null; cart = []; lastMsg = '¡Gracias! Recibimos tu pedido por WhatsApp. Te responderemos con los datos para transferir.'; renderCart(); renderStore(); }, 300);
+    setTimeout(function(){ waPedido = null; cart = []; cuponOn = ''; try{ localStorage.removeItem('paffu-cupon-on'); }catch(e){} lastMsg = '¡Gracias! Recibimos tu pedido por WhatsApp. Te responderemos con los datos para transferir.'; renderCart(); renderStore(); }, 300);
   });
   /* Vuelta desde Mercado Pago */
   (function(){

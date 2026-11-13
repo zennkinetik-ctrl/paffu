@@ -54,3 +54,18 @@ ESTADO ACTUAL (nov 2026): Mercado Pago está apagado (MP_ON = false en index.htm
 Mientras no estén las llaves en Netlify, la clienta confirma el pedido y lo envía por
 WhatsApp con el detalle; Jireh responde con los datos de transferencia.
 Para activar: cargar las variables, cambiar MP_ON a true y publicar.
+
+------------------------------------------------------------
+CUPÓN DE BIENVENIDA (nov 2026)
+------------------------------------------------------------
+Al entrar por primera vez, a los 5 segundos aparece un aviso: "10% en tu primera compra".
+La persona deja su correo y recibe el código BIENVENIDA10 (queda aplicado en su carro).
+El descuento es sobre los productos (no sobre el envío) y el servidor lo recalcula.
+Código y porcentaje: cfg.cupon en index.html y CFG.cupon en netlify/lib/tienda.mjs (cambiar en ambos).
+
+Para que los correos lleguen a paffu.cl@gmail.com (una sola vez, en Netlify):
+1. Project configuration > Forms > activar "Form detection" y volver a publicar.
+2. Forms > Form notifications > Add notification > Email notification:
+   formulario "cupon", correo paffu.cl@gmail.com.
+Todos los correos quedan también en Netlify > Forms > cupon (se pueden exportar a CSV).
+Plan gratis de Netlify: 100 envíos de formulario al mes.

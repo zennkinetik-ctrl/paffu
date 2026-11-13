@@ -1,7 +1,7 @@
 // Lógica compartida de la tienda Paffu para las funciones de Netlify.
 // Precios, envíos y piezas únicas: debe calzar con index.html.
 
-export const CFG = { gratis: 50000 };
+export const CFG = { gratis: 50000, cupon: { code: 'BIENVENIDA10', pct: 10 } };
 
 export const ZONAS = {
   local:   { nombre: "Región de O'Higgins", precio: 3490 },

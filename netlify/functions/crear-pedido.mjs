@@ -31,11 +31,14 @@ export default async (req) => {
   const subtotal = lineas.reduce((s, l) => s + l.precio * l.q, 0);
   const zona = ZONAS[REGIONES[region] || 'rm'];
   const envio = metodo === 'despacho' && subtotal < CFG.gratis ? zona.precio : 0;
-  const total = subtotal + envio;
+  const cupon = String(b.cupon || '').trim().toUpperCase() === CFG.cupon.code ? CFG.cupon.code : '';
+  const descuento = cupon ? Math.round((subtotal * CFG.cupon.pct) / 100) : 0;
+  const total = subtotal - descuento + envio;
 
   const pedido = await insPedido({
     estado: pago === 'transferencia' ? 'esperando_transferencia' : 'pendiente_pago',
     pago, cliente, entrega, items: lineas, subtotal, envio, total,
+    nota: cupon ? 'Cupón ' + cupon + ': -$' + descuento.toLocaleString('es-CL') : null,
   });
 
   if (pago === 'transferencia') {
@@ -45,7 +48,10 @@ export default async (req) => {
   }
 
   const site = process.env.URL || new URL(req.url).origin;
-  const mpItems = lineas.map((l) => ({ id: l.id, title: l.name + (l.label ? ' · ' + l.label : ''), quantity: l.q, unit_price: l.precio, currency_id: 'CLP' }));
+  // Con cupón se cobra el pedido como un solo ítem (Mercado Pago no acepta líneas negativas).
+  const mpItems = descuento
+    ? [{ id: 'pedido-' + pedido.num, title: 'Pedido Paffu N° ' + pedido.num + ' (cupón ' + cupon + ')', quantity: 1, unit_price: subtotal - descuento, currency_id: 'CLP' }]
+    : lineas.map((l) => ({ id: l.id, title: l.name + (l.label ? ' · ' + l.label : ''), quantity: l.q, unit_price: l.precio, currency_id: 'CLP' }));
   if (envio) mpItems.push({ id: 'envio', title: 'Despacho · ' + zona.nombre, quantity: 1, unit_price: envio, currency_id: 'CLP' });
   const [nombre, ...resto] = cliente.nombre.split(' ');
   const r = await fetch('https://api.mercadopago.com/checkout/preferences', {
