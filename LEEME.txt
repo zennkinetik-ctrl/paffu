@@ -8,3 +8,44 @@ img/productos/        Fotos de productos que usa el panel
 
 Sube TODO el contenido de esta carpeta a la raíz del repo, tal cual.
 Antes de usar el panel: correr paffu-supabase.sql en Supabase y crear los usuarios en Authentication.
+
+------------------------------------------------------------
+PAGOS: MERCADO PAGO + TRANSFERENCIA (BancoEstado)
+------------------------------------------------------------
+Archivos nuevos:
+  netlify.toml                         Le dice a Netlify dónde están las funciones
+  netlify/functions/crear-pedido.mjs   Crea el pedido y el cobro de Mercado Pago
+  netlify/functions/mp-webhook.mjs     Recibe el aviso de pago de Mercado Pago
+  netlify/lib/tienda.mjs               Precios, envíos y piezas únicas (igual que index.html)
+  paffu-pedidos.sql                    Tabla "pedidos" en Supabase
+
+Pasos (una sola vez):
+1. Supabase > SQL Editor: correr paffu-pedidos.sql.
+2. Mercado Pago (cuenta de Jireh, identidad validada):
+   Tus integraciones > Crear aplicación > "Pagos online" / Checkout Pro.
+   Copiar el Access Token de PRODUCCIÓN (empieza con APP_USR-).
+   Para probar primero, usar el Access Token de PRUEBA y las cuentas de prueba.
+   En Webhooks > Configurar notificaciones: URL https://paffu.cl/.netlify/functions/mp-webhook,
+   evento "Pagos". Copiar la "clave secreta" que muestra.
+3. Netlify > Site configuration > Environment variables:
+   MP_ACCESS_TOKEN            Access Token de Mercado Pago
+   MP_WEBHOOK_SECRET          Clave secreta del webhook (opcional, recomendado)
+   SUPABASE_URL               https://tzqpnvpxstkxwcwxavfb.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY  Supabase > Project Settings > API keys > service_role / secret
+                              (NUNCA ponerla en el HTML ni en GitHub)
+   TRANSFERENCIA_DATOS        Datos de BancoEstado que verá la clienta, ej:
+                              BancoEstado · CuentaRUT
+                              N° 12345678
+                              RUT 12.345.678-9 · Nombre Apellido
+                              contacto@paffu.cl
+4. Volver a publicar el sitio en Netlify (Deploys > Trigger deploy).
+
+Cómo funciona:
+- Mercado Pago: la clienta paga en Mercado Pago y vuelve a la tienda. Cuando Mercado Pago
+  confirma el pago, el pedido queda "Pagado" en el panel y las piezas salen de la tienda.
+  Si alguien pagó una pieza que justo otra persona compró, el pedido queda "Pagado · revisar"
+  para devolver el dinero o ofrecer un cambio.
+- Transferencia: la clienta ve los datos de BancoEstado y las piezas quedan reservadas.
+  En el panel > Pedidos, Jireh toca "Confirmar transferencia recibida", o "Cancelar y
+  liberar piezas" si no llega el pago.
+- Los precios siempre se recalculan en el servidor; el navegador no puede cambiarlos.
