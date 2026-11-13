@@ -861,7 +861,7 @@ body{color:#3E2A20}
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h22v18H4zM26 20h8l6 6v6H26"/><circle cx="12" cy="35" r="3.5"/><circle cx="33" cy="35" r="3.5"/><path d="M1 19h7M1 24h5"/></svg><p>Envío gratis en compras sobre $50.000</p></div>
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 8h28v26H10z"/><path d="M20 8v8l4-2 4 2V8"/><path d="M4 40h10l8-4h10a3 3 0 0 0 0-6h-8"/></svg><p>Despachamos desde Pichilemu en 1 a 3 días hábiles</p></div>
       <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38L36 12"/><path d="M33 9a3 3 0 0 1 4 0l2 2a3 3 0 0 1 0 4l-2 1-5-5z"/><path d="M10 38c-4 2-6-1-4-4s8-4 10 0 8 6 14 4"/></svg><p>Cosido y tejido a mano en nuestro taller</p></div>
-      <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><path d="M5 18h38M11 30h8"/></svg><p>Mercado Pago: débito, crédito y cuotas sin complicaciones</p></div>
+      <div class="tr"><svg width="56" height="56" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="3"/><path d="M5 18h38M11 30h8"/></svg><p>Paga por transferencia bancaria y te confirmamos por WhatsApp</p></div>
     </div>
   </section>
 
@@ -932,7 +932,7 @@ body{color:#3E2A20}
 
   <section class="compra" aria-label="Medios de pago y envío">
     <div class="wrap">
-      <div><h2>Paga como prefieras</h2><p>Mercado Pago con débito, crédito o cuotas, o transferencia bancaria. Envío gratis sobre $50.000 o retiro gratis en Pichilemu.</p></div>
+      <div><h2>Paga como prefieras</h2><p>Paga con transferencia bancaria. Envío gratis sobre $50.000 o retiro gratis en Pichilemu.</p></div>
       <a class="btn" href="#catalogo">Comprar ahora</a>
     </div>
   </section>
@@ -1024,13 +1024,12 @@ body{color:#3E2A20}
     </div>
     <div>
       <h4>Compra segura</h4>
-      <span>Mercado Pago: débito, crédito y cuotas</span>
       <span>Transferencia bancaria</span>
       <span>Envío gratis sobre $50.000</span>
       <span>Retiro gratis en tienda</span>
     </div>
   </div>
-  <div class="wrap paychips" aria-label="Medios de pago"><span>Mercado Pago</span><span>Débito</span><span>Crédito</span><span>Cuotas</span><span>Transferencia</span></div>
+  <div class="wrap paychips" aria-label="Medios de pago"><span>Transferencia bancaria</span><span>Retiro en tienda</span></div>
   <div class="wrap copyline"><span>© 2026 Paffu</span></div>
 </footer>
 
@@ -1292,7 +1291,10 @@ if (!window.__EXPIRED) (function(){
   var REGIONES = [['Arica y Parinacota','extremo'],['Tarapacá','norte'],['Antofagasta','norte'],['Atacama','norte'],['Coquimbo','centro'],['Valparaíso','centro'],['Metropolitana de Santiago','rm'],["O'Higgins",'local'],['Maule','centro'],['Ñuble','sur'],['Biobío','sur'],['La Araucanía','sur'],['Los Ríos','sur'],['Los Lagos','sur'],['Aysén','extremo'],['Magallanes','extremo']];
 
   var cart = [], revFor = null, revStars = 5;
-  var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'mercadopago'};
+  var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'transferencia'};
+  /* Mercado Pago: poner en true cuando estén cargadas las llaves en Netlify */
+  var MP_ON = false;
+  var waPedido = null, waSig = '';
   var cli = {nombre:'', email:'', telefono:'', direccion:'', comuna:''};
   var orders = [
     {num:'1042', cliente:'Camila R. (ejemplo)', items:'Hoodie Classic Oversize (Talla 4-6) · Beanie Paffu (Color Mostaza)', entrega:'Despacho a Santiago · gratis', total:54980, enviado:false},
@@ -1499,7 +1501,7 @@ if (!window.__EXPIRED) (function(){
     document.getElementById('mMat').textContent = p.mat || '—';
     document.getElementById('mStock').textContent = p.st==='ok' ? (unica(p) ? 'Disponible · pieza única' : 'Disponible') : STLABEL[p.st];
     var add = document.getElementById('mAdd'); add.hidden = p.st!=='ok';
-    document.getElementById('mTrust').innerHTML = p.st==='ok' ? 'Envío gratis sobre <b>'+clp(cfg.gratis)+'</b> · Retiro en tienda en Pichilemu<br>Paga con débito, crédito o transferencia' : '';
+    document.getElementById('mTrust').innerHTML = p.st==='ok' ? 'Envío gratis sobre <b>'+clp(cfg.gratis)+'</b> · Retiro en tienda en Pichilemu<br>Paga con transferencia bancaria' : '';
     document.getElementById('mWa').href = wa('Hola Paffu, me interesa '+p.name+'. ¿Está disponible?');
     modal.hidden = false; document.body.style.overflow='hidden';
     document.getElementById('mClose').focus();
@@ -1557,7 +1559,7 @@ if (!window.__EXPIRED) (function(){
       '</fieldset>'+
       (envio.metodo==='despacho' ? '<div class="field"><label for="cReg">Región de destino</label><select class="inp" id="cReg">'+opts+'</select><span style="font-size:13px;color:var(--muted)">'+esc(r.zona.nombre)+': '+clp(r.zona.precio)+' · gratis desde '+clp(cfg.gratis)+'</span></div>' : '')+
       '<fieldset class="opts"><legend class="eyebrow">Pago</legend>'+
-        '<label class="opt" for="p-mp"><input type="radio" name="pago" id="p-mp" value="mercadopago"'+(envio.pago==='mercadopago'?' checked':'')+'><span class="t">Mercado Pago<small>Débito, crédito, cuotas o saldo Mercado Pago</small></span></label>'+
+        (MP_ON ? '<label class="opt" for="p-mp"><input type="radio" name="pago" id="p-mp" value="mercadopago"'+(envio.pago==='mercadopago'?' checked':'')+'><span class="t">Mercado Pago<small>Débito, crédito, cuotas o saldo Mercado Pago</small></span></label>' : '')+
         '<label class="opt" for="p-tra"><input type="radio" name="pago" id="p-tra" value="transferencia"'+(envio.pago==='transferencia'?' checked':'')+'><span class="t">Transferencia bancaria<small>Te mostramos los datos al confirmar</small></span></label>'+
       '</fieldset>'+
       '<fieldset class="opts c-datos"><legend class="eyebrow">Tus datos</legend>'+
@@ -1565,13 +1567,16 @@ if (!window.__EXPIRED) (function(){
         (envio.metodo==='despacho' ? fld('cDir','direccion','Dirección (calle, número, depto)','text','street-address')+fld('cCom','comuna','Comuna','text','address-level2') : '')+
         '<p class="c-err" id="cErr" role="alert" hidden></p>'+
       '</fieldset>';
+    if (waPedido && waSig !== JSON.stringify([cart, envio, cli])) waPedido = null;
     cFoot.innerHTML =
       '<div class="tot"><span>Subtotal</span><span>'+clp(r.sub)+'</span>'+
       '<span>Envío</span><span>'+(envio.metodo==='retiro' ? 'Retiro gratis' : (r.gratis ? 'Gratis' : clp(r.costo)))+'</span>'+
       '<span class="g">Total</span><span class="g">'+clp(r.total)+'</span></div>'+
-      (envio.pago==='mercadopago'
+      (waPedido
+        ? '<a class="btn btn-ink" id="cWa" href="'+esc(waPedido)+'" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a><p class="c-note">Último paso: envíanos tu pedido por WhatsApp y te respondemos con los datos para transferir.</p>'
+        : envio.pago==='mercadopago'
         ? '<button class="btn btn-ink" type="button" id="cPay">Pagar con Mercado Pago</button><p class="c-note">Te llevamos a Mercado Pago para pagar con débito, crédito o cuotas. Al terminar vuelves a la tienda.</p>'
-        : '<button class="btn btn-ink" type="button" id="cPay">Confirmar pedido</button><p class="c-note">Te enviamos los datos de transferencia por correo y WhatsApp. Reservamos tu pedido hasta recibir el pago.</p>');
+        : '<button class="btn btn-ink" type="button" id="cPay">Confirmar pedido</button><p class="c-note">Te enviamos los datos para transferir por WhatsApp. Despachamos cuando recibimos el pago.</p>');
   }
   function addToCart(id, t){
     var p = byId(id); if(!p || p.st!=='ok') return;
@@ -1639,7 +1644,7 @@ if (!window.__EXPIRED) (function(){
       cliente:{nombre:cli.nombre, email:cli.email, telefono:cli.telefono}, direccion:cli.direccion, comuna:cli.comuna};
     btn.disabled = true; var txt = btn.textContent; btn.textContent = 'Un momento…';
     fetch('/.netlify/functions/crear-pedido', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
-      .then(function(r){ if(r.status===404 || r.status===405) throw {demo:true}; return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
+      .then(function(r){ if(r.status===404 || r.status===405) throw {demo:true}; if(r.status===503 || r.status>=500) throw {wa:true}; return r.json().then(function(d){ return {ok:r.ok, d:d}; }); })
       .then(function(x){
         btn.disabled = false; btn.textContent = txt;
         if (!x.ok) return bad(x.d.error || 'No pudimos crear el pedido. Inténtalo de nuevo.');
@@ -1648,7 +1653,21 @@ if (!window.__EXPIRED) (function(){
         lastMsg = '¡Pedido N° ' + x.d.num + ' recibido! Transfiere ' + clp(x.d.total) + ' a:\n\n' + x.d.datos + '\n\nEnvía el comprobante por WhatsApp indicando tu número de pedido. Reservamos tus piezas mientras llega el pago.';
         renderCart(); renderStore();
       })
-      .catch(function(err){ btn.disabled = false; btn.textContent = txt; if (err && err.demo) return demoPedido(); bad('No hay conexión. Revisa tu internet e inténtalo de nuevo.'); });
+      .catch(function(err){ btn.disabled = false; btn.textContent = txt; if (err && err.demo) return demoPedido(); if (err && err.wa) return pedidoWa(); bad('No hay conexión. Revisa tu internet e inténtalo de nuevo.'); });
+  });
+  /* Sin servidor configurado: el pedido se envía por WhatsApp y Jireh responde con los datos de transferencia */
+  function pedidoWa(){
+    var r = calc();
+    var det = r.lines.map(function(l){ return '• ' + l.p.name + (l.t ? ' (' + vlab(l.p, l.t) + ')' : '') + (l.q>1 ? ' ×' + l.q : '') + ' · ' + clp(l.u*l.q); }).join('\n');
+    var ent = envio.metodo==='retiro' ? 'Retiro en tienda' : 'Despacho a ' + cli.direccion + ', ' + cli.comuna + ', ' + envio.region + (r.gratis ? ' (envío gratis)' : ' (envío ' + clp(r.costo) + ')');
+    waSig = JSON.stringify([cart, envio, cli]);
+    waPedido = wa('Hola Paffu, quiero hacer este pedido con pago por transferencia:\n\n' + det + '\n\nTotal: ' + clp(r.total) + '\nEntrega: ' + ent + '\n\nNombre: ' + cli.nombre + '\nCorreo: ' + cli.email + '\nTeléfono: ' + cli.telefono);
+    lastMsg = ''; renderCart();
+    var a = document.getElementById('cWa'); if (a) a.focus();
+  }
+  cFoot.addEventListener('click', function(e){
+    if (e.target.id!=='cWa') return;
+    setTimeout(function(){ waPedido = null; cart = []; lastMsg = '¡Gracias! Recibimos tu pedido por WhatsApp. Te responderemos con los datos para transferir.'; renderCart(); renderStore(); }, 300);
   });
   /* Vuelta desde Mercado Pago */
   (function(){

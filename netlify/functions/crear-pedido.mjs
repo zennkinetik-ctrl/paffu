@@ -6,6 +6,8 @@ const limpio = (s, n = 120) => String(s || '').trim().slice(0, n);
 
 export default async (req) => {
   if (req.method !== 'POST') return json({ error: 'Método no permitido' }, 405);
+  // Sin llaves cargadas en Netlify: la tienda envía el pedido por WhatsApp.
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return json({ error: 'Pagos en línea aún no configurados', sinConfig: true }, 503);
   let b;
   try { b = await req.json(); } catch { return json({ error: 'Datos inválidos' }, 400); }
 

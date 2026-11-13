@@ -49,3 +49,8 @@ Cómo funciona:
   En el panel > Pedidos, Jireh toca "Confirmar transferencia recibida", o "Cancelar y
   liberar piezas" si no llega el pago.
 - Los precios siempre se recalculan en el servidor; el navegador no puede cambiarlos.
+
+ESTADO ACTUAL (nov 2026): Mercado Pago está apagado (MP_ON = false en index.html).
+Mientras no estén las llaves en Netlify, la clienta confirma el pedido y lo envía por
+WhatsApp con el detalle; Jireh responde con los datos de transferencia.
+Para activar: cargar las variables, cambiar MP_ON a true y publicar.
