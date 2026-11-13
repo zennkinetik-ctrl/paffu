@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /panel/
+Disallow: /.netlify/
+
+Sitemap: https://paffu.cl/sitemap.xml
