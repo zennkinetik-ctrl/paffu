@@ -49,7 +49,20 @@ async function sb(path, opt = {}) {
   if (!r.ok) throw new Error('Supabase ' + r.status + ': ' + txt);
   return data;
 }
-export const getProductos = (ids) => sb('productos?select=*&id=in.(' + ids.map((i) => '"' + String(i).replace(/"/g, '') + '"').join(',') + ')');
+// Tallas siempre separadas (igual que index.html): un rango "2-4" cuenta como 2 y 4.
+export function separarTallas(ts, vl) {
+  if (!ts || !ts.length || /^(Dise|Monto|Color)/.test(vl || '')) return ts;
+  const out = [], seen = new Set();
+  for (const x of ts) {
+    const s = String(x[0]), i = s.lastIndexOf(' · ');
+    const m = i < 0 ? '' : s.slice(0, i + 3), t = i < 0 ? s : s.slice(i + 3);
+    const r = t.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+    for (const v of r ? [r[1], r[2]] : [t]) { const k = m + v; if (!seen.has(k)) { seen.add(k); out.push([k, x[1]]); } }
+  }
+  return out;
+}
+export const getProductos = (ids) => sb('productos?select=*&id=in.(' + ids.map((i) => '"' + String(i).replace(/"/g, '') + '"').join(',') + ')')
+  .then((rows) => rows.map((r) => ({ ...r, tallas: separarTallas(r.tallas, r.vlabel) })));
 export const updProducto = (id, fields) => sb('productos?id=eq.' + encodeURIComponent(id), { method: 'PATCH', body: JSON.stringify({ ...fields, updated_at: new Date().toISOString() }) });
 export const insPedido = (row) => sb('pedidos', { method: 'POST', body: JSON.stringify(row) }).then((d) => d[0]);
 export const getPedido = (id) => sb('pedidos?select=*&id=eq.' + encodeURIComponent(id)).then((d) => d[0]);

@@ -1973,7 +1973,9 @@ if (!window.__EXPIRED) (function(){
   var SB_URL = 'https://tzqpnvpxstkxwcwxavfb.supabase.co', SB_KEY = 'sb_publishable_iMT92-h-1tKoY6BFKIQ6fw_NLU4vFh1';
   var sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SB_URL, SB_KEY) : null;
   var session = null, upFile = null;
-  function fromRow(r){ return {id:r.id, orden:r.orden, cat:r.cat, name:r.name, mat:r.mat||'', price:r.price, stock:r.stock, st:r.st, img:r.img||'', foto:r.foto||undefined, colores:r.colores||[], feat:!!r.feat, sello:r.sello||undefined, desc:r.descr||'', tallas:r.tallas||undefined, vlabel:r.vlabel||undefined, fotos:r.fotos||undefined, dcto:r.dcto||0}; }
+  /* Tallas siempre separadas: un rango "2-4" en la base se muestra como 2 y 4 (piezas distintas, mismo precio) */
+  function separarTallas(ts,vl){ if(!ts||!ts.length||/^(Dise|Monto|Color)/.test(vl||'')) return ts; var out=[],seen={}; ts.forEach(function(x){ var s=String(x[0]), i=s.lastIndexOf(' · '), m=i<0?'':s.slice(0,i+3), t=i<0?s:s.slice(i+3), r=t.trim().match(/^(\d+)\s*-\s*(\d+)$/); (r?[r[1],r[2]]:[t]).forEach(function(v){ var k=m+v; if(!seen[k]){ seen[k]=1; out.push([k,x[1]]); } }); }); return out; }
+  function fromRow(r){ return {id:r.id, orden:r.orden, cat:r.cat, name:r.name, mat:r.mat||'', price:r.price, stock:r.stock, st:r.st, img:r.img||'', foto:r.foto||undefined, colores:r.colores||[], feat:!!r.feat, sello:r.sello||undefined, desc:r.descr||'', tallas:separarTallas(r.tallas,r.vlabel)||undefined, vlabel:r.vlabel||undefined, fotos:r.fotos||undefined, dcto:r.dcto||0}; }
   function toRow(p){ return {id:p.id, orden:p.orden||0, cat:p.cat, name:p.name, mat:p.mat||null, price:p.price, stock:p.stock||0, st:p.st, img:p.img||null, foto:(p.foto && p.foto.indexOf('data:')!==0)?p.foto:null, colores:p.colores||[], feat:!!p.feat, sello:p.sello||null, descr:p.desc||null, tallas:p.tallas||null, vlabel:p.vlabel||null, fotos:p.fotos||null, dcto:p.dcto||0, updated_at:new Date().toISOString()}; }
   function loadCatalog(){
     if(!sb) return;
