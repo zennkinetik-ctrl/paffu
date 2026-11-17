@@ -14,6 +14,7 @@ export default async (req) => {
   const cliente = { nombre: limpio(b.cliente?.nombre, 80), email: limpio(b.cliente?.email, 120), telefono: limpio(b.cliente?.telefono, 30) };
   const metodo = b.metodo === 'retiro' ? 'retiro' : 'despacho';
   const pago = b.pago === 'transferencia' ? 'transferencia' : 'mercadopago';
+  if (pago === 'mercadopago' && !process.env.MP_ACCESS_TOKEN) return json({ error: 'Mercado Pago aún no está activo. Elige transferencia o escríbenos por WhatsApp.', sinConfig: true }, 503);
   const region = limpio(b.region, 60);
   const entrega = { metodo, region: metodo === 'despacho' ? region : null, direccion: metodo === 'despacho' ? limpio(b.direccion, 160) : null, comuna: metodo === 'despacho' ? limpio(b.comuna, 60) : null };
 
@@ -72,10 +73,12 @@ export default async (req) => {
     }),
   });
   const mp = await r.json();
-  if (!r.ok || !mp.init_point) {
+  // Con credenciales de prueba (TEST-...) se usa el checkout de prueba de Mercado Pago.
+  const mpUrl = process.env.MP_ACCESS_TOKEN.startsWith('TEST-') ? (mp.sandbox_init_point || mp.init_point) : mp.init_point;
+  if (!r.ok || !mpUrl) {
     await updPedido(pedido.id, { estado: 'error_pago', nota: 'Mercado Pago: ' + (mp.message || r.status) });
     return json({ error: 'No pudimos abrir Mercado Pago. Inténtalo de nuevo o escríbenos por WhatsApp.' }, 502);
   }
   await updPedido(pedido.id, { mp_preference: mp.id });
-  return json({ num: pedido.num, total, url: mp.init_point });
+  return json({ num: pedido.num, total, url: mpUrl });
 };
