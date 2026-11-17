@@ -1984,7 +1984,7 @@ if (!window.__EXPIRED) (function(){
     if(!sb) return;
     sb.from('productos').select('*').order('orden',{ascending:true}).then(function(res){
       if(res.error || !res.data || !res.data.length) return;
-      products = res.data.map(fromRow).map(fixCat); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
+      products = res.data.map(fromRow).map(fixCat).filter(function(p){ return !/^prueba-/.test(p.id) || MP_ON; }); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
     });
   }
   function dbErr(e){ toast('No se pudo guardar en la base: ' + (e && e.message ? e.message : 'revisa tu conexión')); }
