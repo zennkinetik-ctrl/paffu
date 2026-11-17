@@ -48,7 +48,9 @@ export default async (req) => {
     return json({ num: pedido.num, total, datos: process.env.TRANSFERENCIA_DATOS || 'Te enviaremos los datos de transferencia por WhatsApp.' });
   }
 
-  const site = process.env.URL || new URL(req.url).origin;
+  // Se usa el dominio desde donde se hizo el pedido: así una vista previa de Netlify
+  // recibe su propio aviso de pago (con su token) y la tienda real el suyo.
+  const site = new URL(req.url).origin || process.env.URL;
   // Con cupón se cobra el pedido como un solo ítem (Mercado Pago no acepta líneas negativas).
   const mpItems = descuento
     ? [{ id: 'pedido-' + pedido.num, title: 'Pedido Paffu N° ' + pedido.num + ' (cupón ' + cupon + ')', quantity: 1, unit_price: subtotal - descuento, currency_id: 'CLP' }]
