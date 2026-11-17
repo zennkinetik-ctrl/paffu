@@ -1,6 +1,6 @@
 // POST /.netlify/functions/crear-pedido
 // Crea el pedido en Supabase y, si paga con Mercado Pago, el cobro (Checkout Pro).
-import { CFG, ZONAS, REGIONES, getProductos, armarLineas, insPedido, updPedido, sacarPiezas, json } from '../lib/tienda.mjs';
+import { CFG, ZONAS, REGIONES, getProductos, armarLineas, insPedido, updPedido, sacarPiezas, avisarVenta, json } from '../lib/tienda.mjs';
 
 const limpio = (s, n = 120) => String(s || '').trim().slice(0, n);
 
@@ -45,6 +45,7 @@ export default async (req) => {
   if (pago === 'transferencia') {
     // Las piezas únicas quedan reservadas mientras llega la transferencia.
     await sacarPiezas(lineas);
+    await avisarVenta(pedido);
     return json({ num: pedido.num, total, datos: process.env.TRANSFERENCIA_DATOS || 'Te enviaremos los datos de transferencia por WhatsApp.' });
   }
 

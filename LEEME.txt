@@ -69,3 +69,24 @@ Para que los correos lleguen a paffu.cl@gmail.com (una sola vez, en Netlify):
    formulario "cupon", correo paffu.cl@gmail.com.
 Todos los correos quedan también en Netlify > Forms > cupon (se pueden exportar a CSV).
 Plan gratis de Netlify: 100 envíos de formulario al mes.
+
+------------------------------------------------------------
+AVISOS DE VENTA CON SONIDO (nov 2026)
+------------------------------------------------------------
+Cuando entra una venta, al celular de Jireh le llega una notificación con sonido
+("¡Nueva venta! $24.990 · N° 1005 · Pagado con Mercado Pago · Nombre"), aunque el panel
+esté cerrado. Si tiene el panel abierto, además suena una campanita.
+Avisa: pagos aprobados de Mercado Pago, pedidos por transferencia y ventas "para revisar".
+
+Archivos: netlify/lib/push.mjs (envío Web Push, sin dependencias), paffu-avisos.sql,
+panel/sw.js (recibe el aviso) y panel/index.html (botón "Activar avisos" + campanita).
+
+Pasos (una sola vez):
+1. Supabase > SQL Editor: correr paffu-avisos.sql.
+2. Netlify > Environment variables: VAPID_PRIVATE_KEY (marcar como secreto).
+   La llave pública ya está en el código; la privada NUNCA va en GitHub.
+3. Publicar.
+4. En el celular de Jireh: abrir el panel instalado en la pantalla de inicio, entrar y tocar
+   "Activar avisos" > Permitir. En iPhone SOLO funciona con el panel agregado a la pantalla
+   de inicio desde Safari (iOS 16.4 o más nuevo).
+   El sonido es el de notificaciones del celular: revisar que no esté en silencio / No molestar.

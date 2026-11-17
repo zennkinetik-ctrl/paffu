@@ -1,4 +1,5 @@
 // Lógica compartida de la tienda Paffu para las funciones de Netlify.
+import { enviarPush } from './push.mjs';
 // Precios, envíos y piezas únicas: debe calzar con index.html.
 
 export const CFG = { gratis: 50000, cupon: { code: 'BIENVENIDA10', pct: 10 } };
@@ -106,6 +107,31 @@ export async function sacarPiezas(lineas) {
     await updProducto(id, { tallas: (p.tallas && p.tallas.length) ? tallas : p.tallas, st: sinPiezas ? 'out' : st, stock: sinPiezas ? 0 : p.stock });
   }
   return conflicto;
+}
+
+// Aviso push al celular de Jireh (panel instalado) cuando entra una venta.
+// Nunca hace fallar el pedido: si algo sale mal, solo queda en el log.
+const pesos = (n) => '$' + (Number(n) || 0).toLocaleString('es-CL');
+export async function avisarVenta(p) {
+  if (!process.env.VAPID_PRIVATE_KEY || !p) return;
+  try {
+    const nombre = (p.cliente && p.cliente.nombre) || '';
+    const n = (p.items || []).reduce((s, l) => s + (l.q || 1), 0);
+    const detalle = n + (n === 1 ? ' producto' : ' productos') + (nombre ? ' · ' + nombre : '');
+    const msg = p.estado === 'esperando_transferencia'
+      ? { title: 'Nuevo pedido · ' + pesos(p.total), body: 'N° ' + p.num + ' · Transferencia por confirmar · ' + detalle }
+      : p.estado === 'pagado_revisar'
+        ? { title: 'Venta para revisar · ' + pesos(p.total), body: 'N° ' + p.num + ' · Pagado, pero hay que revisarlo · ' + detalle }
+        : { title: '¡Nueva venta! ' + pesos(p.total), body: 'N° ' + p.num + ' · Pagado con Mercado Pago · ' + detalle };
+    const subs = await sb('push_subs?select=endpoint,p256dh,auth');
+    await Promise.all((subs || []).map(async (s) => {
+      try {
+        const st = await enviarPush(s, { ...msg, tag: 'pedido-' + p.num, url: '/panel/#pedidos' });
+        if (st === 404 || st === 410) await sb('push_subs?endpoint=eq.' + encodeURIComponent(s.endpoint), { method: 'DELETE' });
+        else if (st >= 400) console.log('push', st, new URL(s.endpoint).host);
+      } catch (e) { console.log('push error', e.message); }
+    }));
+  } catch (e) { console.log('avisarVenta', e.message); }
 }
 
 export const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });

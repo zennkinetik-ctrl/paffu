@@ -265,7 +265,7 @@ nav.tabs svg{width:24px;height:24px}
   function dbErr(e){ toast('No se pudo guardar: ' + (e && e.message ? e.message : 'revisa tu conexión')); }
 
   /* ---------- Sesión ---------- */
-  function showApp(){ $('login').hidden = true; $('app').hidden = false; $('demoTag').hidden = !demo; maybeInstall(); load(); }
+  function showApp(){ $('login').hidden = true; $('app').hidden = false; $('demoTag').hidden = !demo; maybeInstall(); load(); suscribirPush(); }
   $('lgF').addEventListener('submit', function(e){
     e.preventDefault(); var err=$('lgErr'), b=$('lgB'); err.hidden=true;
     var em=$('lgE').value.trim(), pw=$('lgP').value;
@@ -332,7 +332,7 @@ nav.tabs svg{width:24px;height:24px}
       var d = p.new; if(!d || !d.id) return;
       var i = peds.findIndex(function(x){ return x.id===d.id; }); if(i>-1) peds[i]=d; else peds.unshift(d); renderO();
       var antes = p.old && p.old.estado;
-      if((d.estado==='pagado' && antes!=='pagado') || (p.eventType==='INSERT' && d.pago==='transferencia')) notify('Pedido N° '+d.num+' · '+clp(d.total), (d.pago==='transferencia'?'Transferencia por confirmar · ':'Pagado · ')+((d.cliente||{}).nombre||''), '/panel/#pedidos');
+      if((d.estado==='pagado' && antes!=='pagado') || (p.eventType==='INSERT' && d.pago==='transferencia')) { campana(); notify(d.pago==='transferencia' ? 'Nuevo pedido · '+clp(d.total) : '¡Nueva venta! '+clp(d.total), 'N° '+d.num+' · '+(d.pago==='transferencia'?'Transferencia por confirmar · ':'Pagado · ')+((d.cliente||{}).nombre||''), '/panel/#pedidos', 'pedido-'+d.num); }
     }).subscribe();
   }
 
@@ -547,13 +547,48 @@ nav.tabs svg{width:24px;height:24px}
     if(deferred){ deferred.prompt(); deferred.userChoice.then(function(){ deferred=null; maybeInstall(); }); }
     else toast('Toca Compartir en Safari y elige “Agregar a pantalla de inicio”.');
   });
-  $('notifBtn').addEventListener('click', function(){ Notification.requestPermission().then(function(r){ toast(r==='granted' ? 'Avisos activados' : 'Avisos no activados'); maybeInstall(); }); });
+  $('notifBtn').addEventListener('click', function(){ audioOn(); Notification.requestPermission().then(function(r){
+    if(r!=='granted'){ toast('Avisos no activados'); maybeInstall(); return; }
+    suscribirPush().then(function(ok){ campana(); toast(ok ? 'Avisos activados: te sonará con cada venta' : 'Avisos activados (solo con el panel abierto)'); maybeInstall(); });
+  }); });
   $('installClose').addEventListener('click', function(){ $('installBox').hidden=true; try{ localStorage.setItem('paffu-install-off','1'); }catch(e){} });
-  function notify(title, body, url){
+  function notify(title, body, url, tag){
     toast(title);
     if(!('Notification' in window) || Notification.permission!=='granted') return;
-    if(navigator.serviceWorker && navigator.serviceWorker.controller){ navigator.serviceWorker.ready.then(function(reg){ reg.showNotification(title, {body:body, icon:'/panel/icons/icon-192.png', badge:'/panel/icons/icon-192.png', data:{url:url}}); }); }
-    else { try{ new Notification(title, {body:body, icon:'/panel/icons/icon-192.png'}); }catch(e){} }
+    /* Mismo tag que el aviso del servidor: si llegan los dos, queda uno solo */
+    var o = {body:body, icon:'/panel/icons/icon-192.png', badge:'/panel/icons/icon-192.png', data:{url:url}}; if(tag){ o.tag = tag; }
+    if(navigator.serviceWorker && navigator.serviceWorker.controller){ navigator.serviceWorker.ready.then(function(reg){ reg.showNotification(title, o); }); }
+    else { try{ new Notification(title, o); }catch(e){} }
+  }
+
+  /* Campanita de venta: suena dentro del panel cuando está abierto.
+     Los navegadores solo dejan sonar audio después del primer toque en la pantalla. */
+  var actx = null;
+  function audioOn(){ try{ if(!actx){ var A = window.AudioContext || window.webkitAudioContext; if(A) actx = new A(); } if(actx && actx.state==='suspended') actx.resume(); }catch(e){} }
+  document.addEventListener('pointerdown', audioOn, {passive:true});
+  function campana(){
+    audioOn(); if(!actx) return;
+    var t0 = actx.currentTime + 0.02;
+    [[1318.5,0],[1760,0.16],[2637,0.32]].forEach(function(n){
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = n[0];
+      g.gain.setValueAtTime(0.0001, t0+n[1]); g.gain.exponentialRampToValueAtTime(0.35, t0+n[1]+0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0+n[1]+0.9);
+      o.connect(g); g.connect(actx.destination); o.start(t0+n[1]); o.stop(t0+n[1]+0.95);
+    });
+    if(navigator.vibrate){ try{ navigator.vibrate([200,100,200]); }catch(e){} }
+  }
+
+  /* Avisos push: este celular queda registrado para recibir las ventas aunque el panel esté cerrado */
+  var VAPID_PUBLIC = 'BAUR6bLGcEiTKqSO0sAtJG3KCRDwZ1eId4PrVvlnw-8xULrSfnIoHRWX5QTWR_UgHnaVbBM0b7sgvLj8x089zFo';
+  function b64u8(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); s += '===='.slice(s.length % 4 || 4); var r = atob(s), a = new Uint8Array(r.length); for(var i=0;i<r.length;i++) a[i] = r.charCodeAt(i); return a; }
+  function suscribirPush(){
+    if(demo || !sb || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window) || Notification.permission!=='granted') return Promise.resolve(false);
+    return navigator.serviceWorker.ready.then(function(reg){
+      return reg.pushManager.getSubscription().then(function(s){ return s || reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:b64u8(VAPID_PUBLIC)}); });
+    }).then(function(s){
+      var j = s.toJSON();
+      return sb.from('push_subs').upsert({endpoint:j.endpoint, p256dh:j.keys.p256dh, auth:j.keys.auth, ua:navigator.userAgent.slice(0,200), updated_at:new Date().toISOString()}, {onConflict:'endpoint'});
+    }).then(function(r){ return !(r && r.error); }).catch(function(){ return false; });
   }
   if('serviceWorker' in navigator && location.pathname.indexOf('/panel')===0){ navigator.serviceWorker.register('/panel/sw.js', {scope:'/panel/'}).catch(function(){}); }
 })();

@@ -1,6 +1,6 @@
 /* Paffu Panel · service worker: guarda la app para abrirla rápido y sin conexión.
    Los datos (Supabase) siempre se piden en línea. */
-const CACHE = 'paffu-panel-v4';
+const CACHE = 'paffu-panel-v5';
 const SHELL = ['/panel/', '/panel/index.html', '/panel/manifest.webmanifest', '/panel/icons/icon-192.png', '/panel/icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -27,6 +27,16 @@ self.addEventListener('fetch', (e) => {
     if (res.ok && url.pathname.startsWith('/panel/')) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
     return res;
   })));
+});
+
+/* Aviso push del servidor (venta nueva): llega aunque el panel esté cerrado */
+self.addEventListener('push', (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { body: e.data ? e.data.text() : '' }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Paffu', {
+    body: d.body || '', icon: '/panel/icons/icon-192.png', badge: '/panel/icons/icon-192.png',
+    tag: d.tag || 'paffu', renotify: true, vibrate: [200, 100, 200, 100, 300], data: { url: d.url || '/panel/#pedidos' },
+  }));
 });
 
 /* Al tocar una notificación, abre el panel en la pestaña indicada */
