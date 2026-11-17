@@ -1,7 +1,7 @@
 // Aviso de Mercado Pago. Siempre confirmamos el pago consultando la API con nuestro token,
 // así un aviso falso no puede marcar pedidos como pagados.
 import crypto from 'node:crypto';
-import { getPedido, updPedido, sacarPiezas, json } from '../lib/tienda.mjs';
+import { getPedido, updPedido, sacarPiezas, avisarVenta, json } from '../lib/tienda.mjs';
 
 function firmaValida(req, dataId) {
   const secret = process.env.MP_WEBHOOK_SECRET;
@@ -38,15 +38,18 @@ export default async (req) => {
   if (pay.status === 'approved') {
     if (Number(pay.transaction_amount) < Number(pedido.total)) {
       await updPedido(pedido.id, { estado: 'pagado_revisar', mp_payment: String(pay.id), nota: 'Monto pagado menor al total del pedido.' });
+      await avisarVenta({ ...pedido, estado: 'pagado_revisar' });
       return json({ ok: true });
     }
     const conflicto = await sacarPiezas(pedido.items || []);
+    const estado = conflicto.length ? 'pagado_revisar' : 'pagado';
     await updPedido(pedido.id, {
-      estado: conflicto.length ? 'pagado_revisar' : 'pagado',
+      estado,
       mp_payment: String(pay.id),
       pagado_at: new Date().toISOString(),
       nota: conflicto.length ? 'Pieza ya vendida a otra persona: ' + conflicto.join(', ') + '. Devolver el dinero desde Mercado Pago o ofrecer cambio.' : null,
     });
+    await avisarVenta({ ...pedido, estado });
   } else if (['rejected', 'cancelled', 'refunded', 'charged_back'].includes(pay.status)) {
     await updPedido(pedido.id, { estado: 'pago_rechazado', mp_payment: String(pay.id) });
   } else {
