@@ -1389,8 +1389,12 @@ if (!window.__EXPIRED) (function(){
 
   var cart = [], revFor = null, revStars = 5;
   var envio = {metodo:'despacho', region:'Metropolitana de Santiago', pago:'transferencia'};
-  /* Mercado Pago: poner en true cuando estén cargadas las llaves en Netlify */
+  /* Mercado Pago: poner en true cuando esté el Access Token de PRODUCCIÓN en Netlify.
+     Mientras tanto se prueba solo abriendo paffu.cl/?mp=prueba (se apaga con ?mp=off). */
   var MP_ON = false;
+  try{ var mpq = (location.search.match(/[?&]mp=(prueba|off)/)||[])[1];
+    if (mpq==='prueba') localStorage.setItem('paffu-mp-prueba','1'); else if (mpq==='off') localStorage.removeItem('paffu-mp-prueba');
+    if (localStorage.getItem('paffu-mp-prueba')) MP_ON = true; }catch(e){}
   var cuponOn = ''; try{ cuponOn = localStorage.getItem('paffu-cupon-on')||''; }catch(e){}
   var waPedido = null, waSig = '';
   var cli = {nombre:'', email:'', telefono:'', direccion:'', comuna:''};
