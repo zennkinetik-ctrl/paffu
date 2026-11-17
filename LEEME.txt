@@ -50,10 +50,13 @@ Cómo funciona:
   liberar piezas" si no llega el pago.
 - Los precios siempre se recalculan en el servidor; el navegador no puede cambiarlos.
 
-ESTADO ACTUAL (nov 2026): Mercado Pago está apagado (MP_ON = false en index.html).
-Mientras no estén las llaves en Netlify, la clienta confirma el pedido y lo envía por
-WhatsApp con el detalle; Jireh responde con los datos de transferencia.
-Para activar: cargar las variables, cambiar MP_ON a true y publicar.
+ESTADO (17 nov 2026): Mercado Pago encendido (MP_ON = true en index.html).
+Variables cargadas en Netlify (contexto Production): MP_ACCESS_TOKEN (producción, cuenta de
+Jireh, compartida con zenn.kinetik@gmail.com) y SUPABASE_SERVICE_ROLE_KEY (clave secreta
+"netlify" de Supabase). Falta TRANSFERENCIA_DATOS.
+Pruebas: paffu.cl/?mp=prueba muestra los productos con id "prueba-…" (ocultos al público).
+Ojo: el plan gratis de Netlify da 300 créditos/mes y cada publicación en producción gasta 15;
+las vistas previas (Pull Requests) no gastan. Agrupar cambios antes de publicar.
 
 ------------------------------------------------------------
 CUPÓN DE BIENVENIDA (nov 2026)
