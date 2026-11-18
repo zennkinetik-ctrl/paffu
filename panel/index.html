@@ -230,6 +230,7 @@ nav.tabs svg{width:24px;height:24px}
       <div><label class="lb" for="eMat">Tipo</label><input class="inp" id="eMat" placeholder="Ej: Hoodie, Polar, Gorro"></div>
     </div>
     <div id="eSubBox" hidden><label class="lb" for="eSub">Subcategoría de Accesorios</label><select class="inp" id="eSub"></select><p class="muted" style="margin:6px 0 0">Cada pieza va por separado; la tienda la muestra dentro de esta portada.</p></div>
+    <div id="eQtyBox" hidden><label class="lb" for="eQty">Cantidad disponible</label><input class="inp" id="eQty" inputmode="numeric" placeholder="1"><p class="muted" style="margin:6px 0 0">La tienda muestra “Quedan 2”. Con cada venta baja sola y en 0 queda “Vendida”. Si el accesorio tiene diseños u opciones, cada opción cuenta como pieza única.</p></div>
     <div class="grid2">
       <div><label class="lb" for="ePrice">Precio base ($)</label><input class="inp" id="ePrice" inputmode="numeric" placeholder="22990"></div>
       <div style="align-self:end"><p class="muted" style="margin:0 0 12px">Cada producto es pieza única: al venderse queda como “Vendida”.</p></div>
@@ -280,6 +281,8 @@ nav.tabs svg{width:24px;height:24px}
   var CATMAP = {'polar-pro-adulto':'Hombre, Mujer','poleron-lupe':'Hombre, Mujer','chaleco-chicago':'Niños','tejidos-unicos':'Mujer','croptop':'Mujer'};
   function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
   function catsOf(p){ return String(p.cat||'').split(/\s*,\s*/).filter(Boolean); }
+  /* Accesorios sin opciones: se venden por cantidad (stock) y la tienda muestra cuántos quedan */
+  function porCant(p){ return !!p && p.id!=='giftcard' && catsOf(p).indexOf('Accesorios')>-1 && !(p.tallas && p.tallas.length); }
   /* Subcategorías de Accesorios (igual que index.html). Pieza sin subcategoría elegida = se asigna por su nombre/tipo. */
   var SUBS_DEF = [{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'billeteras',nombre:'Billeteras'},{id:'fundas',nombre:'Fundas'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros y cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
   var SUBKEY = {cosmetiqueros:/cosmetiquer/i, billeteras:/billetera/i, fundas:/funda/i, bolsos:/banano|tote|bolso|bolsa|morral/i, gorros:/gorro|beanie|cintillo|headband|toca/i, pequenos:/llavero|monedero|pocket|airpods|estuche/i, giftcard:/gift/i};
@@ -435,7 +438,9 @@ nav.tabs svg{width:24px;height:24px}
       return Promise.all((r.data||[]).map(function(row){
         var tallas = (row.tallas||[]).slice(), mias = p.items.filter(function(i){ return i.id===row.id; });
         mias.forEach(function(i){ if(i.t && !tallas.some(function(x){ return x[0]===i.t; })) tallas.push([i.t, i.oprecio]); });
-        return sb.from('productos').update({tallas: tallas.length ? tallas : row.tallas, st:'ok', stock: Math.max(1, row.stock||0), updated_at:new Date().toISOString()}).eq('id', row.id);
+        var vuelven = porCant(Object.assign({}, row, {tallas:separarTallas(row.tallas||[], row.vlabel)})) ? mias.reduce(function(n,i){ return n + (i.q||1); }, 0) : 0;
+        var stock = vuelven ? (row.st==='out' ? 0 : (row.stock||0)) + vuelven : Math.max(1, row.stock||0);
+        return sb.from('productos').update({tallas: tallas.length ? tallas : row.tallas, st:'ok', stock: stock, updated_at:new Date().toISOString()}).eq('id', row.id);
       }));
     });
   }
@@ -452,19 +457,21 @@ nav.tabs svg{width:24px;height:24px}
     if(!products.length){ $('pList').innerHTML = '<div class="empty">Aún no hay productos. Toca “Nuevo producto” para cargar el primero.</div>'; return; }
     if(!list.length){ $('pList').innerHTML = '<div class="empty">No hay productos con ese nombre.</div>'; return; }
     $('pList').innerHTML = list.map(function(p){
-      var pill = p.st==='out' ? '<span class="pill out">Vendida</span>' : p.st==='pedido' ? '<span class="pill ped">Consultar</span>' : '<span class="pill ok">Disponible</span>';
+      var pill = p.st==='out' ? '<span class="pill out">Vendida</span>' : p.st==='pedido' ? '<span class="pill ped">Consultar</span>' : '<span class="pill ok">'+(porCant(p) ? (p.stock>1 ? 'Quedan '+p.stock : 'Queda 1') : 'Disponible')+'</span>';
       var pr = p.tallas && p.tallas.length ? 'Desde ' + clp(Math.min.apply(null, p.tallas.map(function(t){ return t[1]; }))) : clp(p.price);
       return '<article class="item">'+imgTag(cover(p), (p.fotos&&p.fotos[0])||p.img, 'thumb', p.name)+
         '<div class="it-main"><div class="it-top"><button type="button" data-edit="'+esc(p.id)+'" aria-label="Editar '+esc(p.name)+'"><b>'+esc(p.name)+'</b><small>'+esc(p.cat)+(catsOf(p).indexOf('Accesorios')>-1 && subName(subOf(p)) ? ' · '+esc(subName(subOf(p))) : (p.mat?' · '+esc(p.mat):''))+'</small></button>'+pill+'</div>'+
         '<div class="it-row"><span class="price">'+pr+(p.dcto?' <small class="muted">−'+p.dcto+'%</small>':'')+'</span>'+
-        (p.st==='pedido' ? '' : '<button class="btn sm line" type="button" data-sold="'+esc(p.id)+'">'+(p.st==='out' ? 'Volver a disponible' : 'Marcar vendida')+'</button>')+'</div></div></article>';
+        (p.st==='pedido' ? '' : '<button class="btn sm line" type="button" data-sold="'+esc(p.id)+'">'+(p.st==='out' ? 'Volver a disponible' : (porCant(p) && p.stock>1 ? 'Vendí 1' : 'Marcar vendida'))+'</button>')+'</div></div></article>';
     }).join('');
   }
   $('q').addEventListener('input', renderP);
   $('catChips').addEventListener('click', function(e){ var b=e.target.closest('[data-cat]'); if(!b) return; cat=b.dataset.cat; renderP(); });
   $('pList').addEventListener('click', function(e){
     var s = e.target.closest('[data-sold]');
-    if(s){ var p = byId(s.dataset.sold); p.st = p.st==='out' ? 'ok' : 'out'; p.stock = p.st==='out' ? 0 : 1; renderP();
+    if(s){ var p = byId(s.dataset.sold);
+      if(porCant(p) && p.st==='ok' && p.stock>1){ p.stock--; renderP(); save(p, p.name + ': ' + (p.stock>1 ? 'quedan '+p.stock : 'queda 1')); return; }
+      p.st = p.st==='out' ? 'ok' : 'out'; p.stock = p.st==='out' ? 0 : 1; renderP();
       save(p, p.name + (p.st==='out' ? ': vendida' : ': disponible otra vez')); return; }
     var ed = e.target.closest('[data-edit]'); if(ed) openEdit(byId(ed.dataset.edit));
   });
@@ -587,12 +594,13 @@ nav.tabs svg{width:24px;height:24px}
     if(!p && cat==='Accesorios') $('eCat').value = 'Accesorios';
     paintSubBox();
     eSt = p ? (p.st==='ok' && p.stock<1 ? 'out' : p.st) : 'ok'; paintSt();
+    $('eQty').value = p ? (p.st==='out' ? 0 : Math.max(1, p.stock||0)) : 1;
     eFotos = p ? (p.fotos && p.fotos.length ? p.fotos.slice() : (p.foto ? [p.foto] : (p.img ? [p.img] : []))) : [];
     paintFotos(); paintVars(p && p.tallas ? p.tallas : []);
     $('eDel').hidden = !p; $('eErr').hidden = true; $('eFotoMsg').textContent = 'La primera foto es la portada. Puedes tomarla con la cámara.';
     $('sheet').hidden = false; document.body.style.overflow='hidden'; $('eName').focus();
   }
-  function paintSubBox(){ $('eSubBox').hidden = !HAS_SUB || $('eCat').value!=='Accesorios'; }
+  function paintSubBox(){ $('eSubBox').hidden = !HAS_SUB || $('eCat').value!=='Accesorios'; $('eQtyBox').hidden = $('eCat').value!=='Accesorios' || !!(editing && editing.id==='giftcard'); }
   $('eCat').addEventListener('change', paintSubBox);
   function closeEdit(){ $('sheet').hidden = true; document.body.style.overflow=''; if(lastFocus && lastFocus.focus) lastFocus.focus(); }
   $('newBtn').addEventListener('click', function(){ openEdit(null); });
@@ -648,6 +656,9 @@ nav.tabs svg{width:24px;height:24px}
     Object.assign(p, {name:name, cat:$('eCat').value, mat:$('eMat').value.trim(), price: price || (vars[0]?vars[0][1]:0), stock:stock, st:eSt, desc:$('eDesc').value.trim(), dcto:Math.min(90,num($('eDcto').value)), sello:$('eSello').value.trim(), feat:$('eFeat').checked, tallas:vars, vlabel:$('eVLabel').value, fotos:eFotos.slice(), foto:(eFotos[0] && /^https?:/.test(eFotos[0])) ? eFotos[0] : ''});
     if(!p.foto) p.img = eFotos[0] || p.img;
     if(HAS_SUB) p.sub = p.cat==='Accesorios' ? $('eSub').value : '';
+    if(porCant(p) && p.st!=='pedido'){ var qn = $('eQty').value.trim()==='' ? 1 : num($('eQty').value);
+      if(p.st==='out') qn = 0; else if(qn<1){ p.st='out'; }
+      p.stock = Math.min(999, qn); }
     if(!editing) products.unshift(p);
     var was = !!editing; closeEdit(); renderP(); save(p, (was?'Guardaste ':'Agregaste ') + p.name);
   });

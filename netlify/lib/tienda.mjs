@@ -2,7 +2,7 @@
 import { enviarPush } from './push.mjs';
 // Precios, envíos y piezas únicas: debe calzar con index.html.
 
-export const CFG = { gratis: 50000, cupon: { code: 'BIENVENIDA10', pct: 10 } };
+export const CFG = { gratis: 60000, cupon: { code: 'BIENVENIDA10', pct: 10 } };
 
 export const ZONAS = {
   local:   { nombre: "Región de O'Higgins", precio: 3490 },
@@ -20,7 +20,10 @@ export const REGIONES = {
   'Los Lagos': 'sur', 'Aysén': 'extremo', 'Magallanes': 'extremo',
 };
 
-export const unica = (p) => p && p.id !== 'giftcard';
+const catsOf = (p) => String(p.cat || '').split(/\s*,\s*/).filter(Boolean);
+// Accesorios sin opciones se venden por cantidad (columna stock); el resto son piezas únicas.
+export const porCant = (p) => !!p && p.id !== 'giftcard' && catsOf(p).includes('Accesorios') && !(p.tallas && p.tallas.length);
+export const unica = (p) => p && p.id !== 'giftcard' && !porCant(p);
 const dc = (p, n) => (p.dcto ? Math.round((n * (100 - p.dcto)) / 100) : n);
 export function oprice(p, t) {
   if (!p.tallas || !p.tallas.length) return p.price;
@@ -80,6 +83,7 @@ export function armarLineas(items, rows) {
     const tieneVar = p.tallas && p.tallas.length;
     if (tieneVar && !p.tallas.some((x) => x[0] === t)) { faltan.push(p.name + (t ? ' (' + etiqueta(p, t) + ')' : '')); continue; }
     const q = unica(p) ? 1 : Math.max(1, Math.min(20, parseInt(it.q, 10) || 1));
+    if (porCant(p) && q > (p.stock || 0)) { faltan.push(p.name + ' (quedan ' + (p.stock || 0) + ')'); continue; }
     lineas.push({ id: p.id, name: p.name, t, label: etiqueta(p, t), q, precio: vprice(p, t), oprecio: oprice(p, t) });
   }
   return { lineas, faltan, byId };
@@ -93,8 +97,17 @@ export async function sacarPiezas(lineas) {
   const conflicto = [];
   for (const id of ids) {
     const p = byId[id];
-    if (!p || !unica(p)) continue;
+    if (!p) continue;
     const mias = lineas.filter((l) => l.id === id);
+    if (porCant(p)) {
+      const q = mias.reduce((n, l) => n + (l.q || 1), 0);
+      const hay = p.st === 'ok' ? (p.stock || 0) : 0;
+      if (hay < q) conflicto.push(p.name + (hay ? ' (quedaban ' + hay + ')' : ''));
+      const queda = Math.max(0, hay - q);
+      await updProducto(id, { stock: queda, st: queda ? 'ok' : (p.st === 'pedido' ? 'pedido' : 'out') });
+      continue;
+    }
+    if (!unica(p)) continue;
     let tallas = p.tallas || [];
     let st = p.st;
     for (const l of mias) {

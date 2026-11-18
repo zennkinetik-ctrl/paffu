@@ -93,3 +93,13 @@ Pasos (una sola vez):
    "Activar avisos" > Permitir. En iPhone SOLO funciona con el panel agregado a la pantalla
    de inicio desde Safari (iOS 16.4 o más nuevo).
    El sonido es el de notificaciones del celular: revisar que no esté en silencio / No molestar.
+
+------------------------------------------------------------
+CANTIDAD EN ACCESORIOS + ENVÍO GRATIS $60.000 (18 nov 2026)
+------------------------------------------------------------
+- Los accesorios SIN opciones (sin diseños/tallas) se venden por cantidad: en el panel,
+  al editar el producto, campo "Cantidad disponible". La tienda muestra "Quedan 2" / "Queda 1".
+  Con cada venta baja sola; en 0 queda "Vendida". Al cancelar un pedido las unidades vuelven.
+  En la lista del panel el botón dice "Vendí 1" (para ventas en la tienda física).
+- Accesorios con diseños u opciones y toda la ropa siguen siendo piezas únicas.
+- Envío gratis desde $60.000: cfg.gratis en index.html y CFG.gratis en netlify/lib/tienda.mjs.
