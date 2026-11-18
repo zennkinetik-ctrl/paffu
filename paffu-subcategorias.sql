@@ -17,16 +17,26 @@ create policy "todos ven subcategorias" on public.subcategorias for select using
 drop policy if exists "panel edita subcategorias" on public.subcategorias;
 create policy "panel edita subcategorias" on public.subcategorias for all to authenticated using (true) with check (true);
 
--- Subcategorías iniciales (Jireh las renombra, ordena o borra desde el panel)
+-- Subcategorías por tipo de producto (Jireh las renombra, ordena o borra desde el panel)
 insert into public.subcategorias (id, nombre, orden) values
-  ('cosmetiqueros', 'Cosmetiqueros', 1),
-  ('billeteras', 'Billeteras', 2),
-  ('fundas', 'Fundas', 3),
-  ('bolsos', 'Bolsos y bananos', 4),
-  ('gorros', 'Gorros y cintillos', 5),
-  ('pequenos', 'Llaveros y monederos', 6),
-  ('giftcard', 'Gift Card', 7)
+  ('billeteras', 'Billeteras', 1),
+  ('funda-ipad', 'Fundas iPad/tablet', 2),
+  ('funda-kindle', 'Fundas Kindle', 3),
+  ('funda-lentes', 'Fundas de lentes', 4),
+  ('cosmetiqueros', 'Cosmetiqueros', 5),
+  ('bolsos', 'Bolsos y bananos', 6),
+  ('gorros', 'Gorros', 7),
+  ('cintillos', 'Cintillos', 8),
+  ('pequenos', 'Llaveros y monederos', 9),
+  ('giftcard', 'Gift Card', 10)
 on conflict (id) do nothing;
+
+-- "Fundas" se separó en Fundas iPad/tablet, Kindle y lentes; "Gorros y cintillos" en Gorros y Cintillos
+update public.subcategorias set nombre = 'Gorros' where id = 'gorros' and nombre = 'Gorros y cintillos';
+delete from public.subcategorias where id = 'fundas';
 
 -- Cada producto puede elegir su subcategoría (vacío = se asigna sola por el nombre)
 alter table public.productos add column if not exists sub text;
+
+-- Piezas que estaban en "Fundas": vuelven a asignarse solas (Kindle, iPad/tablet o lentes según su nombre)
+update public.productos set sub = null where sub = 'fundas';

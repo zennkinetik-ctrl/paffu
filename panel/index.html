@@ -281,11 +281,16 @@ nav.tabs svg{width:24px;height:24px}
   function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
   function catsOf(p){ return String(p.cat||'').split(/\s*,\s*/).filter(Boolean); }
   /* Subcategorías de Accesorios (igual que index.html). Pieza sin subcategoría elegida = se asigna por su nombre/tipo. */
-  var SUBS_DEF = [{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'billeteras',nombre:'Billeteras'},{id:'fundas',nombre:'Fundas'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros y cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
-  var SUBKEY = {cosmetiqueros:/cosmetiquer/i, billeteras:/billetera/i, fundas:/funda/i, bolsos:/banano|tote|bolso|bolsa|morral/i, gorros:/gorro|beanie|cintillo|headband|toca/i, pequenos:/llavero|monedero|pocket|airpods|estuche/i, giftcard:/gift/i};
+  var SUBS_DEF = [{id:'billeteras',nombre:'Billeteras'},{id:'funda-ipad',nombre:'Fundas iPad/tablet'},{id:'funda-kindle',nombre:'Fundas Kindle'},{id:'funda-lentes',nombre:'Fundas de lentes'},{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros'},{id:'cintillos',nombre:'Cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
+  var SUBKEY = [['giftcard',/gift/i],['billeteras',/billetera/i],['funda-kindle',/kindle|lector/i],['funda-lentes',/lentes|anteojo/i],['funda-ipad',/ipad|tablet|funda/i],['cosmetiqueros',/cosmetiquer|neceser/i],['bolsos',/banano|tote|bolso|bolsa|morral|ri[ñn]onera/i],['cintillos',/cintillo|headband|toka|vincha/i],['gorros',/gorro|beanie|toca/i],['pequenos',/llavero|monedero|pocket|airpods|estuche/i]];
+  /* En la tienda, un tipo con 1 o 2 piezas se muestra junto a su parecido */
+  var JUNTO = {'billeteras':'pequenos','pequenos':'billeteras','funda-ipad':'funda-kindle','funda-kindle':'funda-ipad','funda-lentes':'funda-kindle','cosmetiqueros':'bolsos','bolsos':'cosmetiqueros','gorros':'cintillos','cintillos':'gorros'};
+  var SUBS_VIEJAS = {fundas:1}, MIN_PIEZAS = 3;
   function subsDef(){ return SUBS_DEF.map(function(x,i){ return {id:x.id, nombre:x.nombre, foto:'', orden:i+1}; }); }
+  function conDefs(rows){ var out = rows.filter(function(s){ return !SUBS_VIEJAS[s.id]; }); out.forEach(function(s){ if(s.id==='gorros' && /cintillo/i.test(s.nombre)) s.nombre='Gorros'; }); SUBS_DEF.forEach(function(d){ if(!out.some(function(s){ return s.id===d.id; })) out.push({id:d.id, nombre:d.nombre, foto:'', orden:out.length+1}); }); return out; }
   var SUBS = subsDef(), SUBS_OK = false, HAS_SUB = false, subEditing = null, sFoto = '';
-  function subOf(p){ if(p.sub) return p.sub; var t=p.name+' '+(p.mat||''); for(var k in SUBKEY){ if(SUBKEY[k].test(t)) return k; } return ''; }
+  function subAuto(p){ var t=p.name+' '+(p.mat||''); for(var i=0;i<SUBKEY.length;i++){ if(SUBKEY[i][1].test(t)) return SUBKEY[i][0]; } return ''; }
+  function subOf(p){ return (p.sub && !SUBS_VIEJAS[p.sub] && SUBS.some(function(s){ return s.id===p.sub; })) ? p.sub : subAuto(p); }
   function subName(id){ var x = SUBS.filter(function(s){ return s.id===id; })[0]; return x ? x.nombre : ''; }
   var demo = false, products = [], revs = [], peds = [], of = 'act', view = 'P', cat = 'Todo', rf = 'pend', editing = null, eFotos = [], eSt = 'ok', toastT = null;
 
@@ -359,7 +364,7 @@ nav.tabs svg{width:24px;height:24px}
     sb.from('productos').select('*').order('orden',{ascending:true}).then(function(r){ if(r.error){ dbErr(r.error); return; } if(r.data && r.data.length) HAS_SUB = ('sub' in r.data[0]); products = (r.data||[]).map(fromRow).map(fixCat); renderP(); });
     sb.from('subcategorias').select('*').order('orden',{ascending:true}).then(function(r){
       SUBS_OK = !r.error;
-      SUBS = (!r.error && r.data && r.data.length) ? r.data.filter(function(x){ return !x.cat || x.cat==='Accesorios'; }).map(function(x){ return {id:x.id, nombre:x.nombre, foto:x.foto||'', orden:x.orden||0}; }) : subsDef();
+      SUBS = (!r.error && r.data && r.data.length) ? conDefs(r.data.filter(function(x){ return !x.cat || x.cat==='Accesorios'; }).map(function(x){ return {id:x.id, nombre:x.nombre, foto:x.foto||'', orden:x.orden||0}; })) : subsDef();
       renderP();
     });
     sb.from('resenas').select('*').order('created_at',{ascending:false}).then(function(r){ if(r.error) return; revs = (r.data||[]).map(function(d){ return {id:d.id, name:d.nombre, stars:d.estrellas, text:d.texto, prod:d.producto, ok:d.aprobada, at:d.created_at}; }); renderR(); });
@@ -472,15 +477,29 @@ nav.tabs svg{width:24px;height:24px}
 
   /* ---------- Portadas de Accesorios ---------- */
   function subItems(id){ return products.filter(function(p){ return catsOf(p).indexOf('Accesorios')>-1 && subOf(p)===id; }); }
+  function nPiezas(it){ return it.reduce(function(n,p){ var d = p.tallas && p.tallas.length && p.id!=='giftcard' && (p.vlabel==='Diseño' || subOf(p)==='billeteras'); return n + (d ? (p.st==='ok' ? p.tallas.length : 0) : (p.st!=='out' ? 1 : 0)); }, 0); }
+  /* Con qué tipo se muestra en la tienda (mismo cálculo que index.html) */
+  function juntoDe(){
+    var gs = SUBS.map(function(s,i){ var it = subItems(s.id); return {s:s, i:i, n:nPiezas(it), n0:nPiezas(it), has:it.length>0}; }).filter(function(g){ return g.has; });
+    function dueno(g){ while(g.en) g = g.en; return g; }
+    for(;;){
+      var c = gs.filter(function(g){ if(g.en || g.n>=MIN_PIEZAS || !JUNTO[g.s.id]) return false; var t = gs.filter(function(x){ return x.s.id===JUNTO[g.s.id]; })[0]; return t && dueno(t)!==g; }).sort(function(a,b){ return a.n-b.n || b.i-a.i; })[0];
+      if(!c) break;
+      var t = dueno(gs.filter(function(x){ return x.s.id===JUNTO[c.s.id]; })[0]); c.en = t; t.n += c.n;
+    }
+    var out = {}; gs.forEach(function(g){ var d = dueno(g); if(d!==g || gs.some(function(x){ return x!==g && dueno(x)===g; })){ out[g.s.id] = gs.filter(function(x){ return x!==g && dueno(x)===d; }).map(function(x){ return x.s.nombre; }); } }); return out;
+  }
   function subCover(sx){ if(sx.foto) return sx.foto; var it = subItems(sx.id); var d = it.filter(function(p){ return p.st==='ok'; })[0] || it[0]; return d ? cover(d) : ''; }
   function renderSubs(){
     $('subBox').hidden = cat!=='Accesorios';
     if(cat!=='Accesorios') return;
     $('subNew').hidden = !SUBS_OK;
-    $('subMsg').textContent = SUBS_OK ? 'Toca una portada para cambiar la foto o el nombre. Así se ven en la tienda al entrar a Accesorios.' : 'Las portadas aún no están activadas en la base de datos. Avísale a Kinetik Studio.';
+    $('subMsg').textContent = SUBS_OK ? 'Toca una portada para cambiar la foto o el nombre. Así se ven en la tienda al entrar a Accesorios. Los tipos con 1 o 2 piezas se muestran juntos con uno parecido.' : 'Las portadas aún no están activadas en la base de datos. Avísale a Kinetik Studio.';
+    var J = juntoDe();
     $('subRow').innerHTML = SUBS.map(function(sx){
-      var it = subItems(sx.id), n = it.filter(function(p){ return p.st!=='out'; }).length, c = subCover(sx);
-      return '<button class="subcard" type="button" data-subed="'+esc(sx.id)+'">'+(c ? '<img src="'+esc(c)+'" alt="" loading="lazy">' : '<span class="noimg"></span>')+'<b>'+esc(sx.nombre)+'</b><small>'+(sx.foto ? n+(n===1?' pieza':' piezas') : '<span class="prov">Portada provisoria</span>')+'</small></button>';
+      var it = subItems(sx.id), n = nPiezas(it), c = subCover(sx);
+      var info = !it.length ? 'Sin piezas (no se muestra)' : n+(n===1?' pieza':' piezas') + (J[sx.id] && J[sx.id].length ? ' · se ve junto a '+J[sx.id].join(', ') : '');
+      return '<button class="subcard" type="button" data-subed="'+esc(sx.id)+'">'+(c ? '<img src="'+esc(c)+'" alt="" loading="lazy">' : '<span class="noimg"></span>')+'<b>'+esc(sx.nombre)+'</b><small>'+esc(info)+(sx.foto ? '' : '<br><span class="prov">Portada provisoria</span>')+'</small></button>';
     }).join('');
   }
   $('subRow').addEventListener('click', function(e){ var b=e.target.closest('[data-subed]'); if(!b) return; if(!SUBS_OK){ toast('Primero hay que activar las portadas en la base de datos'); return; } openSub(SUBS.filter(function(x){ return x.id===b.dataset.subed; })[0]); });

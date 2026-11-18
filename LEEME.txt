@@ -93,3 +93,19 @@ Pasos (una sola vez):
    "Activar avisos" > Permitir. En iPhone SOLO funciona con el panel agregado a la pantalla
    de inicio desde Safari (iOS 16.4 o más nuevo).
    El sonido es el de notificaciones del celular: revisar que no esté en silencio / No molestar.
+
+------------------------------------------------------------
+ACCESORIOS POR TIPO DE PRODUCTO (nov 2026)
+------------------------------------------------------------
+Menú principal: Niños, Mujer, Hombre y Accesorios (ya no hay entrada suelta de Billeteras).
+Al entrar a Accesorios se ven portadas por tipo: Billeteras, Fundas iPad/tablet, Fundas Kindle,
+Fundas de lentes, Cosmetiqueros, Bolsos y bananos, Gorros, Cintillos, Llaveros y monederos, Gift Card.
+Dentro de cada portada va cada pieza por separado (cada diseño de billetera es su propia tarjeta).
+- Una pieza se asigna sola por su nombre/tipo (ej. "Funda Kindle Miami" > Fundas Kindle), o se
+  elige a mano en el panel al editarla ("Subcategoría de Accesorios").
+- Un tipo con 1 o 2 piezas se muestra junto a uno parecido y la portada toma el nombre de ambos
+  (ej. "Gorros y cintillos"). Al llegar a 3 piezas se separa solo. El panel indica "se ve junto a…".
+- La foto de portada se cambia en el panel > Accesorios > Portadas de Accesorios.
+Paso (una sola vez): Supabase > SQL Editor: volver a correr paffu-subcategorias.sql
+(crea los tipos nuevos y reparte las piezas que estaban en "Fundas"). Sin este paso la tienda
+igual funciona, pero las portadas nuevas recién quedan guardadas al editarlas en el panel.

@@ -794,10 +794,11 @@ body{color:#3E2A20}
 /* Accesorios: portadas por subcategoría (2 columnas en celular) */
 .subs{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media(min-width:760px){.subs{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}}
-.subs .cat{gap:0}
+.subs .cat{gap:0;position:relative}
+.subs .cat .ph::after{background:linear-gradient(to top,rgba(30,15,10,.7),rgba(30,15,10,0) 65%)}
 .subs .cat .ph{aspect-ratio:4/5;border-radius:18px}
-.subs .cat-row{margin-top:-70px;padding:0 12px 14px}
-.subs .cat-row b{font-size:clamp(20px,5.4vw,34px)!important;max-width:100%;overflow-wrap:anywhere;line-height:1.02}
+.subs .cat-row{position:absolute;left:0;right:0;bottom:0;margin-top:0;padding:0 12px 14px}
+.subs .cat-row b{font-size:clamp(18px,4.8vw,32px)!important;max-width:100%;overflow-wrap:anywhere;line-height:1.02}
 .subs .cat-row span{font-size:11px;letter-spacing:.12em}
 </style>
 
@@ -823,7 +824,6 @@ body{color:#3E2A20}
     <a href="#catalogo" data-filter="Mujer">Mujer</a>
     <a href="#catalogo" data-filter="Hombre">Hombre</a>
     <a href="#catalogo" data-filter="Accesorios">Accesorios</a>
-    <a href="#catalogo" data-filter="Billeteras">Billeteras</a>
     <a href="#tienda-fisica">Tienda física</a>
     <a href="#resenas">Reseñas</a>
   </nav>
@@ -859,7 +859,6 @@ body{color:#3E2A20}
         <a class="m-sub" href="#catalogo" data-filter="Mujer" data-close>Mujer <small data-count="Mujer"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Hombre" data-close>Hombre <small data-count="Hombre"></small></a>
         <a class="m-sub" href="#catalogo" data-filter="Accesorios" data-close>Accesorios <small data-count="Accesorios"></small></a>
-        <a class="m-sub" href="#catalogo" data-filter="Billeteras" data-close>Billeteras <small data-count="Billeteras"></small></a>
       </div>
     </div>
     <div>
@@ -953,8 +952,7 @@ body{color:#3E2A20}
         <button class="cat" type="button" data-filter="Niños"><div class="ph"><img data-src="hoodie-classic-oversize-kids-1" alt="" loading="lazy"></div><div class="cat-row"><b>Niños</b><span>Por edad →</span></div></button>
         <button class="cat" type="button" data-filter="Mujer"><div class="ph"><img data-src="croptop-hilo-1" alt="" loading="lazy"></div><div class="cat-row"><b>Mujer</b><span>Ver todo →</span></div></button>
         <button class="cat" type="button" data-filter="Hombre"><div class="ph"><img data-src="poleron-polar-pro-adulto-1" alt="" loading="lazy"></div><div class="cat-row"><b>Hombre</b><span>Ver todo →</span></div></button>
-        <button class="cat" type="button" data-filter="Accesorios"><div class="ph"><img data-src="funda-ipad-2" alt="" loading="lazy"></div><div class="cat-row"><b>Accesorios</b><span>Ver todo →</span></div></button>
-        <button class="cat" type="button" data-filter="Billeteras"><div class="ph"><img data-src="billetera-1" alt="" loading="lazy"></div><div class="cat-row"><b>Billeteras</b><span>Elige diseño →</span></div></button>
+        <button class="cat" type="button" data-filter="Accesorios"><div class="ph"><img data-src="funda-ipad-2" alt="" loading="lazy"></div><div class="cat-row"><b>Accesorios</b><span>Por tipo →</span></div></button>
       </div>
     </section>
   </div>
@@ -972,7 +970,6 @@ body{color:#3E2A20}
           <button class="chip" type="button" data-chip="Mujer" aria-pressed="false">Mujer</button>
           <button class="chip" type="button" data-chip="Hombre" aria-pressed="false">Hombre</button>
           <button class="chip" type="button" data-chip="Accesorios" aria-pressed="false">Accesorios</button>
-          <button class="chip" type="button" data-chip="Billeteras" aria-pressed="false">Billeteras</button>
         </div>
       </div>
       <div class="edades" id="edades" hidden></div>
@@ -1376,25 +1373,67 @@ if (!window.__EXPIRED) (function(){
   /* null = el producto no tiene tallas por número (ej. Kids/Adulto): se muestra en todas las edades */
   function tallasEdad(p,e){ if(!p.tallas||!p.tallas.length) return null; var num=false; var out=p.tallas.filter(function(x){ var r=rangoTalla(x[0]); if(!r) return false; num=true; return r[0]<=e.b && r[1]>=e.a; }); return num?out:null; }
   function enEdad(p,e){ var t=tallasEdad(p,e); return t===null || t.length>0; }
-  /* Billeteras: cada diseño es una pieza; todas al mismo valor */
-  function esBilletera(p){ return p.sub ? p.sub==='billeteras' : /billetera/i.test(p.name+' '+(p.mat||'')); }
-  /* Accesorios por subcategoría: portada (foto que sube Jireh en el panel) y dentro cada pieza única.
-     Si la pieza no tiene subcategoría elegida, se asigna por su nombre/tipo. Sin foto de portada se usa la de la primera pieza. */
-  var SUBS_DEF = [{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'billeteras',nombre:'Billeteras'},{id:'fundas',nombre:'Fundas'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros y cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
-  var SUBS = SUBS_DEF.slice();
-  var SUBKEY = {cosmetiqueros:/cosmetiquer/i, billeteras:/billetera/i, fundas:/funda/i, bolsos:/banano|tote|bolso|bolsa|morral/i, gorros:/gorro|beanie|cintillo|headband|toca/i, pequenos:/llavero|monedero|pocket|airpods|estuche/i, giftcard:/gift/i};
-  function subOf(p){ if(p.sub) return p.sub; var t=p.name+' '+(p.mat||''); for(var k in SUBKEY){ if(SUBKEY[k].test(t)) return k; } return 'otros'; }
+  /* Accesorios por tipo de producto: cada tipo tiene su portada (la sube Jireh en el panel) y dentro cada pieza por separado.
+     Si la pieza no tiene tipo elegido, se asigna por su nombre/tipo. Sin foto de portada se usa la de la primera pieza.
+     Los tipos con 1 o 2 piezas se muestran junto a uno parecido (JUNTO), con el nombre de ambos. */
+  var SUBS_DEF = [{id:'billeteras',nombre:'Billeteras'},{id:'funda-ipad',nombre:'Fundas iPad/tablet'},{id:'funda-kindle',nombre:'Fundas Kindle'},{id:'funda-lentes',nombre:'Fundas de lentes'},{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros'},{id:'cintillos',nombre:'Cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
+  var SUBKEY = [['giftcard',/gift/i],['billeteras',/billetera/i],['funda-kindle',/kindle|lector/i],['funda-lentes',/lentes|anteojo/i],['funda-ipad',/ipad|tablet|funda/i],['cosmetiqueros',/cosmetiquer|neceser/i],['bolsos',/banano|tote|bolso|bolsa|morral|ri[ñn]onera/i],['cintillos',/cintillo|headband|toka|vincha/i],['gorros',/gorro|beanie|toca/i],['pequenos',/llavero|monedero|pocket|airpods|estuche/i]];
+  var JUNTO = {'billeteras':'pequenos','pequenos':'billeteras','funda-ipad':'funda-kindle','funda-kindle':'funda-ipad','funda-lentes':'funda-kindle','cosmetiqueros':'bolsos','bolsos':'cosmetiqueros','gorros':'cintillos','cintillos':'gorros'};
+  var SUBS_VIEJAS = {fundas:1};   /* tipos que ya no se usan: sus piezas se reparten solas */
+  var MIN_PIEZAS = 3;
+  function conDefs(rows){ var out = rows.filter(function(s){ return !SUBS_VIEJAS[s.id]; }); out.forEach(function(s){ if(s.id==='gorros' && /cintillo/i.test(s.nombre)) s.nombre='Gorros'; }); SUBS_DEF.forEach(function(d){ if(!out.some(function(s){ return s.id===d.id; })) out.push({id:d.id, nombre:d.nombre, foto:''}); }); return out; }
+  var SUBS = conDefs([]);
+  function subAuto(p){ var t=p.name+' '+(p.mat||''); for(var i=0;i<SUBKEY.length;i++){ if(SUBKEY[i][1].test(t)) return SUBKEY[i][0]; } return 'otros'; }
+  function subOf(p){ return (p.sub && !SUBS_VIEJAS[p.sub] && SUBS.some(function(s){ return s.id===p.sub; })) ? p.sub : subAuto(p); }
+  function esBilletera(p){ return subOf(p)==='billeteras'; }
+  /* Piezas por diseño (billeteras o productos con "Diseño"): cada diseño se muestra como una pieza aparte */
+  function porDiseno(p){ return !!(p.tallas && p.tallas.length) && p.id!=='giftcard' && (p.vlabel==='Diseño' || esBilletera(p)); }
+  function piezasDe(p){
+    if(!porDiseno(p)) return [{p:p, t:'', foto:src(p)}];
+    if(p.st!=='ok') return [];
+    return p.tallas.map(function(x,i){ return {p:p, t:x[0], precio:dc(p,x[1]), was:p.dcto?x[1]:0, foto:(p.fotos&&p.fotos[i])?R(p.fotos[i]):src(p)}; });
+  }
+  function nPiezas(items){ return items.reduce(function(n,p){ return n + (porDiseno(p) ? piezasDe(p).length : (p.st!=='out' ? 1 : 0)); }, 0); }
+  /* "Fundas iPad/tablet" + "Fundas Kindle" = "Fundas iPad/tablet y Kindle"; "Gorros" + "Cintillos" = "Gorros y cintillos" */
+  function unirNombres(ns){
+    var w0 = ns[0].split(' ')[0].toLowerCase();
+    if(ns.length>1 && ns.every(function(n){ return n.split(' ')[0].toLowerCase()===w0 && n.indexOf(' ')>0; })){
+      var r = ns.slice(1).map(function(n){ return n.slice(n.indexOf(' ')+1); });
+      ns = [ns[0]].concat(r);
+    }
+    var parts = [], seen = {};
+    function minus(x){ return /^(Kindle|AirPods|Gift|Paffu)|^[A-Z]{2}/.test(x) ? x : x.charAt(0).toLowerCase()+x.slice(1); }
+    ns.forEach(function(n,i){ n.split(/\s*,\s*|\s+y\s+/).forEach(function(x,j){ var k=x.toLowerCase(); if(!x || seen[k]) return; seen[k]=1; parts.push(i||j ? minus(x) : x); }); });
+    return parts.length<2 ? parts.join('') : parts.slice(0,-1).join(', ') + ' y ' + parts[parts.length-1];
+  }
   function subsVivas(){
     var acc = sorted().filter(function(p){ return inCat(p,'Accesorios'); });
-    var out = SUBS.map(function(s){ return {s:s, items:acc.filter(function(p){ return subOf(p)===s.id; })}; }).filter(function(x){ return x.items.length; });
-    var otros = acc.filter(function(p){ var k=subOf(p); return !SUBS.some(function(s){ return s.id===k; }); });
-    if(otros.length) out.push({s:{id:'otros', nombre:'Otros accesorios'}, items:otros});
-    return out;
+    var gs = SUBS.map(function(s){ return {s:s, ids:[s.id], items:acc.filter(function(p){ return subOf(p)===s.id; })}; });
+    var otros = acc.filter(function(p){ return subOf(p)==='otros'; });
+    if(otros.length) gs.push({s:{id:'otros', nombre:'Otros accesorios'}, ids:['otros'], items:otros});
+    gs = gs.filter(function(g){ return g.items.length; });
+    gs.forEach(function(g,i){ g.n = nPiezas(g.items); g.s0 = {s:g.s, n:g.n, i:i}; });
+    function dueno(g){ while(g.en) g = g.en; return g; }
+    for(;;){
+      /* el tipo con menos piezas se suma a su parecido (si hay empate, el que va más abajo en la lista) */
+      var c = gs.filter(function(g){ if(g.en || g.n>=MIN_PIEZAS || !JUNTO[g.s.id]) return false; var t = gs.filter(function(x){ return x.s.id===JUNTO[g.s.id]; })[0]; return t && dueno(t)!==g; })
+        .sort(function(a,b){ return a.n-b.n || gs.indexOf(b)-gs.indexOf(a); })[0];
+      if(!c) break;
+      var t = dueno(gs.filter(function(x){ return x.s.id===JUNTO[c.s.id]; })[0]);
+      c.en = t; t.ids = t.ids.concat(c.ids); t.items = t.items.concat(c.items); t.n += c.n; t.junto = (t.junto||[t.s0]).concat(c.junto||[c.s0]);
+    }
+    return gs.filter(function(g){ return !g.en; }).map(function(g){
+      if(!g.junto) return g;
+      g.items = acc.filter(function(p){ return g.items.indexOf(p)>-1; });
+      /* nombre: primero el tipo con más piezas */
+      var js = g.junto.sort(function(a,b){ return b.n-a.n || a.i-b.i; }).map(function(x){ return x.s; });
+      g.s = {id:g.s.id, nombre:unirNombres(js.map(function(s){ return s.nombre; })), foto:js.map(function(s){ return s.foto; }).filter(Boolean)[0] || ''};
+      return g;
+    });
   }
-  function subObj(id){ return subsVivas().filter(function(x){ return x.s.id===id; })[0]; }
-  function enSub(p,id){ var k=subOf(p); return id==='otros' ? !SUBS.some(function(s){ return s.id===k; }) : k===id; }
+  function subObj(id){ return subsVivas().filter(function(x){ return x.ids.indexOf(id)>-1; })[0]; }
+  function enSub(p,x){ return x.ids.indexOf(subOf(p))>-1; }
   function portada(x){ if(x.s.foto) return x.s.foto; var d=x.items.filter(function(p){ return p.st==='ok'; })[0] || x.items[0]; return src(d); }
-  function disenos(){ var out=[]; sorted().forEach(function(p){ if(!esBilletera(p)||p.st!=='ok') return; if(p.tallas&&p.tallas.length){ p.tallas.forEach(function(x,i){ out.push({p:p, t:x[0], precio:dc(p,x[1]), was:p.dcto?x[1]:0, foto:(p.fotos&&p.fotos[i])?R(p.fotos[i]):src(p)}); }); } else out.push({p:p, t:'', precio:minPrice(p), was:p.dcto?ominPrice(p):0, foto:src(p)}); }); return out; }
   var CATMAP = {'polar-pro-adulto':'Hombre, Mujer','poleron-lupe':'Hombre, Mujer','chaleco-chicago':'Niños','tejidos-unicos':'Mujer','croptop':'Mujer'};
   function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
   function catsOf(p){ return String(p.cat||'').split(/\s*,\s*/).filter(Boolean); }
@@ -1496,17 +1535,15 @@ if (!window.__EXPIRED) (function(){
     var su = (state.cat==='Accesorios' && !q && state.sub) ? subObj(state.sub) : null;
     if (state.sub && !su && state.cat==='Accesorios' && !q) state.sub = '';
     var list = sorted().slice().sort(function(a,b){ if(so==='asc') return (minPrice(a)||1e9)-(minPrice(b)||1e9); if(so==='desc') return minPrice(b)-minPrice(a); if(so==='az') return a.name.localeCompare(b.name,'es'); return (b.feat?1:0)-(a.feat?1:0); }).filter(function(p){
-      return inCat(p,state.cat) && (!ed || enEdad(p,ed)) && (!su || enSub(p,su.s.id)) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
+      return inCat(p,state.cat) && (!ed || enEdad(p,ed)) && (!su || enSub(p,su)) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
     });
     title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : (su ? su.s.nombre : state.cat + (ed ? ' · ' + ed.l : '')));
     renderEdades(ed, list, q);
     renderSubnav(su, q);
     document.querySelectorAll('[data-chip]').forEach(function(c){ c.setAttribute('aria-pressed', String(c.dataset.chip===state.cat)); });
-    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = c==='Billeteras' ? disenos().length : products.filter(function(p){ return inCat(p,c); }).length; });
+    document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = products.filter(function(p){ return inCat(p,c); }).length; });
     var pc=document.getElementById('pCount'); if(pc) pc.textContent = list.length + (list.length===1?' producto':' productos');
-    if (state.cat==='Billeteras' && !q){ renderBilleteras(pc); return; }
     if (state.cat==='Accesorios' && !q && !su){ renderSubs(pc); return; }
-    if (su && su.s.id==='billeteras'){ renderBilleteras(pc); return; }
     if (state.cat==='Niños' && !q && !state.edad){ grid.classList.remove('by-col'); grid.innerHTML=''; if(pc) pc.textContent=''; return; }
     if(!products.length){ grid.innerHTML = '<p class="empty">Aún no hay productos publicados. Agrégalos desde el <a href="#panel">panel de la tienda</a>.</p>'; return; }
     if(!list.length){ grid.innerHTML = '<p class="empty">No encontramos productos con ese nombre. Prueba con “hoodie”, “gorro” o “funda”, o escríbenos por WhatsApp.</p>'; return; }
@@ -1547,7 +1584,23 @@ if (!window.__EXPIRED) (function(){
       return;
     }
     grid.classList.remove('by-col');
+    if (su){
+      /* Dentro de un tipo de accesorio: cada pieza por separado (cada diseño de billetera es una tarjeta) */
+      var n = 0;
+      grid.innerHTML = list.map(function(p){ if(!porDiseno(p)){ n++; return card(p); } var ps = piezasDe(p); n += ps.length; return ps.map(piezaCard).join(''); }).join('');
+      if(pc) pc.textContent = n + (n===1?' pieza':' piezas');
+      if(!n) grid.innerHTML = '<p class="empty">Por ahora no quedan piezas de este tipo. Escríbenos por WhatsApp y te avisamos cuando lleguen nuevas.</p>';
+      return;
+    }
     grid.innerHTML = list.map(card).join('');
+  }
+  function piezaCard(d){
+    var nom = d.t || d.p.name, tipo = d.p.mat || d.p.name;
+    return '<article class="card">'+
+      '<button class="card-img single" type="button" data-open="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'" aria-label="Ver '+esc(tipo+' '+nom)+'"><span class="badge ok">Pieza única</span><img src="'+esc(d.foto)+'" alt="'+esc(tipo+' '+nom)+'" loading="lazy"></button>'+
+      '<span class="tipo">'+esc(tipo)+'</span><h3>'+esc(nom)+'</h3>'+
+      '<div class="price-row"><span class="price">'+clp(d.precio)+(d.was?strike(d.was):'')+'</span></div>'+
+      '<div class="acts"><button class="btn btn-ink" type="button" data-add="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'">Agregar al carro</button></div></article>';
   }
   function renderEdades(ed, list, q){
     var box = document.getElementById('edades'); if(!box) return;
@@ -1568,7 +1621,7 @@ if (!window.__EXPIRED) (function(){
     if (pc) pc.textContent = xs.length ? xs.length + (xs.length===1?' tipo de accesorio':' tipos de accesorios') : '';
     if (!xs.length){ grid.innerHTML = '<p class="empty">Pronto subiremos accesorios nuevos. Escríbenos por WhatsApp y te contamos qué hay en la tienda.</p>'; return; }
     grid.innerHTML = '<div class="subs">' + xs.map(function(x){
-      var n = x.s.id==='billeteras' ? disenos().length : x.items.filter(function(p){ return p.st!=='out'; }).length;
+      var n = x.n;
       return '<button class="cat" type="button" data-sub="'+esc(x.s.id)+'"><div class="ph"><img src="'+esc(portada(x))+'" alt="" loading="lazy"></div><div class="cat-row"><b>'+esc(x.s.nombre)+'</b><span>'+(n ? n+(n===1?' pieza':' piezas')+' →' : 'Ver →')+'</span></div></button>';
     }).join('') + '</div>';
   }
@@ -1579,20 +1632,7 @@ if (!window.__EXPIRED) (function(){
     var pills = subsVivas().map(function(x){ return '<button class="e-pill" type="button" data-sub="'+esc(x.s.id)+'" aria-pressed="'+(x.s.id===su.s.id)+'">'+esc(x.s.nombre)+'</button>'; }).join('');
     box.innerHTML = '<button class="e-back" type="button" data-sub="">← Volver a Accesorios</button><div class="e-pills" aria-label="Cambiar tipo de accesorio">'+pills+'</div>';
   }
-  function renderBilleteras(pc){
-    var ds = disenos();
-    grid.classList.remove('by-col');
-    if (pc) pc.textContent = ds.length + (ds.length===1?' diseño':' diseños') + (ds.length ? ' · todas a ' + clp(ds[0].precio) : '');
-    if (!ds.length){ grid.innerHTML = '<p class="empty">Por ahora no quedan billeteras disponibles. Escríbenos por WhatsApp y te avisamos cuando lleguen nuevos diseños.</p>'; return; }
-    grid.innerHTML = ds.map(function(d){
-      return '<article class="card">'+
-        '<button class="card-img single" type="button" data-open="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'" aria-label="Ver billetera '+esc(d.t||d.p.name)+'"><span class="badge ok">Pieza única</span><img src="'+esc(d.foto)+'" alt="Billetera '+esc(d.t||d.p.name)+'" loading="lazy"></button>'+
-        '<span class="tipo">Billetera</span><h3>'+esc(d.t||d.p.name)+'</h3>'+
-        '<div class="price-row"><span class="price">'+clp(d.precio)+(d.was?strike(d.was):'')+'</span></div>'+
-        '<div class="acts"><button class="btn btn-ink" type="button" data-add="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'">Agregar al carro</button></div></article>';
-    }).join('');
-  }
-  function setCat(c, scroll, edad, sub){ state.edad = (c==='Niños' && edad) ? edad : ''; state.sub = (c==='Accesorios' && sub) ? sub : ''; state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
+  function setCat(c, scroll, edad, sub){ if(c==='Billeteras'){ c='Accesorios'; sub='billeteras'; } state.edad = (c==='Niños' && edad) ? edad : ''; state.sub = (c==='Accesorios' && sub) ? sub : ''; state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
 
   /* Menú */
   var drawer = document.getElementById('drawer'), menuBtn = document.getElementById('menuBtn');
@@ -2038,7 +2078,7 @@ if (!window.__EXPIRED) (function(){
     /* Portadas de Accesorios (las edita Jireh en el panel). Si la tabla aún no existe, se usan las de fábrica. */
     sb.from('subcategorias').select('*').order('orden',{ascending:true}).then(function(res){
       if(res.error || !res.data || !res.data.length) return;
-      SUBS = res.data.filter(function(r){ return !r.cat || r.cat==='Accesorios'; }).map(function(r){ return {id:r.id, nombre:r.nombre, foto:r.foto||''}; });
+      SUBS = conDefs(res.data.filter(function(r){ return !r.cat || r.cat==='Accesorios'; }).map(function(r){ return {id:r.id, nombre:r.nombre, foto:r.foto||''}; }));
       renderStore();
     });
   }
