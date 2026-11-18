@@ -791,6 +791,14 @@ body{color:#3E2A20}
 .cupon-row .inp{flex:1;text-transform:uppercase}
 .cupon-row button{flex:0 0 auto;min-height:44px;padding:0 16px;border:1px solid var(--ink);background:transparent;color:var(--ink);font:500 12px var(--f-body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .cupon-ok{font-size:13px;color:var(--muted)}
+/* Accesorios: portadas por subcategoría (2 columnas en celular) */
+.subs{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(min-width:760px){.subs{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}}
+.subs .cat{gap:0}
+.subs .cat .ph{aspect-ratio:4/5;border-radius:18px}
+.subs .cat-row{margin-top:-70px;padding:0 12px 14px}
+.subs .cat-row b{font-size:clamp(20px,5.4vw,34px)!important;max-width:100%;overflow-wrap:anywhere;line-height:1.02}
+.subs .cat-row span{font-size:11px;letter-spacing:.12em}
 </style>
 
 <!-- ================= TIENDA ================= -->
@@ -968,6 +976,7 @@ body{color:#3E2A20}
         </div>
       </div>
       <div class="edades" id="edades" hidden></div>
+      <div class="edades" id="subnav" hidden></div>
       <div class="toolbar"><span id="pCount" class="eyebrow"></span><label class="sort"><span class="eyebrow">Ordenar</span><select id="sortSel" class="inp"><option value="dest">Destacados</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option><option value="az">Nombre A–Z</option></select></label></div>
       <div class="grid" id="grid"></div>
     </section>
@@ -1368,7 +1377,23 @@ if (!window.__EXPIRED) (function(){
   function tallasEdad(p,e){ if(!p.tallas||!p.tallas.length) return null; var num=false; var out=p.tallas.filter(function(x){ var r=rangoTalla(x[0]); if(!r) return false; num=true; return r[0]<=e.b && r[1]>=e.a; }); return num?out:null; }
   function enEdad(p,e){ var t=tallasEdad(p,e); return t===null || t.length>0; }
   /* Billeteras: cada diseño es una pieza; todas al mismo valor */
-  function esBilletera(p){ return /billetera/i.test(p.name+' '+(p.mat||'')); }
+  function esBilletera(p){ return p.sub ? p.sub==='billeteras' : /billetera/i.test(p.name+' '+(p.mat||'')); }
+  /* Accesorios por subcategoría: portada (foto que sube Jireh en el panel) y dentro cada pieza única.
+     Si la pieza no tiene subcategoría elegida, se asigna por su nombre/tipo. Sin foto de portada se usa la de la primera pieza. */
+  var SUBS_DEF = [{id:'cosmetiqueros',nombre:'Cosmetiqueros'},{id:'billeteras',nombre:'Billeteras'},{id:'fundas',nombre:'Fundas'},{id:'bolsos',nombre:'Bolsos y bananos'},{id:'gorros',nombre:'Gorros y cintillos'},{id:'pequenos',nombre:'Llaveros y monederos'},{id:'giftcard',nombre:'Gift Card'}];
+  var SUBS = SUBS_DEF.slice();
+  var SUBKEY = {cosmetiqueros:/cosmetiquer/i, billeteras:/billetera/i, fundas:/funda/i, bolsos:/banano|tote|bolso|bolsa|morral/i, gorros:/gorro|beanie|cintillo|headband|toca/i, pequenos:/llavero|monedero|pocket|airpods|estuche/i, giftcard:/gift/i};
+  function subOf(p){ if(p.sub) return p.sub; var t=p.name+' '+(p.mat||''); for(var k in SUBKEY){ if(SUBKEY[k].test(t)) return k; } return 'otros'; }
+  function subsVivas(){
+    var acc = sorted().filter(function(p){ return inCat(p,'Accesorios'); });
+    var out = SUBS.map(function(s){ return {s:s, items:acc.filter(function(p){ return subOf(p)===s.id; })}; }).filter(function(x){ return x.items.length; });
+    var otros = acc.filter(function(p){ var k=subOf(p); return !SUBS.some(function(s){ return s.id===k; }); });
+    if(otros.length) out.push({s:{id:'otros', nombre:'Otros accesorios'}, items:otros});
+    return out;
+  }
+  function subObj(id){ return subsVivas().filter(function(x){ return x.s.id===id; })[0]; }
+  function enSub(p,id){ var k=subOf(p); return id==='otros' ? !SUBS.some(function(s){ return s.id===k; }) : k===id; }
+  function portada(x){ if(x.s.foto) return x.s.foto; var d=x.items.filter(function(p){ return p.st==='ok'; })[0] || x.items[0]; return src(d); }
   function disenos(){ var out=[]; sorted().forEach(function(p){ if(!esBilletera(p)||p.st!=='ok') return; if(p.tallas&&p.tallas.length){ p.tallas.forEach(function(x,i){ out.push({p:p, t:x[0], precio:dc(p,x[1]), was:p.dcto?x[1]:0, foto:(p.fotos&&p.fotos[i])?R(p.fotos[i]):src(p)}); }); } else out.push({p:p, t:'', precio:minPrice(p), was:p.dcto?ominPrice(p):0, foto:src(p)}); }); return out; }
   var CATMAP = {'polar-pro-adulto':'Hombre, Mujer','poleron-lupe':'Hombre, Mujer','chaleco-chicago':'Niños','tejidos-unicos':'Mujer','croptop':'Mujer'};
   function fixCat(p){ if(p.cat==='Adultos'||p.cat==='Tejidos'){ p.cat = CATMAP[p.id] || (p.cat==='Adultos' ? 'Hombre, Mujer' : 'Accesorios'); } return p; }
@@ -1451,7 +1476,7 @@ if (!window.__EXPIRED) (function(){
     document.getElementById('track').innerHTML = one + one;
   }
 
-  var state = {cat:'Todos', q:'', edad:''};
+  var state = {cat:'Todos', q:'', edad:'', sub:''};
   var FAV = {}; try{ FAV = JSON.parse(localStorage.getItem('paffu-fav')||'{}'); }catch(e){}
   var grid = document.getElementById('grid'), title = document.getElementById('catTitle');
   function badgeFor(p, n){
@@ -1468,15 +1493,20 @@ if (!window.__EXPIRED) (function(){
     var q = state.q.trim().toLowerCase();
     var so = (document.getElementById('sortSel')||{}).value || 'dest';
     var ed = (state.cat==='Niños' && !q) ? edadObj(state.edad) : null;
+    var su = (state.cat==='Accesorios' && !q && state.sub) ? subObj(state.sub) : null;
+    if (state.sub && !su && state.cat==='Accesorios' && !q) state.sub = '';
     var list = sorted().slice().sort(function(a,b){ if(so==='asc') return (minPrice(a)||1e9)-(minPrice(b)||1e9); if(so==='desc') return minPrice(b)-minPrice(a); if(so==='az') return a.name.localeCompare(b.name,'es'); return (b.feat?1:0)-(a.feat?1:0); }).filter(function(p){
-      return inCat(p,state.cat) && (!ed || enEdad(p,ed)) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
+      return inCat(p,state.cat) && (!ed || enEdad(p,ed)) && (!su || enSub(p,su.s.id)) && (!q || (p.name+' '+p.cat+' '+(p.mat||'')).toLowerCase().indexOf(q) > -1);
     });
-    title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : state.cat + (ed ? ' · ' + ed.l : ''));
+    title.textContent = q ? 'Resultados para “' + state.q.trim() + '”' : (state.cat==='Todos' ? 'Todo' : (su ? su.s.nombre : state.cat + (ed ? ' · ' + ed.l : '')));
     renderEdades(ed, list, q);
+    renderSubnav(su, q);
     document.querySelectorAll('[data-chip]').forEach(function(c){ c.setAttribute('aria-pressed', String(c.dataset.chip===state.cat)); });
     document.querySelectorAll('[data-count]').forEach(function(s){ var c=s.dataset.count; s.textContent = c==='Billeteras' ? disenos().length : products.filter(function(p){ return inCat(p,c); }).length; });
     var pc=document.getElementById('pCount'); if(pc) pc.textContent = list.length + (list.length===1?' producto':' productos');
     if (state.cat==='Billeteras' && !q){ renderBilleteras(pc); return; }
+    if (state.cat==='Accesorios' && !q && !su){ renderSubs(pc); return; }
+    if (su && su.s.id==='billeteras'){ renderBilleteras(pc); return; }
     if (state.cat==='Niños' && !q && !state.edad){ grid.classList.remove('by-col'); grid.innerHTML=''; if(pc) pc.textContent=''; return; }
     if(!products.length){ grid.innerHTML = '<p class="empty">Aún no hay productos publicados. Agrégalos desde el <a href="#panel">panel de la tienda</a>.</p>'; return; }
     if(!list.length){ grid.innerHTML = '<p class="empty">No encontramos productos con ese nombre. Prueba con “hoodie”, “gorro” o “funda”, o escríbenos por WhatsApp.</p>'; return; }
@@ -1532,6 +1562,23 @@ if (!window.__EXPIRED) (function(){
       (ed && tl.length ? '<p class="e-talla">Talla '+esc(tl.join(' y '))+'</p>' : '') +
       '<div class="e-pills" aria-label="Cambiar edad">'+pills+'</div>';
   }
+  function renderSubs(pc){
+    var xs = subsVivas();
+    grid.classList.remove('by-col');
+    if (pc) pc.textContent = xs.length ? xs.length + (xs.length===1?' tipo de accesorio':' tipos de accesorios') : '';
+    if (!xs.length){ grid.innerHTML = '<p class="empty">Pronto subiremos accesorios nuevos. Escríbenos por WhatsApp y te contamos qué hay en la tienda.</p>'; return; }
+    grid.innerHTML = '<div class="subs">' + xs.map(function(x){
+      var n = x.s.id==='billeteras' ? disenos().length : x.items.filter(function(p){ return p.st!=='out'; }).length;
+      return '<button class="cat" type="button" data-sub="'+esc(x.s.id)+'"><div class="ph"><img src="'+esc(portada(x))+'" alt="" loading="lazy"></div><div class="cat-row"><b>'+esc(x.s.nombre)+'</b><span>'+(n ? n+(n===1?' pieza':' piezas')+' →' : 'Ver →')+'</span></div></button>';
+    }).join('') + '</div>';
+  }
+  function renderSubnav(su, q){
+    var box = document.getElementById('subnav'); if(!box) return;
+    if (!su || q){ box.hidden = true; box.innerHTML=''; return; }
+    box.hidden = false;
+    var pills = subsVivas().map(function(x){ return '<button class="e-pill" type="button" data-sub="'+esc(x.s.id)+'" aria-pressed="'+(x.s.id===su.s.id)+'">'+esc(x.s.nombre)+'</button>'; }).join('');
+    box.innerHTML = '<button class="e-back" type="button" data-sub="">← Volver a Accesorios</button><div class="e-pills" aria-label="Cambiar tipo de accesorio">'+pills+'</div>';
+  }
   function renderBilleteras(pc){
     var ds = disenos();
     grid.classList.remove('by-col');
@@ -1545,7 +1592,7 @@ if (!window.__EXPIRED) (function(){
         '<div class="acts"><button class="btn btn-ink" type="button" data-add="'+esc(d.p.id)+'" data-t="'+esc(d.t)+'">Agregar al carro</button></div></article>';
     }).join('');
   }
-  function setCat(c, scroll, edad){ state.edad = (c==='Niños' && edad) ? edad : ''; state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
+  function setCat(c, scroll, edad, sub){ state.edad = (c==='Niños' && edad) ? edad : ''; state.sub = (c==='Accesorios' && sub) ? sub : ''; state.cat = c; state.q=''; document.getElementById('q').value=''; renderStore(); if(scroll){ document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
 
   /* Menú */
   var drawer = document.getElementById('drawer'), menuBtn = document.getElementById('menuBtn');
@@ -1835,7 +1882,8 @@ if (!window.__EXPIRED) (function(){
 
   document.addEventListener('click', function(e){
     var f = e.target.closest('[data-filter]');
-    if(f){ e.preventDefault(); closeMenu(); if(location.hash==='#panel') location.hash='catalogo'; setCat(f.dataset.filter, true, f.dataset.edad); return; }
+    if(f){ e.preventDefault(); closeMenu(); if(location.hash==='#panel') location.hash='catalogo'; setCat(f.dataset.filter, true, f.dataset.edad, f.dataset.sub); return; }
+    var su = e.target.closest('[data-sub]'); if(su){ state.sub = su.dataset.sub; renderStore(); document.getElementById('catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); return; }
     var ea = e.target.closest('[data-edad]'); if(ea){ state.edad = ea.dataset.edad; renderStore(); document.getElementById(state.edad && state.edad!=='todas' ? 'edades' : 'catalogo').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); return; }
     var ch = e.target.closest('[data-chip]'); if(ch){ setCat(ch.dataset.chip, false); return; }
     var a = e.target.closest('[data-add]'); if(a){ addToCart(a.dataset.add, a.dataset.t); return; }
@@ -1979,13 +2027,19 @@ if (!window.__EXPIRED) (function(){
   var session = null, upFile = null;
   /* Tallas siempre separadas: un rango "2-4" en la base se muestra como 2 y 4 (piezas distintas, mismo precio) */
   function separarTallas(ts,vl){ if(!ts||!ts.length||/^(Dise|Monto|Color)/.test(vl||'')) return ts; var out=[],seen={}; ts.forEach(function(x){ var s=String(x[0]), i=s.lastIndexOf(' · '), m=i<0?'':s.slice(0,i+3), t=i<0?s:s.slice(i+3), r=t.trim().match(/^(\d+)\s*-\s*(\d+)$/); (r?[r[1],r[2]]:[t]).forEach(function(v){ var k=m+v; if(!seen[k]){ seen[k]=1; out.push([k,x[1]]); } }); }); return out; }
-  function fromRow(r){ return {id:r.id, orden:r.orden, cat:r.cat, name:r.name, mat:r.mat||'', price:r.price, stock:r.stock, st:r.st, img:r.img||'', foto:r.foto||undefined, colores:r.colores||[], feat:!!r.feat, sello:r.sello||undefined, desc:r.descr||'', tallas:separarTallas(r.tallas,r.vlabel)||undefined, vlabel:r.vlabel||undefined, fotos:r.fotos||undefined, dcto:r.dcto||0}; }
+  function fromRow(r){ return {id:r.id, orden:r.orden, cat:r.cat, name:r.name, mat:r.mat||'', price:r.price, stock:r.stock, st:r.st, img:r.img||'', foto:r.foto||undefined, colores:r.colores||[], feat:!!r.feat, sello:r.sello||undefined, desc:r.descr||'', tallas:separarTallas(r.tallas,r.vlabel)||undefined, vlabel:r.vlabel||undefined, fotos:r.fotos||undefined, dcto:r.dcto||0, sub:r.sub||''}; }
   function toRow(p){ return {id:p.id, orden:p.orden||0, cat:p.cat, name:p.name, mat:p.mat||null, price:p.price, stock:p.stock||0, st:p.st, img:p.img||null, foto:(p.foto && p.foto.indexOf('data:')!==0)?p.foto:null, colores:p.colores||[], feat:!!p.feat, sello:p.sello||null, descr:p.desc||null, tallas:p.tallas||null, vlabel:p.vlabel||null, fotos:p.fotos||null, dcto:p.dcto||0, updated_at:new Date().toISOString()}; }
   function loadCatalog(){
     if(!sb) return;
     sb.from('productos').select('*').order('orden',{ascending:true}).then(function(res){
       if(res.error || !res.data || !res.data.length) return;
       products = res.data.map(fromRow).map(fixCat).filter(function(p){ return !/^prueba-/.test(p.id) || MP_PRUEBA; }); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
+    });
+    /* Portadas de Accesorios (las edita Jireh en el panel). Si la tabla aún no existe, se usan las de fábrica. */
+    sb.from('subcategorias').select('*').order('orden',{ascending:true}).then(function(res){
+      if(res.error || !res.data || !res.data.length) return;
+      SUBS = res.data.filter(function(r){ return !r.cat || r.cat==='Accesorios'; }).map(function(r){ return {id:r.id, nombre:r.nombre, foto:r.foto||''}; });
+      renderStore();
     });
   }
   function dbErr(e){ toast('No se pudo guardar en la base: ' + (e && e.message ? e.message : 'revisa tu conexión')); }
