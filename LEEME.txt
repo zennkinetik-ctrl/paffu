@@ -103,3 +103,6 @@ CANTIDAD EN ACCESORIOS + ENVÍO GRATIS $60.000 (18 nov 2026)
   En la lista del panel el botón dice "Vendí 1" (para ventas en la tienda física).
 - Accesorios con diseños u opciones y toda la ropa siguen siendo piezas únicas.
 - Envío gratis desde $60.000: cfg.gratis en index.html y CFG.gratis en netlify/lib/tienda.mjs.
+- Colección Hombre escondida por ahora (sin productos): OCULTAS = ['Hombre'] en index.html.
+  Para volver a mostrarla, dejar OCULTAS = [] y devolver los enlaces "Hombre" del menú.
+- Billeteras ya no va suelta en el menú: está dentro de Accesorios.
