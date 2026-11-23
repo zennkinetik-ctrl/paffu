@@ -548,6 +548,8 @@ footer{background:#3E2A22!important;color:#F3EAE0!important}
 .m-mods button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
 .m-trust{margin:-6px 0 0!important;font-size:13px;line-height:1.5!important;color:var(--ink-2)}
 .m-trust b{font-weight:600}
+.m-share{display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:center;background:none;border:0;padding:10px 12px;font:inherit;font-size:14px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.m-share:hover{color:var(--ink)}
 .m-off{display:inline-block;margin-left:10px;padding:3px 8px;border-radius:6px;background:var(--btn);color:#fff;font-size:14px;font-weight:600;vertical-align:middle}
 @media(max-width:700px){
   .modal{padding:0;align-items:flex-end}
@@ -555,7 +557,7 @@ footer{background:#3E2A22!important;color:#F3EAE0!important}
   .modal-img{min-height:0;height:min(40vh,340px)}
   .modal-body{padding:16px 18px 0;gap:12px}
   .modal-body h3{font-size:32px}
-  #mCat{order:1} #mTitle{order:2} #mPrice{order:3;font-size:28px!important;font-weight:600} #mTrust{order:4} #mModBox{order:5} #mVarBox{order:5} #mAdd{order:6} #mWa{order:7} #mDesc{order:8} .modal-body .spec{order:9;margin-bottom:24px}
+  #mCat{order:1} #mTitle{order:2} #mPrice{order:3;font-size:28px!important;font-weight:600} #mTrust{order:4} #mModBox{order:5} #mVarBox{order:5} #mAdd{order:6} #mWa{order:7} #mShare{order:7} #mDesc{order:8} .modal-body .spec{order:9;margin-bottom:24px}
   .m-sizes{gap:6px}
   .m-sizes button{min-height:42px;min-width:46px;padding:0 12px;border-radius:10px}
   #mAdd{position:sticky;bottom:10px;z-index:3;min-height:54px;font-size:16px;box-shadow:0 0 0 10px var(--sand)}
@@ -1153,6 +1155,7 @@ body{color:#3E2A20}
       <dl class="spec"><dt>Tipo</dt><dd id="mMat"></dd><dt>Estado</dt><dd id="mStock"></dd></dl>
       <button class="btn btn-ink" id="mAdd" type="button">Agregar al carro</button>
       <a class="btn btn-line" id="mWa" href="#" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+      <button class="m-share" id="mShare" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg><span>Compartir producto</span></button>
     </div>
   </div>
 </div>
@@ -1650,11 +1653,33 @@ if (!window.__EXPIRED) (function(){
     document.getElementById('mStock').textContent = p.st==='ok' ? (porCant(p) ? 'Disponible · ' + quedan(p).toLowerCase() : unica(p) ? 'Disponible · pieza única' : 'Disponible') : STLABEL[p.st];
     var add = document.getElementById('mAdd'); add.hidden = p.st!=='ok';
     document.getElementById('mTrust').innerHTML = p.st==='ok' ? 'Envío gratis sobre <b>'+clp(cfg.gratis)+'</b> · Retiro en tienda en Pichilemu<br>Paga con transferencia bancaria' : '';
-    document.getElementById('mWa').href = wa('Hola Paffu, me interesa '+p.name+'. ¿Está disponible?');
+    document.getElementById('mWa').href = wa('Hola Paffu, me interesa '+p.name+' ('+linkProducto(p.id)+'). ¿Está disponible?');
+    var yaAbierto = !modal.hidden;
     modal.hidden = false; document.body.style.overflow='hidden';
+    if (urlProducto() !== p.id){ try{ var u = new URL(location.href); u.searchParams.set('p', p.id); if (yaAbierto || urlProducto()) history.replaceState({paffuFicha:1}, '', u); else { history.pushState({paffuFicha:1}, '', u); fichaPush = true; } }catch(e){} }
     document.getElementById('mClose').focus();
   }
-  function closeModal(){ modal.hidden = true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus(); }
+  /* Enlace propio de cada producto: paffu.cl/?p=<id>. Al abrir la ficha cambia la barra de direcciones; al cerrarla vuelve. */
+  var fichaPush = false;
+  function urlProducto(){ try{ return new URLSearchParams(location.search).get('p') || ''; }catch(e){ return ''; } }
+  function linkProducto(id){ return location.origin + '/?p=' + encodeURIComponent(id); }
+  function closeModal(fromPop){ modal.hidden = true; document.body.style.overflow=''; if(lastFocus) lastFocus.focus();
+    if (fromPop !== true && urlProducto()){ if (fichaPush){ fichaPush = false; history.back(); } else { try{ var u = new URL(location.href); u.searchParams.delete('p'); history.replaceState(null, '', u); }catch(e){} } } else fichaPush = false; }
+  window.addEventListener('popstate', function(){ var id = urlProducto(); if (!id && !modal.hidden) closeModal(true); else if (id && byId(id) && (modal.hidden || modalId !== id)) openModal(id, null); });
+  /* Abrir la ficha si se llega con ?p=<id> (espera a que cargue el catálogo de la base si hace falta) */
+  var fichaUrlLista = false;
+  function abrirFichaDesdeUrl(){ if (fichaUrlLista || document.body.dataset.view === 'panel') return; var id = urlProducto(); if (!id){ fichaUrlLista = true; return; } if (!byId(id)) return; fichaUrlLista = true; openModal(id, null); }
+  document.getElementById('mShare').addEventListener('click', function(){
+    var p = byId(modalId); if (!p) return; var url = linkProducto(p.id);
+    track('share', {method: navigator.share ? 'nativo' : 'copiar', content_type:'producto', item_id:p.id});
+    if (navigator.share){ navigator.share({title: p.name + ' · Paffu', text: p.name + ' · Paffu, hecho a mano en Pichilemu', url: url}).catch(function(){}); return; }
+    copiar(url);
+  });
+  function copiar(txt){
+    var ok = function(){ toast('Enlace copiado'); };
+    var viejo = function(){ var t = document.createElement('textarea'); t.value = txt; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); var r=false; try{ r = document.execCommand('copy'); }catch(e){} t.remove(); toast(r ? 'Enlace copiado' : txt); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, viejo); else viejo();
+  }
   document.getElementById('mClose').addEventListener('click', closeModal);
   document.getElementById('mScrim').addEventListener('click', closeModal);
   document.getElementById('mAdd').addEventListener('click', function(){ var id = modalId, p = byId(id);
@@ -2031,7 +2056,7 @@ if (!window.__EXPIRED) (function(){
     if(!sb) return;
     sb.from('productos').select('*').order('orden',{ascending:true}).then(function(res){
       if(res.error || !res.data || !res.data.length) return;
-      products = res.data.map(fromRow).map(fixCat).filter(function(p){ return !/^prueba-/.test(p.id) || MP_PRUEBA; }); renderStore(); if(document.body.dataset.view==='panel') renderPanel();
+      products = res.data.map(fromRow).map(fixCat).filter(function(p){ return !/^prueba-/.test(p.id) || MP_PRUEBA; }); renderStore(); if(document.body.dataset.view==='panel') renderPanel(); abrirFichaDesdeUrl();
     });
     /* Portadas de Accesorios (las edita Jireh en el panel). Si la tabla aún no existe, se usan las de fábrica. */
     sb.from('subcategorias').select('*').order('orden',{ascending:true}).then(function(res){
@@ -2216,7 +2241,7 @@ if (!window.__EXPIRED) (function(){
   ];
   document.getElementById('tools').innerHTML = MODULOS.map(function(m){ return '<div class="tool"><span class="pill pedido">Próximamente</span><b>'+esc(m.t)+'</b><p>'+esc(m.d)+'</p><a class="btn btn-line btn-sm" href="https://kinetikstudio.cl" target="_blank" rel="noopener">Quiero saber más</a></div>'; }).join('');
 
-  applyCfg(); renderStore(); renderCart(); renderReviews(); renderRevAdmin(); route();
+  applyCfg(); renderStore(); renderCart(); renderReviews(); renderRevAdmin(); route(); abrirFichaDesdeUrl();
 })();
 </script>
 
