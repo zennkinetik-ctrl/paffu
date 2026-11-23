@@ -106,3 +106,14 @@ CANTIDAD EN ACCESORIOS + ENVÍO GRATIS $60.000 (18 nov 2026)
 - Colección Hombre escondida por ahora (sin productos): OCULTAS = ['Hombre'] en index.html.
   Para volver a mostrarla, dejar OCULTAS = [] y devolver los enlaces "Hombre" del menú.
 - Billeteras ya no va suelta en el menú: está dentro de Accesorios.
+
+------------------------------------------------------------
+ENLACE PROPIO DE CADA PRODUCTO (nov 2026)
+------------------------------------------------------------
+Cada producto tiene su enlace: paffu.cl/?p=<id del producto> (ej. paffu.cl/?p=polar-pro-kids).
+Al abrir una ficha, la barra de direcciones cambia a ese enlace; al cerrarla vuelve a paffu.cl.
+El botón "atrás" del celular cierra la ficha.
+En la ficha hay un botón "Compartir producto": en el celular abre el menú de compartir
+(WhatsApp, Instagram, etc.); en el computador copia el enlace.
+El mensaje de "Consultar por WhatsApp" ahora incluye el enlace del producto.
+Pendiente: la vista previa en WhatsApp muestra la foto general de Paffu, no la del producto.
